@@ -1,0 +1,13 @@
+{
+  "name": "omega-platform",
+  "version": "4.0.0",
+  "description": "Omega Platform — Encuentra tu Punto 0 usando causalidad inversa",
+  "scripts": {
+    "dev": "npx serve public -l 8765",
+    "start": "npx serve public"
+  },
+  "keywords": ["omega", "punto-0", "causalidad-inversa", "estrategia", "ia"],
+  "author": "Aniol Guell (@tacotios)",
+  "license": "UNLICENSED",
+  "private": true
+}
