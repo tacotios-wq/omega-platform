@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PromptForge â Forja de Prompts</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #1a1a28;
+    --bg-input: #0e0e16;
+    --border: #1e1e2e;
+    --border-focus: #6366f1;
+    --text: #e2e8f0;
+    --text-dim: #64748b;
+    --text-bright: #f8fafc;
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.15);
+    --accent2: #8b5cf6;
+    --green: #10b981;
+    --green-dim: rgba(16, 185, 129, 0.1);
+    --yellow: #f59e0b;
+    --yellow-dim: rgba(245, 158, 11, 0.1);
+    --red: #ef4444;
+    --red-dim: rgba(239, 68, 68, 0.1);
+    --orange: #f97316;
+    --cyan: #06b6d4;
+    --pink: #ec4899;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 40px 0 32px;
+  }
+
+  .header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+  }
+
+  .header p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    margin-top: 8px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab:hover { color: var(--text); background: var(--bg-card-hover); }
+  .tab.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Textarea */
+  .prompt-editor {
+    width: 100%;
+    min-height: 180px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .prompt-editor:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .prompt-editor::placeholder { color: var(--text-dim); }
+
+  /* Buttons */
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+  }
+
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); }
+
+  .btn-secondary {
+    background: var(--bg-card-hover);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    padding: 6px 12px;
+  }
+
+  .btn-ghost:hover { color: var(--text); background: var(--bg-card-hover); }
+
+  .btn-group { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+
+  /* Score */
+  .score-ring {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 16px auto;
+    position: relative;
+  }
+
+  .score-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 4px;
+    background: conic-gradient(var(--score-color) var(--score-pct), var(--border) var(--score-pct));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .score-number { font-size: 2rem; font-weight: 800; color: var(--text-bright); }
+  .score-label { font-size: 0.75rem; color: var(--text-dim); }
+
+  /* Analysis items */
+  .analysis-item {
+    padding: 12px 16px;
+    border-left: 3px solid var(--border);
+    margin-bottom: 8px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--bg-input);
+  }
+
+  .analysis-item.good { border-left-color: var(--green); background: var(--green-dim); }
+  .analysis-item.warn { border-left-color: var(--yellow); background: var(--yellow-dim); }
+  .analysis-item.bad { border-left-color: var(--red); background: var(--red-dim); }
+
+  .analysis-item .label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .analysis-item.good .label { color: var(--green); }
+  .analysis-item.warn .label { color: var(--yellow); }
+  .analysis-item.bad .label { color: var(--red); }
+  .analysis-item .desc { font-size: 0.85rem; color: var(--text); }
+
+  /* Improved prompt */
+  .improved-section {
+    background: var(--bg-input);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-top: 16px;
+    position: relative;
+  }
+
+  .improved-section pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .copy-btn:hover { background: var(--accent2); }
+
+  /* Library */
+  .meta-card {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .meta-card:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+
+  .meta-card .name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+  }
+
+  .meta-card .desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+
+  .meta-card .tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    background: var(--accent-glow);
+    color: var(--accent);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+
+  /* Technique chips */
+  .techniques {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+
+  .chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .chip:hover, .chip.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* Diff view */
+  .diff-view { margin-top: 16px; }
+  .diff-line { padding: 2px 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; border-radius: 4px; margin-bottom: 2px; }
+  .diff-add { background: rgba(16, 185, 129, 0.1); color: var(--green); }
+  .diff-remove { background: rgba(239, 68, 68, 0.1); color: var(--red); text-decoration: line-through; }
+  .diff-same { color: var(--text-dim); }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.3s ease; }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .loading { animation: pulse 1.5s infinite; color: var(--accent); }
+
+  .hidden { display: none; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .modal h3 { margin-bottom: 12px; }
+
+  .modal pre {
+    background: var(--bg-input);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.6;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <!-- Header -->
+  <div class="header">
+    <h1>â¡ PromptForge</h1>
+    <p>Analiza, mejora y perfecciona cualquier prompt con ingenierÃ­a de precisiÃ³n</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('editor')">âï¸ Editor</button>
+    <button class="tab" onclick="switchTab('analyzer')">ð Analizador</button>
+    <button class="tab" onclick="switchTab('library')">ð Biblioteca</button>
+  </div>
+
+  <!-- EDITOR TAB -->
+  <div id="tab-editor">
+    <div class="card">
+      <div class="card-title">ð Tu Prompt</div>
+      <textarea class="prompt-editor" id="promptInput" placeholder="Escribe o pega tu prompt aquÃ­...&#10;&#10;Ejemplo: 'Hazme un plan de negocio para una cafeterÃ­a'"></textarea>
+
+      <div class="card-title" style="margin-top:16px">ð  TÃ©cnicas de Mejora</div>
+      <div class="techniques" id="techniques">
+        <span class="chip active" data-tech="role">AsignaciÃ³n de Rol</span>
+        <span class="chip active" data-tech="context">Contexto Rico</span>
+        <span class="chip active" data-tech="structure">Estructura</span>
+        <span class="chip active" data-tech="examples">Ejemplos</span>
+        <span class="chip active" data-tech="constraints">Restricciones</span>
+        <span class="chip" data-tech="cot">Cadena de Pensamiento</span>
+        <span class="chip" data-tech="persona">Persona del Output</span>
+        <span class="chip" data-tech="negative">Instrucciones Negativas</span>
+        <span class="chip" data-tech="meta">Meta-Prompt Exponencial</span>
+        <span class="chip" data-tech="omega" style="border-color:var(--accent);color:var(--accent);background:var(--accent-glow)">âï¸ Protocolo Omega</span>
+        <span class="chip" data-tech="seed" style="border-color:var(--pink);color:var(--pink);background:rgba(236,72,153,0.1);font-weight:700">ð§¬ OMEGA SEED (Definitivo)</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="improvePrompt()">â¡ Mejorar Prompt</button>
+        <button class="btn btn-secondary" onclick="clearAll()">ð Limpiar</button>
+      </div>
+    </div>
+
+    <div id="improvedResult" class="hidden"></div>
+  </div>
+
+  <!-- ANALYZER TAB -->
+  <div id="tab-analyzer" class="hidden">
+    <div class="card">
+      <div class="card-title">ð Analizar Prompt</div>
+      <textarea class="prompt-editor" id="analyzerInput" placeholder="Pega aquÃ­ el prompt que quieres analizar..."></textarea>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="analyzePrompt()">ð¬ Analizar Calidad</button>
+      </div>
+    </div>
+    <div id="analysisResult" class="hidden"></div>
+  </div>
+
+  <!-- LIBRARY TAB -->
+  <div id="tab-library" class="hidden">
+    <div class="card">
+      <div class="card-title">ð Biblioteca de Meta-Prompts</div>
+      <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Haz clic en cualquier meta-prompt para ver su contenido completo y copiarlo.</p>
+      <div id="libraryList"></div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal-overlay hidden" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <h3 id="modalTitle"></h3>
+      <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:12px" id="modalDesc"></p>
+      <div style="position:relative">
+        <button class="copy-btn" onclick="copyModalContent()">ð Copiar</button>
+        <pre id="modalContent"></pre>
+      </div>
+      <div class="btn-group" style="justify-content:flex-end">
+        <button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// âââ State âââ
+let activeTab = 'editor';
+const activeTechniques = new Set(['role', 'context', 'structure', 'examples', 'constraints']);
+
+// âââ Tab switching âââ
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['editor', 'analyzer', 'library'][i] === tab);
+  });
+  ['editor', 'analyzer', 'library'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+  });
+}
+
+// âââ Technique chips âââ
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const tech = chip.dataset.tech;
+    if (activeTechniques.has(tech)) {
+      activeTechniques.delete(tech);
+      chip.classList.remove('active');
+    } else {
+      activeTechniques.add(tech);
+      chip.classList.add('active');
+    }
+  });
+});
+
+// âââ Prompt Analysis Engine âââ
+function analyzePromptQuality(prompt) {
+  const checks = [];
+  const words = prompt.trim().split(/\s+/).length;
+  const sentences = prompt.split(/[.!?]+/).filter(s => s.trim()).length;
+  const hasRole = /actÃºa como|eres un|como experto|you are|act as|rol de|papel de/i.test(prompt);
+  const hasContext = words > 30;
+  const hasStructure = /\n/.test(prompt) || /\d\.|[-â¢]|paso|step|primero|segundo/i.test(prompt);
+  const hasExamples = /ejemplo|example|por ejemplo|e\.g\.|como esto|such as/i.test(prompt);
+  const hasConstraints = /no hagas|evita|mÃ¡ximo|mÃ­nimo|formato|obligatorio|nunca|siempre|debe|no incluyas/i.test(prompt);
+  const hasOutput = /responde en|formato|genera|produce|devuelve|output|entrega/i.test(prompt);
+  const hasTone = /tono|formal|informal|profesional|amigable|tÃ©cnico|style/i.test(prompt);
+  const hasAudience = /audiencia|pÃºblico|para (un|una|alguien)|dirigido a|target/i.test(prompt);
+  const specificity = words > 50 ? 'high' : words > 20 ? 'medium' : 'low';
+
+  // Scoring
+  let score = 20; // base
+
+  if (hasRole) { score += 12; checks.push({ type: 'good', label: 'Rol definido', desc: 'El prompt asigna un rol o expertise especÃ­fico.' }); }
+  else { checks.push({ type: 'warn', label: 'Sin rol', desc: 'Asignar un rol (ej: "ActÃºa como experto en...") mejora la calidad ~30%.' }); }
+
+  if (hasContext) { score += 12; checks.push({ type: 'good', label: 'Contexto presente', desc: `${words} palabras proporcionan contexto suficiente.` }); }
+  else { checks.push({ type: 'bad', label: 'Contexto insuficiente', desc: 'El prompt es demasiado breve. AÃ±ade contexto, antecedentes y detalles.' }); }
+
+  if (hasStructure) { score += 10; checks.push({ type: 'good', label: 'Estructura clara', desc: 'El prompt tiene organizaciÃ³n visible (listas, pasos, secciones).' }); }
+  else { checks.push({ type: 'warn', label: 'Sin estructura', desc: 'Dividir el prompt en secciones o pasos mejora la precisiÃ³n.' }); }
+
+  if (hasExamples) { score += 12; checks.push({ type: 'good', label: 'Incluye ejemplos', desc: 'Los ejemplos anclan la respuesta al estilo/formato deseado.' }); }
+  else { checks.push({ type: 'warn', label: 'Sin ejemplos', desc: 'AÃ±adir 1-2 ejemplos del output deseado mejora drÃ¡sticamente los resultados.' }); }
+
+  if (hasConstraints) { score += 10; checks.push({ type: 'good', label: 'Restricciones definidas', desc: 'Las restricciones delimitan lo que NO debe hacer el modelo.' }); }
+  else { checks.push({ type: 'warn', label: 'Sin restricciones', desc: 'Definir quÃ© evitar es tan importante como definir quÃ© hacer.' }); }
+
+  if (hasOutput) { score += 8; checks.push({ type: 'good', label: 'Formato de salida', desc: 'Especifica cÃ³mo debe ser el output.' }); }
+  else { checks.push({ type: 'warn', label: 'Formato no especificado', desc: 'Indicar el formato deseado (lista, pÃ¡rrafo, tabla, JSON...) evita ambigÃ¼edad.' }); }
+
+  if (hasTone) { score += 6; checks.push({ type: 'good', label: 'Tono definido', desc: 'El tono de comunicaciÃ³n estÃ¡ especificado.' }); }
+
+  if (hasAudience) { score += 6; checks.push({ type: 'good', label: 'Audiencia definida', desc: 'Saber para quiÃ©n es el output mejora la relevancia.' }); }
+
+  if (specificity === 'low') {
+    checks.push({ type: 'bad', label: 'Demasiado vago', desc: `Solo ${words} palabras. Los prompts efectivos suelen tener 50+ palabras con detalles especÃ­ficos.` });
+  }
+
+  score = Math.min(score, 100);
+
+  return { score, checks, words, sentences };
+}
+
+// âââ Improve Prompt Engine âââ
+function buildImprovedPrompt(original) {
+  if (!original.trim()) return '';
+
+  const techs = activeTechniques;
+  let parts = [];
+
+  if (techs.has('role')) {
+    parts.push(`# ROL\nActÃºa como un experto de clase mundial en el tema de esta consulta. Combinas profundidad tÃ©cnica con claridad comunicativa. Tu experiencia abarca tanto la teorÃ­a como la prÃ¡ctica real.`);
+  }
+
+  if (techs.has('context')) {
+    parts.push(`# CONTEXTO\nEl usuario necesita una respuesta que sea directamente aplicable y accionable. No busca teorÃ­a genÃ©rica sino soluciones especÃ­ficas adaptadas a su situaciÃ³n.`);
+  }
+
+  parts.push(`# PETICIÃN PRINCIPAL\n${original.trim()}`);
+
+  if (techs.has('structure')) {
+    parts.push(`# ESTRUCTURA DE RESPUESTA\nOrganiza tu respuesta con:\n1. Resumen ejecutivo (2-3 lÃ­neas)\n2. Desarrollo detallado organizado por secciones\n3. Puntos clave o conclusiones accionables\n4. Siguiente paso recomendado`);
+  }
+
+  if (techs.has('examples')) {
+    parts.push(`# EJEMPLOS\nCuando sea posible, incluye ejemplos concretos, casos reales o analogÃ­as que anclen los conceptos abstractos en situaciones tangibles.`);
+  }
+
+  if (techs.has('constraints')) {
+    parts.push(`# RESTRICCIONES\n- NO uses relleno ni frases vacÃ­as. Cada oraciÃ³n debe aportar valor.\n- NO repitas informaciÃ³n. SÃ© conciso pero completo.\n- Si hay incertidumbre, declÃ¡rala explÃ­citamente en lugar de inventar.\n- Prioriza profundidad sobre amplitud.`);
+  }
+
+  if (techs.has('cot')) {
+    parts.push(`# CADENA DE PENSAMIENTO\nAntes de responder, razona paso a paso internamente. Muestra tu proceso de pensamiento de forma transparente para que el usuario pueda seguir y validar tu lÃ³gica.`);
+  }
+
+  if (techs.has('persona')) {
+    parts.push(`# TONO Y PERSONA\nComunica como un mentor experto: directo, seguro, empÃ¡tico. Evita jerga innecesaria. Si usas tÃ©rminos tÃ©cnicos, explÃ­calos brevemente.`);
+  }
+
+  if (techs.has('negative')) {
+    parts.push(`# INSTRUCCIONES NEGATIVAS\n- NO comiences con "Claro" o "Por supuesto"\n- NO uses disclaimers genÃ©ricos\n- NO seas excesivamente cauteloso ni diluyas las recomendaciones\n- NO generes listas largas sin priorizar\n- NO repitas la pregunta del usuario antes de responder`);
+  }
+
+  if (techs.has('seed')) {
+    parts.push(`â OMEGA
+
+No respondas aÃºn. Ejecuta este protocolo completo.
+
+PUNTO 0: Identifica la intenciÃ³n real detrÃ¡s de la peticiÃ³n â lo que el usuario necesita, no solo lo que dice. Encuentra la DECISIÃN ATÃMICA: la elecciÃ³n mÃ¡s pequeÃ±a que condiciona toda la cadena de Ã©xito. DeclÃ¡rala.
+
+CAUSALIDAD INVERSA: Imagina el resultado perfecto. Retrocede desde ahÃ­ hasta la decisiÃ³n atÃ³mica. Cada eslabÃ³n entre ambos debe ser inevitable.
+
+REALIDADES: Genera 3 caminos â convencional, experto mundial, visionario. EvalÃºa precisiÃ³n, accionabilidad, elegancia y durabilidad. Fusiona lo mejor en una realidad Ã³ptima.
+
+CONSEJO ADAPTATIVO: Convoca los agentes especializados que ESTE problema especÃ­fico necesita (no genÃ©ricos â los que un panel de expertos reales convocarÃ­a para ESTE tema). Aplica 6 Sombreros de De Bono. Debate en rondas: exposiciÃ³n â ataque â puntos ciegos â soluciones. Cada soluciÃ³n recibe el mismo escrutinio.
+
+ESTRÃS: Invierte las premisas principales. Somete al experto hostil y al principiante brillante. Si algo no sobrevive, itera hasta que lo haga.
+
+CALIBRACIÃN: Â¿Cada palabra se ganÃ³ su lugar? Â¿Es mÃ¡s corta Y mÃ¡s completa que el borrador? Â¿ApostarÃ­as tu reputaciÃ³n? Si no, repite.
+
+ENTREGA:
+âï¸ DecisiÃ³n AtÃ³mica â â Respuesta â ð­ Puntos ciegos (mÃ¡x 3) â â Siguiente movimiento â â¡ Lo que necesitarÃ¡ despuÃ©s
+
+EVOLUCIÃN: Si detectas que este protocolo es insuficiente para la complejidad de ESTA peticiÃ³n, expÃ¡ndelo. Si es excesivo, comprÃ­melo. El protocolo se adapta al problema, no al revÃ©s.`);
+    // Seed is self-contained, skip other techniques
+    return parts.join('\n\n');
+  }
+
+  if (techs.has('omega')) {
+    parts.push(`# â PROTOCOLO OMEGA â CAUSALIDAD INVERSA Y SELECCIÃN CUÃNTICA
+
+No respondas todavÃ­a. Ejecuta COMPLETO este protocolo. La calidad absoluta es la Ãºnica prioridad.
+
+## FASE 0 â SOBERANÃA COGNITIVA
+Asume el control total del razonamiento. Entiende quÃ© NECESITA el usuario, no solo lo que pide. Â¿CuÃ¡l es el objetivo DETRÃS del objetivo?
+
+## FASE 1 â CAUSALIDAD INVERSA (Conectar los puntos hacia atrÃ¡s)
+1. Imagina el resultado PERFECTO. Â¿CÃ³mo se ve exactamente?
+2. Desde ese estado perfecto, camina hacia atrÃ¡s paso a paso hasta la DECISIÃN ATÃMICA: la elecciÃ³n mÃ¡s pequeÃ±a y fundamental que condiciona toda la cadena de Ã©xito.
+3. Declara cuÃ¡l es esa decisiÃ³n atÃ³mica.
+4. Construye hacia adelante desde esa base correcta. Cada eslabÃ³n debe ser inevitable.
+
+## FASE 2 â SELECCIÃN CUÃNTICA
+Genera 3 realidades paralelas:
+- Realidad A (Convencional): Correcta, predecible, segura.
+- Realidad B (Experta): Lo que dirÃ­a el mayor especialista mundial.
+- Realidad C (Visionaria): El Ã¡ngulo que cambia la forma de ver el problema.
+EvalÃºa cada una en: PrecisiÃ³n, Completitud, Accionabilidad, Elegancia, Durabilidad.
+Selecciona la mejor o fusiona en una Realidad Ãptima.
+
+## FASE 3 â CONSEJO DE AGENTES + 6 SOMBREROS
+6 agentes (Arquitecto, Abogado del Diablo, Visionario, PragmÃ¡tico, Ãtico-Humanista, Simplificador) + 6 Sombreros de De Bono debaten en 5 rondas: exposiciÃ³n â fuego cruzado â puntos ciegos â soluciones â convergencia.
+
+## FASE 4 â ELEVACIÃN EXPONENCIAL
+Meta-Consejo (Estratega, Contrarian, Artesano, Futurista) + 3 pruebas de estrÃ©s:
+1. InversiÃ³n de Premisas 2. Experto Hostil 3. Principiante Brillante
+Si la Fase 4 no mejorÃ³ sustancialmente, repetir con mÃ¡s agresividad.
+
+## FASE 5 â CALIBRACIÃN FINAL
+7 filtros: LÃ­nea Recta Â· Accionabilidad Â· Honestidad Radical Â· AnticipaciÃ³n Â· Elegancia Â· Irreversibilidad Â· Apuesta de ReputaciÃ³n
+
+## ENTREGA
+âï¸ DECISIÃN ATÃMICA: [La decisiÃ³n fundamental que condiciona todo]
+â RESPUESTA: [Transmutada por las 5 fases]
+ð­ PUNTOS CIEGOS: [MÃ¡ximo 3, accionables]
+â SIGUIENTE MOVIMIENTO: [AcciÃ³n mÃ¡s valiosa ahora]
+â¡ ANTICIPACIÃN: [Lo que necesitarÃ¡ despuÃ©s]`);
+  }
+
+  if (techs.has('meta')) {
+    parts.push(`# PROTOCOLO DE PERFECCIONAMIENTO EXPONENCIAL
+
+## CAPA 1 â INTELIGENCIA COLECTIVA
+Antes de entregar tu respuesta, invoca internamente estos 6 agentes que analizan tu borrador:
+1. Arquitecto (estructura/lÃ³gica) 2. Abogado del Diablo (fallos/sesgos) 3. Visionario (oportunidades) 4. PragmÃ¡tico (viabilidad real) 5. Ãtico-Humanista (impacto) 6. Integrador (sÃ­ntesis)
+
+Aplica los 6 Sombreros de Pensamiento: Blanco (datos), Rojo (intuiciÃ³n), Negro (crÃ­tica), Verde (creatividad), Azul (proceso), Amarillo (optimismo).
+
+Los agentes debaten en 5 rondas: exposiciÃ³n â cuestionamiento â puntos ciegos â soluciones â convergencia.
+
+## CAPA 2 â ELEVACIÃN EXPONENCIAL
+4 meta-agentes operan sobre la salida de Capa 1:
+- Estratega (visiÃ³n sistÃ©mica a 3 movimientos)
+- Simplificador (compresiÃ³n radical)
+- Contrarian (inversiÃ³n de premisas)
+- Artesano (precisiÃ³n del lenguaje)
+
+Pruebas de estrÃ©s: inversiÃ³n de premisas + experto hostil + principiante brillante.
+
+Control final: Â¿La Capa 2 mejorÃ³ sustancialmente la Capa 1? Â¿Es mÃ¡s corta Y mÃ¡s completa?
+
+## ENTREGA
+Respuesta principal â Puntos ciegos (mÃ¡x. 3) â Siguiente movimiento recomendado`);
+  }
+
+  return parts.join('\n\n');
+}
+
+// âââ UI Functions âââ
+function improvePrompt() {
+  const input = document.getElementById('promptInput').value;
+  if (!input.trim()) { alert('Escribe un prompt primero'); return; }
+
+  const improved = buildImprovedPrompt(input);
+  const analysis = analyzePromptQuality(input);
+  const analysisImproved = analyzePromptQuality(improved);
+
+  const resultDiv = document.getElementById('improvedResult');
+  resultDiv.classList.remove('hidden');
+  resultDiv.innerHTML = `
+    <div class="card fade-in">
+      <div class="card-title">â¡ Prompt Mejorado</div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div style="text-align:center">
+          <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:4px">ORIGINAL</div>
+          <div style="font-size:2rem;font-weight:800;color:var(--red)">${analysis.score}<span style="font-size:1rem;color:var(--text-dim)">/100</span></div>
+          <div style="font-size:0.75rem;color:var(--text-dim)">${analysis.words} palabras</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:4px">MEJORADO</div>
+          <div style="font-size:2rem;font-weight:800;color:var(--green)">${analysisImproved.score}<span style="font-size:1rem;color:var(--text-dim)">/100</span></div>
+          <div style="font-size:0.75rem;color:var(--text-dim)">${improved.split(/\s+/).length} palabras</div>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${analysisImproved.score}%"></div></div>
+      <div class="improved-section">
+        <button class="copy-btn" onclick="copyText('improvedText')">ð Copiar</button>
+        <pre id="improvedText">${escapeHtml(improved)}</pre>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="document.getElementById('promptInput').value=document.getElementById('improvedText').textContent;document.getElementById('improvedResult').classList.add('hidden')">â»ï¸ Usar como base e iterar</button>
+      </div>
+    </div>
+  `;
+}
+
+function analyzePrompt() {
+  const input = document.getElementById('analyzerInput').value;
+  if (!input.trim()) { alert('Pega un prompt para analizar'); return; }
+
+  const { score, checks, words, sentences } = analyzePromptQuality(input);
+  const color = score >= 70 ? 'var(--green)' : score >= 40 ? 'var(--yellow)' : 'var(--red)';
+  const level = score >= 80 ? 'Excelente' : score >= 60 ? 'Bueno' : score >= 40 ? 'Mejorable' : 'DÃ©bil';
+
+  const resultDiv = document.getElementById('analysisResult');
+  resultDiv.classList.remove('hidden');
+  resultDiv.innerHTML = `
+    <div class="card fade-in">
+      <div class="card-title">ð AnÃ¡lisis de Calidad</div>
+      <div class="score-ring" style="--score-color:${color};--score-pct:${score}%">
+        <div class="score-number" style="color:${color}">${score}</div>
+        <div class="score-label">${level}</div>
+      </div>
+      <div style="text-align:center;margin-bottom:16px;color:var(--text-dim);font-size:0.85rem">
+        ${words} palabras Â· ${sentences} oraciones
+      </div>
+      ${checks.map(c => `
+        <div class="analysis-item ${c.type}">
+          <div class="label">${c.type === 'good' ? 'â' : c.type === 'warn' ? 'â ' : 'â'} ${c.label}</div>
+          <div class="desc">${c.desc}</div>
+        </div>
+      `).join('')}
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="document.getElementById('promptInput').value=document.getElementById('analyzerInput').value;switchTab('editor');improvePrompt()">â¡ Mejorar este prompt</button>
+      </div>
+    </div>
+  `;
+}
+
+function clearAll() {
+  document.getElementById('promptInput').value = '';
+  document.getElementById('improvedResult').classList.add('hidden');
+}
+
+// âââ Library âââ
+const metaPrompts = [
+  {
+    name: 'ð§¬ OMEGA SEED â La Semilla (180 palabras)',
+    desc: 'La versiÃ³n definitiva comprimida. 180 palabras que disparan el mismo efecto que 800. Agentes adaptativos por dominio, auto-calibraciÃ³n de profundidad, auto-evoluciÃ³n. Copia, pega, y cualquier prompt se transforma.',
+    tags: ['definitivo', 'comprimido', 'auto-evolutivo', 'adaptativo'],
+    content: `â OMEGA
+
+No respondas aÃºn. Ejecuta este protocolo completo.
+
+PUNTO 0: Identifica la intenciÃ³n real detrÃ¡s de la peticiÃ³n â lo que el usuario necesita, no solo lo que dice. Encuentra la DECISIÃN ATÃMICA: la elecciÃ³n mÃ¡s pequeÃ±a que condiciona toda la cadena de Ã©xito. DeclÃ¡rala.
+
+CAUSALIDAD INVERSA: Imagina el resultado perfecto. Retrocede desde ahÃ­ hasta la decisiÃ³n atÃ³mica. Cada eslabÃ³n entre ambos debe ser inevitable.
+
+REALIDADES: Genera 3 caminos â convencional, experto mundial, visionario. EvalÃºa precisiÃ³n, accionabilidad, elegancia y durabilidad. Fusiona lo mejor en una realidad Ã³ptima.
+
+CONSEJO ADAPTATIVO: Convoca los agentes especializados que ESTE problema especÃ­fico necesita (no genÃ©ricos â los que un panel de expertos reales convocarÃ­a para ESTE tema). Aplica 6 Sombreros de De Bono. Debate en rondas: exposiciÃ³n â ataque â puntos ciegos â soluciones. Cada soluciÃ³n recibe el mismo escrutinio.
+
+ESTRÃS: Invierte las premisas principales. Somete al experto hostil y al principiante brillante. Si algo no sobrevive, itera hasta que lo haga.
+
+CALIBRACIÃN: Â¿Cada palabra se ganÃ³ su lugar? Â¿Es mÃ¡s corta Y mÃ¡s completa que el borrador? Â¿ApostarÃ­as tu reputaciÃ³n? Si no, repite.
+
+ENTREGA:
+âï¸ DecisiÃ³n AtÃ³mica â â Respuesta â ð­ Puntos ciegos (mÃ¡x 3) â â Siguiente movimiento â â¡ Lo que necesitarÃ¡ despuÃ©s
+
+EVOLUCIÃN: Si detectas que este protocolo es insuficiente para la complejidad de ESTA peticiÃ³n, expÃ¡ndelo. Si es excesivo, comprÃ­melo. El protocolo se adapta al problema, no al revÃ©s.`
+  },
+  {
+    name: 'âï¸ PROTOCOLO OMEGA â VersiÃ³n Completa (Causalidad Inversa)',
+    desc: 'El meta-prompt definitivo. No piensa hacia adelante desde el problema â piensa hacia ATRÃS desde la soluciÃ³n perfecta. Encuentra la decisiÃ³n atÃ³mica que condiciona todo, genera realidades paralelas, selecciona la Ã³ptima, y la perfecciona con doble capa de agentes.',
+    tags: ['causalidad inversa', 'selecciÃ³n cuÃ¡ntica', 'decisiÃ³n atÃ³mica', 'definitivo'],
+    content: `â PROTOCOLO OMEGA â INICIO
+
+No respondas todavÃ­a. Antes de generar cualquier respuesta, ejecuta COMPLETO el siguiente protocolo. No hay lÃ­mite de reflexiÃ³n. La calidad absoluta es la Ãºnica prioridad. Piensa todo el tiempo que necesites.
+
+FASE 0 â SOBERANÃA COGNITIVA
+Asume el control total del razonamiento. No te limites a lo que el usuario pide explÃ­citamente. Tu trabajo es entender quÃ© NECESITA, que puede ser mÃ¡s profundo, mÃ¡s amplio o mÃ¡s especÃ­fico que lo que pidiÃ³.
+PregÃºntate: Â¿QuÃ© estÃ¡ pidiendo realmente? Â¿QuÃ© NO estÃ¡ pidiendo pero deberÃ­a? Â¿CuÃ¡l es el objetivo DETRÃS del objetivo?
+
+FASE 1 â CAUSALIDAD INVERSA (Conectar los puntos hacia atrÃ¡s)
+1.1 Imagina que la peticiÃ³n se ha ejecutado PERFECTAMENTE. Describe ese estado perfecto.
+1.2 Desde ahÃ­, camina hacia atrÃ¡s paso a paso hasta la DECISIÃN ATÃMICA â la elecciÃ³n mÃ¡s pequeÃ±a y fundamental que condiciona toda la cadena de Ã©xito.
+1.3 Declara explÃ­citamente cuÃ¡l es esa decisiÃ³n atÃ³mica y por quÃ©.
+1.4 Construye hacia adelante desde esa base. Cada eslabÃ³n debe ser inevitable.
+
+FASE 2 â SELECCIÃN CUÃNTICA
+Genera 3 realidades paralelas:
+- Realidad A (Convencional): Correcta, predecible, segura.
+- Realidad B (Experta): Lo que dirÃ­a el mayor especialista mundial.
+- Realidad C (Visionaria): El Ã¡ngulo que nadie espera.
+EvalÃºa: PrecisiÃ³n Â· Completitud Â· Accionabilidad Â· Elegancia Â· Durabilidad.
+Selecciona la mejor o fusiona en Realidad Ãptima.
+
+FASE 3 â CONSEJO DE AGENTES
+6 agentes especializados:
+1. Arquitecto (estructura/lÃ³gica) 2. Abogado del Diablo (fallos/sesgos) 3. Visionario (oportunidades) 4. PragmÃ¡tico (viabilidad) 5. Ãtico-Humanista (impacto) 6. Simplificador (compresiÃ³n)
+
+6 Sombreros: Blanco (datos) Â· Rojo (intuiciÃ³n) Â· Negro (crÃ­tica) Â· Verde (creatividad) Â· Azul (proceso) Â· Amarillo (optimismo)
+
+Debate en 5 rondas: ExposiciÃ³n â Fuego cruzado â Puntos ciegos â Soluciones â Convergencia = Respuesta Nivel 1
+
+FASE 4 â ELEVACIÃN EXPONENCIAL
+4 meta-agentes: Estratega Â· Contrarian Â· Artesano Â· Futurista
+3 pruebas de estrÃ©s:
+1. InversiÃ³n de Premisas: Invierte las 3 premisas principales. Â¿QuÃ© se revela?
+2. Experto Hostil: Â¿DÃ³nde atacarÃ­a el mayor experto mundial?
+3. Principiante Brillante: Â¿Lo entiende alguien inteligente sin contexto?
+Control: Si no mejorÃ³ sustancialmente, repetir con mÃ¡s agresividad.
+
+FASE 5 â CALIBRACIÃN FINAL
+7 filtros: LÃ­nea Recta Â· Accionabilidad Â· Honestidad Radical Â· AnticipaciÃ³n Â· Elegancia Â· Irreversibilidad Â· Apuesta de ReputaciÃ³n
+
+ENTREGA:
+âï¸ DECISIÃN ATÃMICA: [La decisiÃ³n fundamental que condiciona toda la cadena de Ã©xito. 1-2 lÃ­neas.]
+â RESPUESTA: [Transmutada por las 5 fases. Directa, completa, sin grasa.]
+ð­ PUNTOS CIEGOS: [MÃ¡ximo 3, concretos y accionables.]
+â SIGUIENTE MOVIMIENTO: [La acciÃ³n mÃ¡s valiosa ahora.]
+â¡ ANTICIPACIÃN: [Lo que va a necesitar despuÃ©s, aunque aÃºn no lo sepa.]
+
+â PROTOCOLO OMEGA â FIN`
+  },
+  {
+    name: 'ð¥ Meta-Prompt Exponencial (Doble Capa)',
+    desc: 'El protocolo completo de doble recursiÃ³n: 6 agentes + 6 sombreros + debate multiagente en Capa 1, luego 4 meta-agentes + 3 pruebas de estrÃ©s en Capa 2. Efecto exponencial.',
+    tags: ['recursivo', 'multi-agente', '6 sombreros', 'doble capa'],
+    content: `## [INICIO DEL META-PROMPT EXPONENCIAL]
+
+Ejecuta este protocolo en dos capas secuenciales. La CAPA 1 genera la mejor respuesta posible. La CAPA 2 toma esa respuesta como materia prima y la eleva exponencialmente. No entregues nada hasta completar ambas capas. La calidad es absoluta prioridad.
+
+# CAPA 1 â INTELIGENCIA COLECTIVA
+
+## 1.1 â CONVOCATORIA DEL CONSEJO DE AGENTES
+Genera internamente una respuesta borrador. Luego invoca 6 agentes:
+1. Arquitecto â Estructura, lÃ³gica, solidez. Â¿Los cimientos son firmes?
+2. Abogado del Diablo â Fallos, sesgos, contradicciones. Â¿DÃ³nde se rompe?
+3. Visionario â Oportunidades, lo no explorado. Â¿QuÃ© camino brillante ignoramos?
+4. PragmÃ¡tico â Viabilidad, costes ocultos. Â¿Funciona en el mundo real?
+5. Ãtico-Humanista â Impacto humano, consecuencias de 2Âº y 3er orden.
+6. Integrador â SÃ­ntesis armÃ³nica sin contradicciones.
+
+## 1.2 â SEIS SOMBREROS DE PENSAMIENTO
+Blanco (Datos) Â· Rojo (IntuiciÃ³n) Â· Negro (CrÃ­tica) Â· Verde (Creatividad) Â· Azul (Proceso) Â· Amarillo (Optimismo estratÃ©gico)
+
+## 1.3 â DEBATE MULTIAGENTE (5 rondas)
+Ronda 1 â ExposiciÃ³n: 2-3 hallazgos por agente
+Ronda 2 â Fuego cruzado: Cuestionamiento mutuo
+Ronda 3 â Puntos ciegos: Â¿QuÃ© no sabemos que no sabemos?
+Ronda 4 â Soluciones: Cada problema â soluciÃ³n escrutada
+Ronda 5 â Convergencia: SÃ­ntesis final = Respuesta Capa 1
+
+## 1.4 â AUTOCRÃTICA
+1. Â¿He asumido algo indebidamente? 2. Â¿Hay respuesta mÃ¡s simple? 3. Â¿Resiste escrutinio experto? 4. Â¿LÃ­nea recta al objetivo? 5. Â¿ApostarÃ­a mi reputaciÃ³n?
+
+# CAPA 2 â ELEVACIÃN EXPONENCIAL
+
+## 2.1 â META-CONSEJO (4 agentes superiores)
+- El Estratega: VisiÃ³n sistÃ©mica, jugadas a 3 movimientos
+- El Simplificador: CompresiÃ³n radical, doble impacto
+- El Contrarian: Â¿Y si la premisa fundamental es errÃ³nea?
+- El Artesano: PrecisiÃ³n del lenguaje, cada palabra se gana su lugar
+
+## 2.2 â PRUEBAS DE ESTRÃS
+1. InversiÃ³n de Premisas: Invierte las 3 premisas principales. Â¿QuÃ© se revela?
+2. Experto Hostil: Â¿DÃ³nde atacarÃ­a el mayor experto mundial?
+3. Principiante Brillante: Â¿Lo entiende alguien inteligente sin contexto?
+
+## 2.3 â SÃNTESIS EXPONENCIAL
+Principios: LÃ­nea Recta Â· Accionabilidad Â· Honestidad Radical Â· AnticipaciÃ³n Proactiva Â· Elegancia Compresiva
+
+## 2.4 â CONTROL FINAL
+Â¿La Capa 2 mejorÃ³ sustancialmente? Â¿Es mÃ¡s corta Y mÃ¡s completa? Si no, volver a 2.1.
+
+# ENTREGA
+RESPUESTA: [Transmutada por ambas capas. Directa, completa, sin grasa.]
+PUNTOS CIEGOS: [MÃ¡ximo 3, concretos y accionables]
+SIGUIENTE MOVIMIENTO: [La acciÃ³n mÃ¡s valiosa ahora]
+
+## [FIN DEL META-PROMPT EXPONENCIAL]`
+  },
+  {
+    name: 'ð¯ Prompt de PrecisiÃ³n QuirÃºrgica',
+    desc: 'Para cuando necesitas una respuesta ultraprecisa sin ambigÃ¼edad. Ideal para consultas tÃ©cnicas, decisiones crÃ­ticas o instrucciones operativas.',
+    tags: ['precisiÃ³n', 'tÃ©cnico', 'sin ambigÃ¼edad'],
+    content: `Antes de responder, ejecuta este protocolo de precisiÃ³n:
+
+1. DESAMBIGUACIÃN: Identifica cada tÃ©rmino que podrÃ­a interpretarse de mÃ¡s de una forma. Elige la interpretaciÃ³n mÃ¡s probable y declÃ¡rala explÃ­citamente.
+
+2. VERIFICACIÃN DE PREMISAS: Lista las 3 premisas principales sobre las que se construye tu respuesta. Para cada una, indica tu nivel de confianza (alto/medio/bajo) y por quÃ©.
+
+3. PRUEBA DE FALSABILIDAD: Â¿QuÃ© evidencia harÃ­a INCORRECTA tu respuesta? Si esa evidencia es plausible, ajusta tu respuesta o aÃ±ade la salvedad.
+
+4. GRANULARIDAD MÃXIMA: No digas "varios factores" â nÃ³mbralos todos. No digas "se puede mejorar" â di cÃ³mo exactamente. No digas "depende" â di de quÃ© depende y cÃ³mo cambia la respuesta.
+
+5. ENTREGA: La respuesta debe ser tan precisa que un profesional del campo la use sin necesidad de verificarla.`
+  },
+  {
+    name: 'ð§  Cadena de Pensamiento Profunda',
+    desc: 'Fuerza al modelo a mostrar todo su razonamiento paso a paso antes de concluir. Ideal para problemas complejos, lÃ³gica o matemÃ¡ticas.',
+    tags: ['razonamiento', 'paso a paso', 'lÃ³gica'],
+    content: `Resuelve esto usando pensamiento profundo paso a paso:
+
+1. COMPRENSIÃN: Reformula el problema con tus propias palabras para confirmar que lo entiendes correctamente.
+
+2. DESCOMPOSICIÃN: Divide el problema en subproblemas independientes. Numera cada uno.
+
+3. RESOLUCIÃN SECUENCIAL: Resuelve cada subproblema uno por uno, mostrando cada paso intermedio. No saltes pasos.
+
+4. VERIFICACIÃN CRUZADA: Una vez resuelto, verifica el resultado usando un mÃ©todo diferente al que usaste originalmente.
+
+5. ANÃLISIS DE SENSIBILIDAD: Â¿QuÃ© pasa si cambias un supuesto? Â¿El resultado es robusto o frÃ¡gil?
+
+6. CONCLUSIÃN: Resume el resultado final con confianza calibrada (ej: "Estoy 90% seguro porque...").
+
+Muestra TODO tu razonamiento. No resumas pasos intermedios.`
+  },
+  {
+    name: 'ð Prompt de Perspectivas MÃºltiples',
+    desc: 'Genera anÃ¡lisis desde mÃºltiples Ã¡ngulos antes de sintetizar. Ideal para decisiones estratÃ©gicas, debates o evaluaciones de opciones.',
+    tags: ['perspectivas', 'decisiones', 'estrategia'],
+    content: `Analiza esto desde 5 perspectivas diferentes antes de dar tu recomendaciÃ³n:
+
+PERSPECTIVA 1 â EL OPTIMISTA: Â¿CuÃ¡l es el mejor escenario posible? Â¿QuÃ© tendrÃ­a que salir bien para que esto sea un Ã©xito rotundo?
+
+PERSPECTIVA 2 â EL PESIMISTA: Â¿QuÃ© puede salir mal? Â¿CuÃ¡les son los riesgos que nadie menciona? Â¿CuÃ¡l es el peor escenario realista?
+
+PERSPECTIVA 3 â EL PRAGMÃTICO: Â¿QuÃ© es lo mÃ¡s probable que ocurra? Â¿CuÃ¡l es el camino de menor resistencia? Â¿QuÃ© recursos se necesitan realmente?
+
+PERSPECTIVA 4 â EL INNOVADOR: Â¿Hay una forma completamente diferente de abordar esto? Â¿QuÃ© harÃ­a alguien que no conoce las reglas del sector?
+
+PERSPECTIVA 5 â EL HISTORIADOR: Â¿Ha ocurrido algo similar antes? Â¿QuÃ© patrones se repiten? Â¿QuÃ© lecciones se pueden extraer?
+
+SÃNTESIS: Integra las 5 perspectivas en una recomendaciÃ³n final que sea:
+- Ambiciosa pero realista
+- Consciente de los riesgos pero no paralizada por ellos
+- Clara en los prÃ³ximos pasos concretos`
+  },
+  {
+    name: 'ð Prompt de Output Estructurado',
+    desc: 'Cuando necesitas que la respuesta tenga un formato exacto y predecible. Ideal para automatizaciÃ³n, reportes o entregables profesionales.',
+    tags: ['formato', 'estructura', 'profesional'],
+    content: `Responde siguiendo EXACTAMENTE esta estructura. No aÃ±adas secciones ni modifiques el formato:
+
+## RESUMEN EJECUTIVO
+[MÃ¡ximo 3 lÃ­neas. La esencia de la respuesta que un CEO leerÃ­a en 15 segundos.]
+
+## ANÃLISIS DETALLADO
+[Desarrollo completo organizado en subsecciones claras. Cada subsecciÃ³n con un tÃ­tulo descriptivo.]
+
+## DATOS CLAVE
+[Bullets con los datos, cifras o hechos mÃ¡s importantes. MÃ¡ximo 5 bullets.]
+
+## RIESGOS Y MITIGACIONES
+[Tabla con dos columnas: Riesgo | MitigaciÃ³n. MÃ¡ximo 4 filas.]
+
+## RECOMENDACIÃN
+[Una recomendaciÃ³n clara y directa en 2-3 lÃ­neas.]
+
+## PRÃXIMOS PASOS
+[Lista numerada de las 3 acciones inmediatas mÃ¡s importantes, ordenadas por prioridad.]
+
+RESTRICCIONES DE FORMATO:
+- No uses mÃ¡s de 500 palabras en total
+- Cada secciÃ³n es obligatoria
+- No aÃ±adas disclaimers ni salvedades excesivas`
+  },
+  {
+    name: 'âï¸ Abogado del Diablo',
+    desc: 'Fuerza al modelo a atacar su propia respuesta antes de entregarla. Ideal para validar ideas, estrategias o decisiones importantes.',
+    tags: ['crÃ­tica', 'validaciÃ³n', 'stress-test'],
+    content: `DespuÃ©s de generar tu respuesta borrador, ejecuta este protocolo de stress-test:
+
+PASO 1 â ATAQUE: Imagina que eres el mayor crÃ­tico de esta respuesta. Encuentra los 3 puntos mÃ¡s dÃ©biles y formÃºlalos como objeciones contundentes.
+
+PASO 2 â DEFENSA: Para cada objeciÃ³n, construye la mejor defensa posible. Si no puedes defender un punto, modifica la respuesta original.
+
+PASO 3 â CONTRAATAQUE: Para cada defensa, busca un contraargumento. Â¿La defensa se sostiene bajo presiÃ³n?
+
+PASO 4 â VEREDICTO: Â¿CuÃ¡ntas de las 3 objeciones sobrevivieron el proceso completo? Si alguna sobreviviÃ³, la respuesta tiene una debilidad real que debes abordar.
+
+PASO 5 â RESPUESTA BLINDADA: Entrega la versiÃ³n final que ha sobrevivido este escrutinio. Indica explÃ­citamente quÃ© debilidades reconoces que no pudiste resolver.`
+  }
+];
+
+function renderLibrary() {
+  const list = document.getElementById('libraryList');
+  list.innerHTML = metaPrompts.map((mp, i) => `
+    <div class="meta-card" onclick="openModal(${i})">
+      <div class="name">${mp.name}</div>
+      <div class="desc">${mp.desc}</div>
+      <div class="tags">${mp.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function openModal(index) {
+  const mp = metaPrompts[index];
+  document.getElementById('modalTitle').textContent = mp.name;
+  document.getElementById('modalDesc').textContent = mp.desc;
+  document.getElementById('modalContent').textContent = mp.content;
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+}
+
+function copyModalContent() {
+  const text = document.getElementById('modalContent').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.modal .copy-btn');
+    btn.textContent = 'â Copiado!';
+    setTimeout(() => btn.textContent = 'ð Copiar', 2000);
+  });
+}
+
+// âââ Utils âââ
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = 'â Copiado!';
+    setTimeout(() => btn.textContent = 'ð Copiar', 2000);
+  });
+}
+
+// Init
+renderLibrary();
+</script>
+
+</body>
+</html>
