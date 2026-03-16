@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.lemonsqueezy.com">
+<title>Omega Platform — Encuentra tu Punto 0</title>
+<meta property="og:title" content="Omega Platform — Encuentra tu Punto 0">
+<meta property="og:description" content="La herramienta que encuentra la decisión atómica que desbloquea todo lo demás. Causalidad inversa + agentes IA.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://omega-platform-gold.vercel.app/">
+<meta name="description" content="No necesitas hacer más. Necesitas saber qué hacer primero. Omega encuentra tu Punto 0 — la decisión que desbloquea todo lo demás.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
+<style>
+/* ═══ RESET + BASE ═══ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121c;--surface2:#1a1a28;
+  --border:#2a2a3d;--text:#eaeaf4;--text2:#9a9ab8;
+  --accent:#00d4aa;--accent2:#7b61ff;--accent3:#ff6b6b;
+  --gold:#ffd700;
+  --grad:linear-gradient(135deg,#00d4aa,#7b61ff);
+  --grad-gold:linear-gradient(135deg,#ffd700,#ff9500);
+  --radius:14px;--radius-sm:10px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:var(--accent);text-decoration:none}
+/* ═══ GLOBAL AMBIENT BG ═══ */
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,rgba(0,212,170,.04) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(123,97,255,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+.screen{position:relative;z-index:1}
+
+/* ═══ LAYOUT ═══ */
+.screen{display:none;min-height:100vh;padding:0 20px;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s}
+.screen.active{display:block;opacity:1;transform:translateY(0)}
+.container{max-width:720px;margin:0 auto;padding:40px 0}
+
+/* ═══ HEADER ═══ */
+.header{display:flex;justify-content:space-between;align-items:center;padding:20px 0 10px}
+.logo{font-size:14px;letter-spacing:4px;text-transform:uppercase;color:var(--text2);cursor:pointer}
+.logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.header-right{display:flex;align-items:center;gap:12px}
+.usage-badge{padding:4px 12px;border-radius:16px;font-size:12px;border:1px solid var(--border);color:var(--text2)}
+.usage-badge strong{color:var(--accent)}
+.btn-history{padding:10px 16px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:13px;cursor:pointer;transition:all .2s;min-height:44px}
+.btn-history:hover{border-color:var(--accent);color:var(--accent)}
+.btn-pro-small{padding:10px 16px;border-radius:var(--radius-sm);background:var(--grad-gold);border:none;color:#000;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.5px;min-height:44px}
+
+/* ═══ HOME SCREEN ═══ */
+.hero{text-align:center;padding:80px 0 48px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.06) 0%,rgba(123,97,255,.03) 40%,transparent 70%);pointer-events:none;z-index:0}
+.hero>*{position:relative;z-index:1}
+.hero h1{font-size:clamp(30px,5.5vw,46px);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:18px;color:var(--text2);max-width:500px;margin:0 auto 36px;line-height:1.7}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:24px;background:var(--surface2);border:1px solid var(--border);font-size:13px;color:var(--text2);margin-bottom:28px;backdrop-filter:blur(8px)}
+.badge strong{color:var(--accent)}
+.badge .pulse{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,170,.4)}50%{opacity:.8;box-shadow:0 0 0 6px rgba(0,212,170,0)}}
+
+/* ═══ INPUT AREA ═══ */
+.input-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:all .3s ease}
+.input-area:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,170,.08)}
+.input-area textarea{width:100%;background:none;border:none;color:var(--text);font-size:16px;line-height:1.6;resize:vertical;min-height:120px;max-height:300px;outline:none;font-family:inherit}
+.input-area textarea::placeholder{color:var(--text2)}
+.input-meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.char-count{font-size:13px;color:var(--text2)}
+.btn-analyze{padding:14px 36px;border:none;border-radius:var(--radius-sm);background:var(--grad);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all .3s ease;position:relative;overflow:hidden;letter-spacing:.02em}
+.btn-analyze::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.15);border-radius:50%;transform:translate(-50%,-50%);transition:width .4s,height .4s}
+.btn-analyze:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,212,170,.25)}
+.btn-analyze:hover:not(:disabled)::after{width:300px;height:300px}
+.btn-analyze:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* ═══ CONTEXT FIELDS ═══ */
+.context-toggle{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--text2);cursor:pointer;margin-bottom:16px;user-select:none;border-radius:var(--radius-sm);padding:4px 8px;transition:all .2s;border:1px solid transparent;role:button;tabindex:0}
+.context-toggle:hover{color:var(--text);border-color:var(--border)}
+.context-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.context-fields{display:none;gap:12px;margin-bottom:20px}
+.context-fields.open{display:grid;grid-template-columns:1fr 1fr}
+.ctx-field{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+.ctx-field label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.ctx-field input,.ctx-field select{width:100%;background:none;border:none;color:var(--text);font-size:14px;outline:none;font-family:inherit}
+.ctx-field select{cursor:pointer}
+.ctx-field select option{background:var(--surface);color:var(--text)}
+
+/* ═══ TEMPLATES ═══ */
+.templates-section{margin-bottom:48px}
+.templates-section h3{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:16px;font-weight:600}
+.templates-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.template-chip{padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text2);cursor:pointer;transition:all .25s ease;text-align:left;position:relative;role:button;tabindex:0}
+.template-chip:hover{border-color:var(--accent);color:var(--text);transform:translateY(-3px);box-shadow:0 6px 24px rgba(0,212,170,.1)}
+.template-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.template-chip strong{display:block;color:var(--text);margin-bottom:4px;font-size:14px}
+.template-chip.pro-only{opacity:.6}
+.template-chip.pro-only::after{content:'PRO';position:absolute;top:10px;right:10px;background:var(--grad-gold);color:#000;font-size:9px;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:.5px}
+
+/* ═══ FEATURES (below fold) ═══ */
+.features{padding:80px 0;border-top:1px solid var(--border);position:relative}
+.features h2{text-align:center;font-size:26px;margin-bottom:8px;letter-spacing:-.01em}
+.features .subtitle{text-align:center;color:var(--text2);margin-bottom:48px;font-size:15px}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:all .3s ease;position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:0;transition:opacity .3s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,212,170,.1);border-color:rgba(0,212,170,.2)}
+.feature-card:hover::before{opacity:1}
+.feature-card .icon{font-size:28px;margin-bottom:12px;display:block}
+.feature-card h3{font-size:15px;margin-bottom:8px;font-weight:700}
+.feature-card p{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ═══ PRICING SECTION ═══ */
+.pricing{padding:80px 0;border-top:1px solid var(--border);position:relative}
+.pricing::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(255,215,0,.03) 0%,transparent 70%);pointer-events:none}
+.pricing h2{text-align:center;font-size:28px;margin-bottom:8px;letter-spacing:-.01em}
+.pricing .subtitle{text-align:center;color:var(--text2);margin-bottom:48px}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:620px;margin:0 auto;position:relative}
+.price-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;position:relative;transition:all .3s}
+.price-card:hover{transform:translateY(-4px)}
+.price-card.featured{border-color:var(--gold);box-shadow:0 0 40px rgba(255,215,0,.08),0 0 80px rgba(255,215,0,.04);transform:scale(1.02)}
+.price-card.featured:hover{transform:scale(1.04) translateY(-4px)}
+.price-card.featured::before{content:'POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--grad-gold);color:#000;font-size:10px;font-weight:800;padding:4px 14px;border-radius:12px;letter-spacing:1px}
+.price-name{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--text2);margin-bottom:8px}
+.price-amount{font-size:36px;font-weight:800;margin-bottom:4px}
+.price-amount small{font-size:14px;font-weight:400;color:var(--text2)}
+.price-desc{font-size:14px;color:var(--text2);margin-bottom:20px}
+.price-features{list-style:none;margin-bottom:24px}
+.price-features li{padding:6px 0;font-size:14px;color:var(--text2)}
+.price-features li::before{content:'✓ ';color:var(--accent);font-weight:700}
+.price-features li.disabled{opacity:.4;text-decoration:line-through}
+.price-features li.disabled::before{content:'✗ ';color:var(--accent3)}
+.btn-price{width:100%;padding:12px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-price.free{background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+.btn-price.pro{background:var(--grad-gold);color:#000}
+.btn-price:hover{transform:translateY(-1px);opacity:.9}
+
+/* ═══ SOCIAL PROOF ═══ */
+.social-proof{text-align:center;padding:60px 0;border-top:1px solid var(--border)}
+.social-proof p{color:var(--text2);font-size:14px}
+.social-proof strong{color:var(--text)}
+.proof-stats{display:flex;justify-content:center;gap:48px;margin-bottom:24px;flex-wrap:wrap}
+.proof-stat{text-align:center}
+.proof-stat .num{font-size:32px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+.proof-stat .label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.proof-quote{max-width:500px;margin:24px auto 0;padding:20px 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-style:italic;color:var(--text2);font-size:14px;line-height:1.7;position:relative}
+.proof-quote::before{content:'"';position:absolute;top:8px;left:12px;font-size:36px;color:var(--accent);opacity:.3;font-style:normal}
+.proof-author{margin-top:8px;font-style:normal;font-size:13px;color:var(--accent);font-weight:600}
+
+/* ═══ ANALYSIS SCREEN ═══ */
+.analysis-header{text-align:center;padding:40px 0 20px}
+.analysis-header h2{font-size:28px;font-weight:800}
+.analysis-header p{color:var(--text2);margin-top:8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:all .3s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,212,170,.08)}
+.card-label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:12px}
+.punto0-card{border-color:var(--accent);background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(123,97,255,.05))}
+.punto0-card h3{font-size:22px;font-weight:800;margin-bottom:8px}
+.punto0-card .why{color:var(--text2);font-size:15px}
+.chain-step{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.chain-step:last-child{border:none}
+.chain-arrow{color:var(--accent);font-size:18px;margin-top:2px;flex-shrink:0}
+.chain-text{font-size:15px}
+.chain-text strong{color:var(--accent)}
+.exec-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.exec-item{text-align:center;padding:16px}
+.exec-item .label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.exec-item .value{font-size:15px;font-weight:600}
+.agent-card{border-left:3px solid var(--accent2);padding-left:16px;margin-bottom:16px;transition:all .2s}
+.agent-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,212,170,.08)}
+.agent-card:last-child{margin-bottom:0}
+.agent-role{font-size:16px;font-weight:700;margin-bottom:4px}
+.agent-bias{font-size:13px;color:var(--accent3);margin-bottom:6px}
+.agent-rec{font-size:14px;color:var(--text2)}
+.tension-box{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);border-radius:var(--radius-sm);padding:16px;margin-top:16px;transition:all .2s}
+.tension-box:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(255,107,107,.1)}
+.tension-box strong{color:var(--accent3)}
+
+/* ═══ PROMPTS SCREEN ═══ */
+.prompt-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.prompt-tab{padding:10px 18px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:14px;transition:all .2s}
+.prompt-tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+.prompt-tab:hover:not(.active){border-color:var(--text2)}
+.level-hint{font-size:13px;color:var(--text2);margin-bottom:16px;font-style:italic}
+.prompt-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;font-family:'Courier New',monospace;font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-height:500px;overflow-y:auto}
+.btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;transition:all .2s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--grad);color:#fff;border:none;font-weight:600}
+.btn-primary:hover{opacity:.9}
+.btn-back{background:none;border:none;color:var(--text2);cursor:pointer;font-size:14px;padding:10px 0}
+.btn-back:hover{color:var(--text)}
+.btn-pro-lock{position:relative;opacity:.6}
+.btn-pro-lock::after{content:'PRO';margin-left:6px;background:var(--grad-gold);color:#000;font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px;vertical-align:middle}
+
+/* ═══ PROGRESS BAR ═══ */
+.progress-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:20px 0}
+.progress-step{display:flex;align-items:center;gap:8px}
+.progress-dot{width:28px;height:28px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);transition:all .3s}
+.progress-dot.active{background:var(--accent);border-color:var(--accent);color:#000}
+.progress-dot.done{background:var(--accent);border-color:var(--accent);color:#000}
+.progress-line{width:40px;height:2px;background:var(--border);transition:background .3s}
+.progress-line.done{background:var(--accent)}
+
+/* ═══ MEMORY BANNER ═══ */
+.memory-banner{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:none}
+.memory-banner.visible{display:block}
+.memory-banner h4{font-size:14px;margin-bottom:8px}
+.memory-chips{display:flex;flex-wrap:wrap;gap:6px}
+.memory-chip{padding:4px 10px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:12px;color:var(--text2);cursor:pointer;transition:all .2s}
+.memory-chip:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ═══ HISTORY PANEL ═══ */
+.history-panel{display:none;position:fixed;right:0;top:0;bottom:0;width:360px;background:var(--bg);border-left:1px solid var(--border);z-index:998;overflow-y:auto;padding:20px;animation:slideIn .3s ease;-webkit-overflow-scrolling:touch}
+.history-panel.open{display:block}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.history-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.history-header h3{font-size:18px}
+.history-close{background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer}
+.history-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.history-item:hover{border-color:var(--accent)}
+.history-item .date{font-size:12px;color:var(--text2);margin-bottom:6px}
+.history-item .goal{font-size:14px;font-weight:600;margin-bottom:4px}
+.history-item .p0{font-size:13px;color:var(--accent)}
+.history-empty{text-align:center;color:var(--text2);padding:40px 0;font-size:14px}
+
+/* ═══ EMAIL CAPTURE ═══ */
+.email-capture{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;text-align:center}
+.email-capture p{color:var(--text2);font-size:14px;margin-bottom:12px}
+.email-row{display:flex;gap:8px;margin-bottom:8px}
+.email-row input{flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:14px;outline:none}
+.email-row input::placeholder{color:var(--text2)}
+.email-row input:focus{border-color:var(--accent)}
+.email-row button{padding:10px 16px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#000;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.email-row button:hover{opacity:.9}
+.email-skip{background:none;border:none;color:var(--text2);font-size:13px;cursor:pointer;width:100%;padding:4px}
+.email-skip:hover{color:var(--text)}
+
+/* ═══ ONBOARDING OVERLAY ═══ */
+.onboarding-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,15,.85);z-index:997;justify-content:center;align-items:center}
+.onboarding-overlay.visible{display:flex}
+.onboarding-content{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:480px;width:90%;text-align:center}
+.onboarding-content h2{font-size:24px;margin-bottom:24px}
+.onboarding-steps{text-align:left;margin-bottom:24px}
+.onboarding-step{display:flex;gap:16px;margin-bottom:16px;align-items:flex-start}
+.onboarding-step .num{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.onboarding-step .text{color:var(--text2);font-size:15px}
+.onboarding-btn{padding:12px 32px;border:none;border-radius:var(--radius-sm);background:var(--grad);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.onboarding-btn:hover{opacity:.9}
+
+/* ═══ PRO MODAL ═══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,15,.9);z-index:999;justify-content:center;align-items:center;animation:fadeIn .3s}
+.modal-overlay.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:36px;max-width:420px;width:90%;max-height:85vh;overflow-y:auto;text-align:center;position:relative;box-shadow:0 0 60px rgba(255,215,0,.1)}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer}
+.modal-preview{background:var(--surface2);border:1px dashed var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;max-height:120px;overflow:hidden;position:relative;filter:blur(4px);color:var(--text2);font-size:13px;line-height:1.5}
+.modal-preview::after{content:'';position:absolute;inset:0;background:rgba(10,10,15,.3)}
+.modal h2{font-size:24px;margin-bottom:8px}
+.modal h2 span{background:var(--grad-gold);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.modal p{color:var(--text2);margin-bottom:20px;font-size:15px}
+.modal-features{list-style:none;text-align:left;margin-bottom:24px}
+.modal-features li{padding:8px 0;font-size:14px;border-bottom:1px solid var(--border)}
+.modal-features li::before{content:'⚡ ';color:var(--gold)}
+.modal-features li:last-child{border:none}
+.btn-upgrade{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);background:var(--grad-gold);color:#000;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.5px;transition:all .2s}
+.btn-upgrade:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,215,0,.3)}
+.modal-skip{display:block;margin-top:12px;background:none;border:none;color:var(--text2);font-size:13px;cursor:pointer;width:100%}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius-sm);padding:12px 24px;font-size:14px;color:var(--accent);z-index:1000;transition:transform .3s ease;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ═══ LOADING ═══ */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,15,.85);z-index:999;justify-content:center;align-items:center;flex-direction:column;gap:20px}
+.loading-overlay.active{display:flex}
+.loading-progress{width:200px}
+.progress-indicators{display:flex;justify-content:space-between;gap:8px;width:100%;max-width:300px;margin-bottom:16px}
+.progress-indicators .step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.progress-indicators .step-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);transition:all .3s;background:var(--surface2)}
+.progress-indicators .step-circle.active{border-color:var(--accent);background:var(--accent);color:#000}
+.progress-indicators .step-circle.done{border-color:var(--accent);background:var(--accent);color:#fff}
+.progress-indicators .step-label{font-size:11px;color:var(--text2);text-align:center;max-width:60px}
+.loading-text{font-size:16px;color:var(--text2)}
+
+/* ═══ FOOTER ═══ */
+.footer{text-align:center;padding:40px 0 20px;border-top:1px solid var(--border);color:var(--text2);font-size:13px}
+/* ═══ SCROLL REVEAL ═══ */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1024px){
+  .templates-grid{grid-template-columns:1fr 1fr}
+  .feature-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+  .exec-summary{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  body::before{display:none}
+  .hero::before{display:none}
+  .pricing::before{display:none}
+  .container{padding:20px 0}
+  .hero{padding:40px 0 20px}
+  .hero h1{font-size:26px}
+  .templates-grid{grid-template-columns:1fr}
+  .context-fields.open{grid-template-columns:1fr}
+  .exec-summary{grid-template-columns:1fr}
+  .feature-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .prompt-tabs{flex-direction:column}
+  .history-panel{width:100%}
+  .header-right{gap:6px}
+  .header{flex-wrap:wrap;gap:8px}
+  .progress-indicators{gap:4px}
+  .progress-indicators .step-label{font-size:10px}
+}
+
+/* ═══ FOCUS VISIBLE ═══ */
+*:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ LOADING ═══ -->
+<div class="loading-overlay" id="loading">
+  <div class="progress-indicators">
+    <div class="step">
+      <div class="progress-indicators step-circle active" id="step1">1</div>
+      <div class="step-label">Analizando</div>
+    </div>
+    <div class="step">
+      <div class="progress-indicators step-circle" id="step2">2</div>
+      <div class="step-label">Causalidad</div>
+    </div>
+    <div class="step">
+      <div class="progress-indicators step-circle" id="step3">3</div>
+      <div class="step-label">Agentes</div>
+    </div>
+    <div class="step">
+      <div class="progress-indicators step-circle" id="step4">4</div>
+      <div class="step-label">Prompts</div>
+    </div>
+  </div>
+  <div class="loading-text" id="loadingText">Analizando tu objetivo...</div>
+</div>
+
+<!-- ═══ ONBOARDING OVERLAY ═══ -->
+<div class="onboarding-overlay" id="onboarding">
+  <div class="onboarding-content">
+    <h2>Bienvenido a Omega</h2>
+    <div class="onboarding-steps">
+      <div class="onboarding-step">
+        <div class="num">1</div>
+        <div class="text">Escribe tu objetivo o situación</div>
+      </div>
+      <div class="onboarding-step">
+        <div class="num">2</div>
+        <div class="text">Omega analiza con causalidad inversa</div>
+      </div>
+      <div class="onboarding-step">
+        <div class="num">3</div>
+        <div class="text">Copia el prompt y pégalo en cualquier IA</div>
+      </div>
+    </div>
+    <button class="onboarding-btn" onclick="dismissOnboarding()">Entendido</button>
+  </div>
+</div>
+
+<!-- ═══ PRO MODAL ═══ -->
+<div class="modal-overlay" id="proModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeProModal()">&times;</button>
+    <h2>Desbloquea <span>Omega PRO</span></h2>
+    <p id="proModalMsg">Accede al poder completo del Protocolo Omega.</p>
+    <div class="modal-preview" id="proPreview">Este es un análisis PRO con más agentes, stress tests completos y export PDF profesional. Tendría acceso ilimitado a análisis sin restricciones mensuales...</div>
+    <ul class="modal-features">
+      <li>Análisis ilimitados (no solo 3/mes)</li>
+      <li>5 agentes adaptativos (no solo 1)</li>
+      <li>5/5 stress tests completos</li>
+      <li>Export PDF de cada análisis</li>
+      <li>Historial completo de sesiones</li>
+      <li>Templates por industria</li>
+    </ul>
+    <button class="btn-upgrade" onclick="handleUpgrade()">Desbloquear PRO — $15/mes</button>
+    <button class="modal-skip" onclick="closeProModal()">Seguir con plan gratuito</button>
+  </div>
+</div>
+
+<!-- ═══ HISTORY PANEL ═══ -->
+<div class="history-panel" id="historyPanel">
+  <div class="history-header">
+    <h3>Historial</h3>
+    <button class="history-close" onclick="toggleHistory()">&times;</button>
+  </div>
+  <div id="historyList"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SCREEN 1: HOME                                      -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="container">
+    <div class="header">
+      <div class="logo" onclick="goScreen('home')">⚛️ <span>OMEGA</span> PLATFORM</div>
+      <div class="header-right">
+        <span class="usage-badge" id="usageBadge"><strong id="usageCount">3</strong>/3 este mes</span>
+        <button class="btn-history" onclick="toggleHistory()">Historial</button>
+        <button class="btn-pro-small" id="btnProHeader" onclick="showProModal('header')" style="display:none">PRO</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="badge"><span class="pulse"></span> Creado por <strong>@tacotios</strong> · gratis · 60 segundos</div>
+      <h1>No necesitas hacer más.<br>Necesitas saber <em>qué hacer primero.</em></h1>
+      <p>Escribe tu situación. En 60 segundos Omega encuentra tu Punto 0 — la única decisión que desbloquea toda tu cadena de éxito.</p>
+    </div>
+
+    <!-- Memory banner -->
+    <div class="memory-banner" id="memoryBanner">
+      <h4>Tu perfil Omega</h4>
+      <div class="memory-chips" id="memoryChips"></div>
+    </div>
+
+    <!-- Main input -->
+    <div class="input-area">
+      <textarea id="goalInput" aria-label="Escribe tu objetivo aquí" placeholder="Describe tu situación completa. Cuanto más contexto, mejor el análisis. Ej: Quiero lanzar un servicio de meal prep en CDMX. Somos 2 personas, 50K MXN, meta: 30 clientes en el primer mes." rows="5"></textarea>
+      <div class="input-meta">
+        <span class="char-count" id="charCount">0 caracteres</span>
+        <button class="btn-analyze" id="btnAnalyze" onclick="analyze()" disabled aria-label="Analizar objetivo">Encontrar mi Punto 0</button>
+      </div>
+    </div>
+
+    <!-- Context fields -->
+    <div class="context-toggle" onclick="toggleContext()" role="button" tabindex="0">
+      <span id="ctxArrow">▸</span> Añadir contexto (opcional — mejora el análisis)
+    </div>
+    <div class="context-fields" id="contextFields">
+      <div class="ctx-field">
+        <label>Sector</label>
+        <input type="text" id="ctxSector" placeholder="Gastronomía, tech, fitness...">
+      </div>
+      <div class="ctx-field">
+        <label>Horizonte</label>
+        <select id="ctxTimeline">
+          <option value="">Selecciona...</option>
+          <option value="1 mes">1 mes</option>
+          <option value="3 meses">3 meses</option>
+          <option value="6 meses">6 meses</option>
+          <option value="1 año">1 año</option>
+        </select>
+      </div>
+      <div class="ctx-field">
+        <label>Equipo</label>
+        <input type="text" id="ctxTeam" placeholder="Solo, 2-5, 5-20...">
+      </div>
+      <div class="ctx-field">
+        <label>Presupuesto</label>
+        <input type="text" id="ctxBudget" placeholder="$10K, $50K, $500K...">
+      </div>
+    </div>
+
+    <!-- Templates -->
+    <div class="templates-section">
+      <h3>Elige un escenario</h3>
+      <div class="templates-grid">
+        <div class="template-chip" onclick="loadTemplate(0)" role="button" tabindex="0">
+          <strong>🍽️ Restaurantes</strong>
+          Lanzar meal prep delivery en CDMX
+        </div>
+        <div class="template-chip" onclick="loadTemplate(1)" role="button" tabindex="0">
+          <strong>🛒 E-commerce</strong>
+          Escalar de 10 a 100 clientes
+        </div>
+        <div class="template-chip" onclick="loadTemplate(2)" role="button" tabindex="0">
+          <strong>📱 App/SaaS</strong>
+          Retención baja, necesito pivotar
+        </div>
+        <div class="template-chip" onclick="loadTemplate(3)" role="button" tabindex="0">
+          <strong>🤖 Automatización</strong>
+          Reducir trabajo manual 50%
+        </div>
+        <div class="template-chip pro-only" onclick="loadTemplate(4)" role="button" tabindex="0">
+          <strong>🎬 Creadores</strong>
+          Monetizar audiencia sin perder esencia
+        </div>
+        <div class="template-chip pro-only" onclick="loadTemplate(5)" role="button" tabindex="0">
+          <strong>💼 Consultoría</strong>
+          De freelancer a agencia escalable
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features">
+      <h2>Cómo funciona</h2>
+      <p class="subtitle">De "tengo mil cosas en la cabeza" a "sé exactamente qué hacer primero"</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon">🎯</div>
+          <h3>Causalidad inversa</h3>
+          <p>No planifica hacia adelante. Empieza en tu meta y traza hacia atrás hasta la decisión raíz.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">⛓️</div>
+          <h3>Cadena causal</h3>
+          <p>Cada paso conectado al siguiente. Si falla uno, ves dónde y por qué. Sin puntos ciegos.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🧠</div>
+          <h3>Agentes con sesgos</h3>
+          <p>Hasta 5 expertos que declaran sus sesgos. Donde discrepan, está la verdad de tu caso.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📋</div>
+          <h3>Prompts que ejecutan</h3>
+          <p>3 niveles de profundidad. Los copias, los pegas en cualquier IA, y funcionan solos.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔬</div>
+          <h3>Stress tests</h3>
+          <p>Tu decisión se prueba contra 5 escenarios extremos. Si sobrevive, la ejecutas tranquilo.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔁</div>
+          <h3>Memoria</h3>
+          <p>Recuerda tus análisis anteriores. Detecta patrones. Cada vez te conoce mejor.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="pricing" id="pricing">
+      <h2>Simple y transparente</h2>
+      <p class="subtitle">Empieza gratis. Desbloquea cuando lo necesites.</p>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-name">Gratis</div>
+          <div class="price-amount">$0 <small>/mes</small></div>
+          <div class="price-desc">Perfecto para probar Omega</div>
+          <ul class="price-features">
+            <li>3 análisis al mes</li>
+            <li>1 agente adaptativo</li>
+            <li>3 de 5 stress tests</li>
+            <li>Prompts ejecutables</li>
+            <li class="disabled">Export PDF</li>
+            <li class="disabled">Historial completo</li>
+            <li class="disabled">Templates industria</li>
+          </ul>
+          <button class="btn-price free" onclick="goScreen('home');window.scrollTo(0,0)">Plan actual</button>
+        </div>
+        <div class="price-card featured">
+          <div class="price-name">PRO</div>
+          <div class="price-amount">$15 <small>/mes</small></div>
+          <div class="price-desc">Para quienes toman decisiones en serio</div>
+          <ul class="price-features">
+            <li>Análisis ilimitados</li>
+            <li>5 agentes adaptativos</li>
+            <li>5/5 stress tests completos</li>
+            <li>Prompts ejecutables</li>
+            <li>Export PDF profesional</li>
+            <li>Historial completo</li>
+            <li>Templates por industria</li>
+          </ul>
+          <button class="btn-price pro" onclick="handleUpgrade()">Desbloquear PRO →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social proof -->
+    <div class="social-proof">
+      <div class="proof-stats">
+        <div class="proof-stat"><div class="num">2M+</div><div class="label">Seguidores</div></div>
+        <div class="proof-stat"><div class="num">10</div><div class="label">Proyectos activos</div></div>
+        <div class="proof-stat"><div class="num">60s</div><div class="label">Por análisis</div></div>
+      </div>
+      <p>Creado por <a href="https://instagram.com/tacotios" target="_blank">@tacotios</a> — porque yo necesitaba esto antes que nadie.</p>
+      <div class="proof-quote">
+        Tenía 10 proyectos en paralelo y no sabía cuál atacar primero. Omega me mostró que la decisión que parecía menor era la que condicionaba todo lo demás.
+        <div class="proof-author">— @tacotios, creador</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Omega Platform v6.0 · Creado con obsesión por las buenas decisiones</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SCREEN 2: ANALYSIS                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen" id="screen-analysis">
+  <div class="container">
+    <div class="header">
+      <div class="logo" onclick="goScreen('home')">⚛️ <span>OMEGA</span> PLATFORM</div>
+      <div class="header-right">
+        <span class="usage-badge" id="usageBadge2"><strong id="usageCount2">3</strong>/3 este mes</span>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-step"><div class="progress-dot done">1</div></div>
+      <div class="progress-line done"></div>
+      <div class="progress-step"><div class="progress-dot active">2</div></div>
+      <div class="progress-line"></div>
+      <div class="progress-step"><div class="progress-dot">3</div></div>
+    </div>
+
+    <div class="analysis-header">
+      <h2>Tu análisis Omega</h2>
+      <p id="analysisGoalPreview"></p>
+    </div>
+
+    <div class="card" id="execSummaryCard">
+      <div class="card-label">Resumen ejecutivo</div>
+      <div class="exec-summary" id="execSummary"></div>
+    </div>
+
+    <div class="card punto0-card" id="punto0Card">
+      <div class="card-label">★ Punto 0 — Tu decisión atómica</div>
+      <h3 id="punto0Title"></h3>
+      <p class="why" id="punto0Why"></p>
+    </div>
+
+    <div class="card" id="chainCard">
+      <div class="card-label">⛓️ Cadena causal</div>
+      <div id="chainSteps"></div>
+    </div>
+
+    <div class="card" id="agentsCard">
+      <div class="card-label" id="agentsLabel">🧠 Agente adaptativo</div>
+      <div id="agentsList"></div>
+      <div class="tension-box" id="tensionBox"></div>
+    </div>
+
+    <div id="emailCaptureContainer"></div>
+
+    <div style="text-align:center;padding:20px 0">
+      <button class="btn btn-primary" onclick="goScreen('prompts')" style="font-size:16px;padding:14px 36px">
+        Ver prompts ejecutables →
+      </button>
+      <br><br>
+      <button class="btn-back" onclick="goScreen('home')">← Nuevo análisis</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SCREEN 3: PROMPTS                                   -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen" id="screen-prompts">
+  <div class="container">
+    <div class="header">
+      <div class="logo" onclick="goScreen('home')">⚛️ <span>OMEGA</span> PLATFORM</div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-step"><div class="progress-dot done">1</div></div>
+      <div class="progress-line done"></div>
+      <div class="progress-step"><div class="progress-dot done">2</div></div>
+      <div class="progress-line done"></div>
+      <div class="progress-step"><div class="progress-dot active">3</div></div>
+    </div>
+
+    <div class="analysis-header">
+      <h2>Tus prompts ejecutables</h2>
+      <p>Copia cualquiera en ChatGPT, Claude o Gemini. Funcionan solos.</p>
+    </div>
+
+    <div class="prompt-tabs" id="promptTabs">
+      <div class="prompt-tab active" onclick="selectLevel(0)">📋 Directo</div>
+      <div class="prompt-tab" onclick="selectLevel(1)">⚡ Profundo</div>
+      <div class="prompt-tab" onclick="selectLevel(2)">🧬 Máximo</div>
+    </div>
+    <div class="level-hint" id="levelHint">Objetivo reformulado con contexto. Ideal para decisiones rápidas.</div>
+
+    <div class="prompt-box" id="promptBox"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="copyPrompt()">📋 Copiar prompt</button>
+      <button class="btn" onclick="shareResult()">🔗 Compartir</button>
+      <button class="btn" id="btnExportPdf" onclick="exportPDF()">📄 Export PDF</button>
+      <button class="btn" onclick="downloadPrompt()">💾 Descargar .txt</button>
+    </div>
+
+    <div style="padding:20px 0">
+      <button class="btn-back" onclick="goScreen('analysis')">← Volver al análisis</button>
+      <button class="btn-back" onclick="goScreen('home')" style="margin-left:20px">Nuevo análisis</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<script>
+(function(){
+
+// ═══ CONFIG ═══
+const CONFIG = {
+  FREE_LIMIT: 3,
+  MAX_INPUT_LENGTH: 2000,
+  MAX_HISTORY: 50,
+  FREE_HISTORY_VISIBLE: 5,
+  LOADING_STEP_MS: 600,
+  ANALYSIS_DELAY_MS: 3200
+};
+
+// ═══ STATE ═══
+let currentResult = null;
+let currentLevel = 0;
+let prompts = ['','',''];
+let isPro = false;
+let loadingInterval = null;
+
+// ═══ SECURITY: HTML escape ═══
+function esc(str){
+  if(!str) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML.replace(/'/g,'&#39;').replace(/`/g,'&#96;');
+}
+
+// ═══ EVENT TRACKING ═══
+function trackEvent(name, props) {
+  if (window.posthog) window.posthog.capture(name, props);
+}
+
+// ═══ USAGE TRACKING ═══
+function getUsage(){
+  try{
+    let data = JSON.parse(localStorage.getItem('omega_v1_usage')||'{}');
+    const now = new Date();
+    const key = now.getFullYear()+'-'+(now.getMonth()+1);
+    if(data.month !== key){data = {month:key, count:0}; saveUsage(data)}
+    return data;
+  }catch(e){return {month:'',count:0}}
+}
+function saveUsage(data){try{localStorage.setItem('omega_v1_usage',JSON.stringify(data))}catch(e){}}
+function incrementUsage(){
+  const data = getUsage();
+  data.count++;
+  saveUsage(data);
+  updateUsageUI();
+}
+function getRemainingUses(){
+  if(isPro) return 999;
+  const data = getUsage();
+  return Math.max(0, CONFIG.FREE_LIMIT - data.count);
+}
+function updateUsageUI(){
+  const remaining = getRemainingUses();
+  const els = ['usageCount','usageCount2'];
+  els.forEach(function(id){
+    const el = document.getElementById(id);
+    if(el) el.textContent = remaining;
+  });
+  const badges = ['usageBadge','usageBadge2'];
+  badges.forEach(function(id){
+    const el = document.getElementById(id);
+    if(el){
+      if(isPro){el.innerHTML='<strong style="color:var(--gold)">PRO</strong> ilimitado'}
+      else{el.innerHTML='<strong>'+remaining+'</strong>/'+CONFIG.FREE_LIMIT+' este mes'}
+    }
+  });
+  const proBtn = document.getElementById('btnProHeader');
+  if(proBtn) proBtn.style.display = (!isPro && remaining <= 1) ? 'block' : 'none';
+}
+
+// ═══ PRO MODAL ═══
+function showProModal(trigger){
+  const msgs = {
+    'limit':'Has usado tus 3 análisis gratis este mes. Desbloquea PRO para análisis ilimitados.',
+    'agents':'Con PRO obtienes 5 agentes adaptativos en vez de 1. Más perspectivas = mejores decisiones.',
+    'pdf':'El export PDF es una feature PRO. Descarga tus análisis como documentos profesionales.',
+    'template':'Los templates de industria son exclusivos de PRO.',
+    'history':'El historial completo es una feature PRO. Accede a todos tus análisis anteriores.',
+    'header':'Accede al poder completo del Protocolo Omega.'
+  };
+  document.getElementById('proModalMsg').textContent = msgs[trigger]||msgs['header'];
+  document.getElementById('proModal').classList.add('open');
+  trackEvent('pro_modal_shown', {trigger: trigger});
+}
+function closeProModal(){document.getElementById('proModal').classList.remove('open')}
+function handleUpgrade(){
+  showToast('Próximamente — pagos en proceso de integración');
+  closeProModal();
+}
+
+// ═══ ONBOARDING ═══
+function checkFirstVisit(){
+  try{
+    if(!localStorage.getItem('omega_v1_onboarded')){
+      document.getElementById('onboarding').classList.add('visible');
+    }
+  }catch(e){}
+}
+function dismissOnboarding(){
+  try{localStorage.setItem('omega_v1_onboarded','true')}catch(e){}
+  document.getElementById('onboarding').classList.remove('visible');
+}
+
+// ═══ EMAIL CAPTURE ═══
+function captureEmail(){
+  const email = document.getElementById('emailInput').value;
+  if(!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
+    showToast('Por favor ingresa un email válido');
+    return;
+  }
+  try{localStorage.setItem('omega_v1_email',email)}catch(e){}
+  document.getElementById('emailCapture').style.display='none';
+  showToast('¡Guardado! Te enviaremos tu análisis cuando activemos esta función.');
+  trackEvent('email_captured', {});
+}
+function dismissEmail(){
+  document.getElementById('emailCapture').style.display='none';
+}
+function showEmailCapture(){
+  const container = document.getElementById('emailCaptureContainer');
+  if(!container) return;
+  container.innerHTML = '<div class="email-capture" id="emailCapture"><p>¿Quieres recibir tu análisis por email?</p><div class="email-row"><input type="email" id="emailInput" placeholder="tu@email.com"><button onclick="captureEmail()">Enviar</button></div><button class="email-skip" onclick="dismissEmail()">No, gracias</button></div>';
+}
+
+// ═══ TEMPLATES ═══
+const templates = [
+  {text:'Quiero lanzar un servicio de meal prep delivery en Ciudad de México para profesionales ocupados. Somos 2 personas (yo en operaciones y mi socio chef), presupuesto de 50,000 MXN, y queremos 30 clientes en el primer mes.',sector:'Gastronomía',timeline:'3 meses',team:'2 personas',budget:'$50K MXN'},
+  {text:'Tengo un e-commerce de ropa con 10 clientes recurrentes. Quiero escalar a 100 clientes en 3 meses sin contratar más gente. Mi margen es del 40% y gasto $5K/mes en ads con ROAS de 2x.',sector:'E-commerce',timeline:'3 meses',team:'Solo',budget:'$5K/mes'},
+  {text:'Lancé una app de fitness hace 6 meses. Tengo 500 descargas pero solo 20 usuarios activos semanales. La retención a 30 días es del 8%. Necesito decidir si pivoteo el concepto o mejoro el onboarding.',sector:'Tech/Fitness',timeline:'3 meses',team:'3 personas',budget:'$100K MXN'},
+  {text:'Mi agencia de marketing tiene 5 empleados y hacemos todo manual: reportes, posting, facturación, seguimiento de leads. Quiero automatizar el 50% del trabajo operativo para poder tomar más clientes sin contratar.',sector:'Marketing',timeline:'6 meses',team:'5 personas',budget:'$30K MXN'},
+  {text:'Soy creador de contenido con 200K seguidores. Gano dinero con brand deals pero quiero construir ingresos propios sin perder autenticidad. Tengo una comunidad leal pero no sé cómo monetizarla sin que se sienta transaccional.',sector:'Creadores',timeline:'6 meses',team:'2 personas',budget:'$20K MXN',pro:true},
+  {text:'Soy consultor independiente cobrando $2K USD/proyecto. Quiero escalar a agencia con 3-5 personas y llegar a $15K/mes recurrentes. No quiero ser el cuello de botella pero mi expertise es lo que vende.',sector:'Consultoría',timeline:'1 año',team:'Solo → 5',budget:'$10K USD',pro:true}
+];
+
+function loadTemplate(i){
+  const t = templates[i];
+  if(t.pro && !isPro){showProModal('template');return}
+  document.getElementById('goalInput').value = t.text;
+  document.getElementById('goalInput').dispatchEvent(new Event('input'));
+  document.getElementById('ctxSector').value = t.sector||'';
+  document.getElementById('ctxTimeline').value = t.timeline||'';
+  document.getElementById('ctxTeam').value = t.team||'';
+  document.getElementById('ctxBudget').value = t.budget||'';
+  if(!document.getElementById('contextFields').classList.contains('open')) toggleContext();
+  document.getElementById('goalInput').focus();
+  window.scrollTo({top:0,behavior:'smooth'});
+  trackEvent('template_used', {template: i});
+}
+
+// ═══ NAVIGATION ═══
+function goScreen(name){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  document.getElementById('screen-'+name).classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='home') renderMemoryBanner();
+  trackEvent('screen_changed', {screen: name});
+}
+
+// ═══ INPUT ═══
+const goalInput = document.getElementById('goalInput');
+const charCount = document.getElementById('charCount');
+const btnAnalyze = document.getElementById('btnAnalyze');
+
+goalInput.setAttribute('maxlength', CONFIG.MAX_INPUT_LENGTH);
+goalInput.addEventListener('input',function(){
+  const len = this.value.length;
+  charCount.textContent = len + '/' + CONFIG.MAX_INPUT_LENGTH + ' caracteres';
+  btnAnalyze.disabled = len < 30;
+});
+goalInput.addEventListener('keydown',function(e){
+  if(e.ctrlKey && e.key==='Enter') analyze();
+});
+
+function toggleContext(){
+  const f = document.getElementById('contextFields');
+  const a = document.getElementById('ctxArrow');
+  if(f.classList.contains('open')){f.classList.remove('open');a.textContent='▸'}
+  else{f.classList.add('open');a.textContent='▾'}
+}
+
+// ═══ HISTORY ═══
+function getHistory(){try{return JSON.parse(localStorage.getItem('omega_v1_history')||'[]')}catch(e){return []}}
+function saveHistory(h){try{localStorage.setItem('omega_v1_history',JSON.stringify(h))}catch(e){}}
+
+function addToHistory(text, ctx, result){
+  const h = getHistory();
+  h.unshift({
+    date: new Date().toISOString(),
+    text: text.substring(0,200),
+    goal: result.goal,
+    punto0: result.punto0.text,
+    sector: ctx.sector,
+    ctx: ctx,
+    result: result
+  });
+  if(h.length > 50) h.slice(0,50);
+  saveHistory(h);
+}
+
+function toggleHistory(){
+  const panel = document.getElementById('historyPanel');
+  if(panel.classList.contains('open')){panel.classList.remove('open');return}
+
+  const h = getHistory();
+  let html = '';
+  if(h.length === 0){
+    html = '<div class="history-empty">Aún no tienes análisis. Tu historial aparecerá aquí.</div>';
+  } else {
+    const limit = isPro ? h.length : Math.min(h.length, CONFIG.FREE_HISTORY_VISIBLE);
+    for(let i=0;i<limit;i++){
+      const item = h[i];
+      const d = new Date(item.date);
+      const dateStr = d.toLocaleDateString('es',{day:'numeric',month:'short',year:'numeric'});
+      html += '<div class="history-item" onclick="loadFromHistory('+i+')">';
+      html += '<div class="date">'+esc(dateStr)+'</div>';
+      html += '<div class="goal">'+esc(item.goal)+'</div>';
+      html += '<div class="p0">'+esc((item.punto0||'').replace('PUNTO 0: ',''))+'</div>';
+      html += '</div>';
+    }
+    if(!isPro && h.length > CONFIG.FREE_HISTORY_VISIBLE){
+      html += '<div style="text-align:center;padding:16px"><button class="btn-pro-small" onclick="showProModal(\'history\')">Ver historial completo (PRO)</button></div>';
+    }
+  }
+  document.getElementById('historyList').innerHTML = html;
+  panel.classList.add('open');
+}
+
+function loadFromHistory(i){
+  const h = getHistory();
+  const item = h[i];
+  if(!item) return;
+  currentResult = item.result;
+  const ctx = item.ctx||{sector:'',timeline:'',team:'',budget:''};
+  prompts = generatePrompts(item.text, ctx, currentResult);
+  renderAnalysis(currentResult);
+  toggleHistory();
+  goScreen('analysis');
+}
+
+// ═══ CAUSAL CHAIN MAP ═══
+const chainMap = {
+  'Problema de retención': {
+    steps:['Retención estabilizada por mejora en propuesta de valor','Propuesta de valor redefinida con datos de usuarios reales','Feedback loop de usuarios implementado'],
+    p0:'Decidir qué problema específico resuelves para tu usuario ideal'
+  },
+  'Operaciones ineficientes': {
+    steps:['Equipo enfocado en crecimiento (no en tareas repetitivas)','Procesos core automatizados','Mapa de procesos con tiempos medidos'],
+    p0:'Decidir cuál es el proceso que más tiempo consume y tiene mayor ROI al automatizar'
+  },
+  'Restricción de presupuesto': {
+    steps:['Ingresos superan gastos — modelo sostenible','Primeros clientes de pago adquiridos','Canal de adquisición validado con datos'],
+    p0:'Decidir tu canal de adquisición principal antes de gastar un peso'
+  },
+  'Competencia en el mercado': {
+    steps:['Posicionamiento diferenciado consolidado','Propuesta de valor única identificada'],
+    p0:'Decidir en qué eres 10x mejor que la competencia (no 10% mejor)'
+  },
+  'Barrera de escala': {
+    steps:['Sistema escalable operando sin dependencia del fundador','Procesos documentados y delegables','Cuello de botella principal eliminado'],
+    p0:'Decidir qué función del negocio dejas de hacer TÚ primero para poder crecer'
+  },
+  'Desafío de equipo': {
+    steps:['Equipo ejecutando con autonomía','Roles y ownership claros','Primer hire/delegación exitosa'],
+    p0:'Decidir cuál es el primer rol que necesitas cubrir (y cuál NO)'
+  },
+  'Brecha tecnológica': {
+    steps:['Stack tecnológico resolviendo el problema core','Herramientas integradas en flujo de trabajo','Requisitos técnicos priorizados por impacto'],
+    p0:'Decidir si construyes, compras o adaptas — y cuál es la herramienta mínima que resuelve tu problema'
+  },
+  'Posicionamiento débil': {
+    steps:['Marca reconocida en su nicho','Mensaje claro que resuena con la audiencia','Propuesta diferenciadora articulada'],
+    p0:'Decidir cuál es tu audiencia de 100 personas ideales (no de 10,000 genéricas)'
+  },
+  'Recursos limitados': {
+    steps:['Operación lean pero funcional','Prioridades alineadas con recursos disponibles','Quick wins ejecutados para generar momentum'],
+    p0:'Decidir cuál es la ÚNICA cosa que puedes hacer con lo que tienes hoy'
+  },
+  'Incertidumbre en la dirección': {
+    steps:['Dirección clara con criterios de éxito definidos','Opciones evaluadas con datos (no con suposiciones)','Hipótesis principal articulada'],
+    p0:'Decidir cuáles son tus 2-3 opciones reales y qué información necesitas para elegir entre ellas'
+  },
+  'Complejidad del objetivo': {
+    steps:['Objetivo simplificado en componentes accionables','Prioridades claras establecidas','Primera iteración ejecutada'],
+    p0:'Decidir cuál es el sub-objetivo más pequeño que puedes completar esta semana'
+  }
+};
+
+// ═══ AGENT RECOMMENDATIONS ═══
+const recMap = {
+  growth:'Valida el Punto 0 con un experimento de 1 semana en {{sector}}: gasta el mínimo posible en probar UNA hipótesis. Si funciona, escala. Si no, pivotea.',
+  product:'Define exactamente qué significa "éxito" para tu Punto 0. Necesitas una métrica medible en {{timeline}} que confirme que "{{p0_short}}..." fue la decisión correcta.',
+  finance:'Calcula el costo de NO tomar esta decisión. Cada semana sin resolver "{{p0_short}}..." tiene un costo de oportunidad. Cuantifícalo.',
+  ops:'Mapea el flujo actual de trabajo. Identifica dónde se pierde más tiempo y ataca ESO primero. En {{sector}}, el 80% del desperdicio suele estar en 1-2 procesos.',
+  brand:'Tu posicionamiento en {{sector}} define todo lo demás. Antes de ejecutar, responde: "¿Por qué alguien elegiría ESTO sobre las alternativas?"',
+  tech:'No construyas lo que puedes comprar. En {{sector}}, evalúa 3 herramientas existentes antes de crear la tuya.',
+  sales:'Habla con 5 clientes potenciales esta semana antes de invertir un peso más. En {{sector}}, el feedback directo vale más que cualquier estudio.',
+  hr:'El primer hire define la cultura. Para resolver "{{p0_short}}...", ¿necesitas un ejecutor o un estratega?'
+};
+
+// ═══ TENSIONS ═══
+const tensions = {
+  'growth+product':'El {{a1}} quiere lanzar ya; el {{a2}} quiere definir métricas primero. Resolución: define tu métrica de éxito HOY (2 horas) y lanza el experimento MAÑANA.',
+  'growth+finance':'El {{a1}} quiere invertir en velocidad; el {{a2}} quiere ver los números. Resolución: define un presupuesto máximo para el experimento de validación.',
+  'product+growth':'El {{a1}} quiere más iteración; el {{a2}} quiere más velocidad. Resolución: timeboxea la iteración a 3 días.',
+  'ops+tech':'El {{a1}} quiere procesos antes que herramientas; el {{a2}} quiere automatizar ya. Resolución: documenta el proceso manual primero (1 día), luego automatiza.',
+  'finance+growth':'El {{a1}} quiere ROI comprobado; el {{a2}} quiere experimentar. Resolución: asigna un presupuesto de innovación separado del operativo.',
+  'brand+growth':'El {{a1}} quiere posicionamiento perfecto; el {{a2}} quiere tracción. Resolución: lanza con 70% del mensaje y refina con feedback real.',
+  'hr+ops':'El {{a1}} quiere el equipo perfecto; el {{a2}} quiere sistemas. Resolución: contrata para el cuello de botella actual.',
+  'tech+product':'El {{a1}} quiere la solución elegante; el {{a2}} quiere la experiencia perfecta. Resolución: prioriza lo que el usuario toca.',
+  'brand+sales':'El {{a1}} quiere percepción; el {{a2}} quiere revenue. Resolución: los primeros 10 clientes se consiguen con relación, no con marca.',
+  'ops+growth':'El {{a1}} quiere estabilizar; el {{a2}} quiere acelerar. Resolución: estabiliza SOLO el proceso que toca el cliente.'
+};
+
+// ═══ RISK MAP ═══
+const riskMap = {
+  'Problema de retención':'Seguir iterando features sin entender por qué los usuarios se van.',
+  'Operaciones ineficientes':'Automatizar lo incorrecto. Primero valida que el proceso manual es el correcto.',
+  'Restricción de presupuesto':'Gastar en adquisición antes de validar retención.',
+  'Competencia en el mercado':'Competir en precio en vez de en diferenciación.',
+  'Barrera de escala':'Escalar el caos. Si no funciona con 10, no funciona con 100.',
+  'Desafío de equipo':'Contratar para síntomas en vez de causas raíz.',
+  'Brecha tecnológica':'Construir la solución perfecta en vez de la mínima funcional.',
+  'Posicionamiento débil':'Intentar gustarle a todos.',
+  'Recursos limitados':'Dispersar recursos en demasiados frentes.',
+  'Incertidumbre en la dirección':'Parálisis por análisis.',
+  'Complejidad del objetivo':'Intentar resolver todo a la vez en vez de priorizar.'
+};
+
+// ═══ FIRST STEP MAP ═══
+const stepMap = {
+  'Problema de retención':'Contacta a 3 usuarios que dejaron tu producto. Pregunta: "¿Qué esperabas que no encontraste?"',
+  'Operaciones ineficientes':'Cronometra tu día mañana. Anota cada tarea y cuánto tarda. El resultado te dirá qué automatizar.',
+  'Restricción de presupuesto':'Lista tus 3 canales de adquisición. ¿Cuál trae clientes al menor costo? Duplica ese y corta los otros.',
+  'Competencia en el mercado':'Escribe en 1 frase por qué alguien te elegiría. Si no puedes, ese es tu verdadero problema.',
+  'Barrera de escala':'Identifica qué haces TÚ que NO debería depender de ti. Documenta cómo lo haces en 30 min.',
+  'Desafío de equipo':'Define tu primer hire: 3 skills imprescindibles y 2 que puedes enseñar.',
+  'Brecha tecnológica':'Busca 3 herramientas que resuelvan >70% de tu problema. Prueba la mejor 1 hora antes de construir.',
+  'Posicionamiento débil':'Escribe 3 versiones de tu pitch en 1 línea. Mándalas a 5 personas. El que más resuene gana.',
+  'Recursos limitados':'Lista todo lo que haces ahora. Tacha todo menos 1 cosa. Esa es tu prioridad.',
+  'Incertidumbre en la dirección':'30 min HOY: escribe las 2-3 opciones reales. Decide con lo que ya sabes.',
+  'Complejidad del objetivo':'Divide tu objetivo en 3 partes. Elige la más pequeña. Complétala esta semana.'
+};
+
+// ═══ ANALYSIS ENGINE ═══
+function analyze(){
+  const text = goalInput.value.trim();
+  if(text.length < 30){showToast('Añade más detalle ('+text.length+'/30 mínimo)');goalInput.focus();return}
+
+  if(!isPro && getRemainingUses() <= 0){showProModal('limit');return}
+
+  btnAnalyze.disabled = true;
+  trackEvent('analysis_started', {});
+
+  showLoading(true);
+
+  setTimeout(function(){
+    try{
+      const autoCtx = autoExtractContext(text);
+      const ctx = {
+        sector: document.getElementById('ctxSector').value || autoCtx.sector || 'no especificado',
+        timeline: document.getElementById('ctxTimeline').value || autoCtx.timeline || 'no especificado',
+        team: document.getElementById('ctxTeam').value || autoCtx.team || 'no especificado',
+        budget: document.getElementById('ctxBudget').value || autoCtx.budget || 'no especificado'
+      };
+
+      currentResult = runOmegaProtocol(text, ctx);
+      prompts = generatePrompts(text, ctx, currentResult);
+      renderAnalysis(currentResult);
+      updateMemory(text, ctx, currentResult);
+      addToHistory(text, ctx, currentResult);
+      incrementUsage();
+      showLoading(false);
+      showEmailCapture();
+      goScreen('analysis');
+      trackEvent('analysis_completed', {goal: currentResult.goal, agents: currentResult.agents.length});
+    } catch(e){
+      showLoading(false);
+      btnAnalyze.disabled = false;
+      showToast('Error: '+e.message);
+      trackEvent('analysis_error', {error: e.message});
+    }
+  }, CONFIG.ANALYSIS_DELAY_MS);
+}
+
+function autoExtractContext(text){
+  const t = text.toLowerCase();
+  const ctx = {};
+  const teamMatch = t.match(/somos\s+(\d+)\s+persona/i) || t.match(/(\d+)\s+(?:empleado|persona|miembro)/i) || t.match(/equipo\s+de\s+(\d+)/i);
+  if(teamMatch) ctx.team = teamMatch[1] + ' personas';
+  if(/solo|sola|independiente|freelance/.test(t) && !teamMatch) ctx.team = 'Solo';
+  let budgetMatch = text.match(/(\d[\d,.]*)\s*[kK]\s*(MXN|USD|mxn|usd|pesos|dolares)/i);
+  if(!budgetMatch) budgetMatch = text.match(/\$\s*([\d,.]+)\s*(MXN|USD|mxn|usd|pesos|dolares)/i);
+  if(!budgetMatch) budgetMatch = text.match(/(?:presupuesto|invertir|inversion)\s+(?:de\s+)?\$?\s*([\d,.]+)\s*[kK]?\s*(MXN|USD|mxn|usd|pesos|dolares)?/i);
+  if(budgetMatch){
+    const rawAmount = budgetMatch[1].replace(/,/g,'');
+    const hasSuffix = /[kK]/.test(text.substring(text.indexOf(budgetMatch[1]), text.indexOf(budgetMatch[1])+rawAmount.length+2));
+    const currency = (budgetMatch[2]||'MXN').toUpperCase().replace('PESOS','MXN').replace('DOLARES','USD');
+    ctx.budget = '$' + rawAmount + (hasSuffix ? 'K' : '') + ' ' + currency;
+  }
+  const timeMatch = t.match(/(\d+)\s*(meses|mes|semanas|semana|años|año|anos|ano|dias|dia)/i);
+  if(timeMatch){
+    let num = parseInt(timeMatch[1]);
+    let unit = timeMatch[2].toLowerCase();
+    if(num > 1 && !unit.endsWith('s') && !unit.endsWith('es')){
+      if(unit==='mes') unit='meses'; else if(unit==='año'||unit==='ano') unit='años';
+      else if(unit==='semana') unit='semanas'; else if(unit==='dia') unit='días';
+    }
+    ctx.timeline = num + ' ' + unit;
+  }
+  const sectorMap = [
+    {keywords:/restaurante|comida|gastronom|chef|cocina|meal\s*prep|delivery.*comida/i, sector:'Gastronomía'},
+    {keywords:/fitness|gym|ejercicio|entrenamiento|deporte/i, sector:'Fitness/Salud'},
+    {keywords:/e-?commerce|tienda\s+online|vender\s+online|shopify|ropa|producto/i, sector:'E-commerce'},
+    {keywords:/saas|software|plataforma\s+digital|tech(?!.*fitness)/i, sector:'Tech/SaaS'},
+    {keywords:/marketing|agencia|publicidad|ads|marca|branding|contenido/i, sector:'Marketing'},
+    {keywords:/consult|asesor|freelance|servicio\s+profesional/i, sector:'Consultoría'},
+    {keywords:/creador|influencer|seguidor|youtube|tiktok|instagram|contenido/i, sector:'Creadores'},
+    {keywords:/inmobili|bienes\s+raíces|propiedad|renta/i, sector:'Inmobiliario'},
+    {keywords:/educaci|curso|academia|enseñ|formaci/i, sector:'Educación'},
+    {keywords:/finanz|contab|dinero|inversion|cripto|trading/i, sector:'Finanzas'}
+  ];
+  for(let i=0;i<sectorMap.length;i++){
+    if(sectorMap[i].keywords.test(text)){ctx.sector = sectorMap[i].sector;break}
+  }
+  return ctx;
+}
+
+function runOmegaProtocol(text, ctx){
+  const complexity = detectComplexity(text);
+  const goal = extractGoal(text);
+  const obstacles = extractObstacles(text);
+  const resources = extractResources(text, ctx);
+  const chain = buildCausalChain(goal, obstacles, resources, ctx);
+  const punto0 = chain[0];
+
+  const agentCount = isPro ? 5 : 1;
+  const agents = generateAgents(goal, punto0, ctx, obstacles, agentCount);
+  const tension = agents.length > 1 ? findTension(agents) : 'Desbloquea PRO para ver la tensión entre múltiples agentes.';
+
+  return {
+    goal: goal,
+    complexity: complexity,
+    obstacles: obstacles,
+    punto0: punto0,
+    chain: chain,
+    agents: agents,
+    tension: tension,
+    summary: {
+      lever: findBiggestLever(chain, agents),
+      risk: findBiggestRisk(chain, agents, obstacles),
+      firstStep: generateFirstStep(punto0, obstacles)
+    }
+  };
+}
+
+function detectComplexity(text){
+  let score = 0;
+  const t = text.toLowerCase();
+  const signals = [
+    {pattern:/dinero|presupuesto|invertir|cost|precio|\$|mxn|usd/,weight:2,name:'money'},
+    {pattern:/decidir|elegir|opcion|alternativa|dilema/,weight:2,name:'decision'},
+    {pattern:/equipo|empleado|socio|contratar|persona/,weight:1,name:'people'},
+    {pattern:/estrateg|plan|escalar|crecer|lanzar/,weight:1,name:'strategy'},
+    {pattern:/competen|rival|mercado|industria/,weight:1,name:'competition'},
+    {pattern:/riesgo|miedo|perder|fracas/,weight:2,name:'risk'},
+    {pattern:/urgente|rapido|deadline|plazo|mes/,weight:1,name:'time'}
+  ];
+  const triggered = [];
+  signals.forEach(function(s){if(s.pattern.test(t)){score+=s.weight;triggered.push(s.name)}});
+  return {score:Math.min(score,10),level:score<=2?0:score<=5?1:2,triggered:triggered};
+}
+
+function extractGoal(text){
+  const goalPatterns = [
+    /quiero\s+(.{10,80}?)(?:\.|,|pero|sin|con\s+un)/i,
+    /mi\s+(?:meta|objetivo)\s+(?:es|:)\s*(.{10,80}?)(?:\.|,)/i,
+    /necesito\s+(.{10,80}?)(?:\.|,|pero)/i
+  ];
+  for(let i=0;i<goalPatterns.length;i++){
+    const m = text.match(goalPatterns[i]);
+    if(m) return m[1].trim();
+  }
+  return text.length > 80 ? text.substring(0,80)+'...' : text;
+}
+
+function extractObstacles(text){
+  const obstacles = [];
+  const t = text.toLowerCase();
+  const patterns = [
+    {re:/no\s+s[ée]|no\s+tengo\s+claro|indecis/i, name:'Incertidumbre en la dirección'},
+    {re:/solo|solamente|[úu]nic|sin\s+equipo|una\s+persona/i, name:'Recursos limitados'},
+    {re:/competen|rival|mercado\s+saturat|otros\s+hacen/i, name:'Competencia en el mercado'},
+    {re:/retenci[oó]n|abandon|churn|no\s+vuelven|pierdo\s+client/i, name:'Problema de retención'},
+    {re:/manual|repetitiv|operativ|ineficien|consume\s+tiempo/i, name:'Operaciones ineficientes'},
+    {re:/presupuesto|cost|gast|dinero\s+limita|no\s+tengo\s+capital/i, name:'Restricción de presupuesto'},
+    {re:/escalar|crecer|pasar\s+de|aumentar|duplicar/i, name:'Barrera de escala'},
+    {re:/equipo|contratar|delegar|confiar|talento/i, name:'Desafío de equipo'},
+    {re:/tecnolog|sistema|plataforma|herramienta|software/i, name:'Brecha tecnológica'},
+    {re:/marca|posicion|diferenci|identi/i, name:'Posicionamiento débil'}
+  ];
+  patterns.forEach(function(p){if(p.re.test(t)) obstacles.push(p.name)});
+  if(obstacles.length===0) obstacles.push('Complejidad del objetivo');
+  return obstacles;
+}
+
+function extractResources(text, ctx){
+  const res = [];
+  if(ctx.team && ctx.team!=='no especificado') res.push('Equipo: '+ctx.team);
+  if(ctx.budget && ctx.budget!=='no especificado') res.push('Presupuesto: '+ctx.budget);
+  if(ctx.timeline && ctx.timeline!=='no especificado') res.push('Horizonte: '+ctx.timeline);
+  if(ctx.sector && ctx.sector!=='no especificado') res.push('Sector: '+ctx.sector);
+  if(res.length===0) res.push('No especificados');
+  return res;
+}
+
+function buildCausalChain(goal, obstacles, resources, ctx){
+  let chain = [];
+  chain.push({text:'Meta alcanzada: '+goal, type:'goal'});
+  chain.push({text:'Validación: métricas confirman el éxito', type:'validation'});
+
+  const primaryObstacle = obstacles[0];
+  const branch = chainMap[primaryObstacle] || chainMap['Incertidumbre en la dirección'];
+  branch.steps.forEach(function(s){chain.push({text:s, type:'step'})});
+  chain.push({text:'PUNTO 0: '+branch.p0, type:'punto0'});
+  return chain.reverse();
+}
+
+function generateAgents(goal, punto0, ctx, obstacles, count){
+  const pool = {
+    growth:{role:'Estratega de Crecimiento',bias:'Prioriza velocidad sobre perfección. Quiere lanzar rápido aunque no sea perfecto.'},
+    product:{role:'Director de Producto',bias:'Sobre-optimiza la experiencia del usuario. Tiende a retrasar por perfeccionismo.'},
+    finance:{role:'Analista Financiero',bias:'Todo lo reduce a números. Puede ignorar factores cualitativos como marca o moral.'},
+    ops:{role:'Director de Operaciones',bias:'Obsesionado con procesos. Puede sobre-sistematizar antes de validar demanda.'},
+    brand:{role:'Estratega de Marca',bias:'Prioriza percepción y posicionamiento. Puede retrasar acción por buscar "el mensaje perfecto".'},
+    tech:{role:'CTO / Arquitecto Técnico',bias:'Tiende a sobre-engineerear. Prefiere la solución técnica elegante sobre la rápida.'},
+    sales:{role:'Director Comercial',bias:'Todo es pipeline. Puede presionar por volumen sacrificando calidad de cliente.'},
+    hr:{role:'Director de Talento',bias:'Cree que todo se resuelve con el equipo correcto. Puede subestimar restricciones de presupuesto.'}
+  };
+
+  const obs = obstacles || [];
+  const selected = [];
+  const used = {};
+  function pick(key){if(pool[key]&&!used[key]){used[key]=true;selected.push(key)}}
+
+  const o0 = obs[0]||'';
+  if(o0.indexOf('retención')>=0||o0.indexOf('Retención')>=0) {pick('product');pick('growth');pick('sales')}
+  else if(o0.indexOf('ineficien')>=0||o0.indexOf('Operaciones')>=0) {pick('ops');pick('tech');pick('finance')}
+  else if(o0.indexOf('presupuesto')>=0||o0.indexOf('Restricción')>=0) {pick('finance');pick('growth');pick('sales')}
+  else if(o0.indexOf('Competencia')>=0) {pick('brand');pick('growth');pick('product')}
+  else if(o0.indexOf('escala')>=0||o0.indexOf('Barrera')>=0) {pick('ops');pick('growth');pick('hr')}
+  else if(o0.indexOf('equipo')>=0||o0.indexOf('Desafío')>=0) {pick('hr');pick('ops');pick('finance')}
+  else if(o0.indexOf('tecnol')>=0||o0.indexOf('Brecha')>=0) {pick('tech');pick('product');pick('finance')}
+  else if(o0.indexOf('Posicionamiento')>=0) {pick('brand');pick('sales');pick('growth')}
+  else {pick('growth');pick('product');pick('finance')}
+
+  const fallback = ['growth','product','finance','ops','brand','tech','sales','hr'];
+  for(let i=0;selected.length<3&&i<fallback.length;i++) pick(fallback[i]);
+
+  const finalSelected = selected.slice(0, count || 3);
+
+  const p0Text = punto0.text ? punto0.text.replace('PUNTO 0: ','') : '';
+  const sector = ctx.sector||'tu sector';
+  const timeline = ctx.timeline||'tu horizonte';
+
+  return finalSelected.map(function(key,i){
+    let rec = recMap[key]||'';
+    rec = rec.replace(/{{sector}}/g, sector).replace(/{{timeline}}/g, timeline).replace(/{{p0_short}}/g, p0Text.substring(0,40));
+    return {role:pool[key].role,bias:pool[key].bias,rec:rec,key:key,tensionWith:i===0?1:0};
+  });
+}
+
+function findTension(agents){
+  if(agents.length<2) return '';
+  const a1 = agents[0], a2 = agents[1];
+  let key1 = (a1.key||'growth')+'+'+(a2.key||'product');
+  let key2 = (a2.key||'product')+'+'+(a1.key||'growth');
+  let tension = tensions[key1] || tensions[key2] || 'El {{a1}} y el {{a2}} tienen prioridades opuestas. Resolución: timeboxea la decisión a 48 horas.';
+  tension = tension.replace(/{{a1}}/g, a1.role).replace(/{{a2}}/g, a2.role);
+  return tension;
+}
+
+function findBiggestLever(chain, agents){
+  const p0 = chain.find(function(s){return s.type==='punto0'});
+  return p0 ? p0.text.replace('PUNTO 0: ','') : 'Resolver la decisión atómica';
+}
+
+function findBiggestRisk(chain, agents, obstacles){
+  const obs = obstacles || [];
+  return riskMap[obs[0]] || riskMap['Incertidumbre en la dirección'];
+}
+
+function generateFirstStep(punto0, obstacles){
+  const obs = obstacles || [];
+  return stepMap[obs[0]] || stepMap['Incertidumbre en la dirección'];
+}
+
+// ═══ PROMPT GENERATOR ═══
+function generatePrompts(text, ctx, result){
+  const p0Text = result.punto0.text.replace('PUNTO 0: ','');
+  const goalText = result.goal;
+  const ctxStr = 'Sector: '+ctx.sector+'. Horizonte: '+ctx.timeline+'. Equipo: '+ctx.team+'. Presupuesto: '+ctx.budget+'.';
+
+  const direct = 'Mi objetivo: '+goalText+'\n\nContexto: '+ctxStr+'\n\nNecesito que me ayudes a tomar esta decisión específica:\n'+p0Text+'\n\nDame 2-3 opciones concretas con pros/contras de cada una, y recomiéndame cuál elegir y por qué.';
+
+  let deep = 'Eres un consultor estratégico con 15 años de experiencia en '+ctx.sector+'.\n\nCONTEXTO:\n'+text+'\n\nRecursos: '+ctxStr+'\n\nHe identificado que mi DECISIÓN ATÓMICA (Punto 0) es:\n"'+p0Text+'"\n\nCadena causal:\n';
+  result.chain.forEach(function(step){deep += '  → '+step.text+'\n'});
+  deep += '\nNecesito que:\n1. Valides o cuestiones si este ES realmente mi Punto 0\n2. Me des 3 opciones (convencional, experta, visionaria)\n3. Para cada una: plan a 7 días, métricas, riesgo principal\n4. Tu recomendación final\n\nSé directo. Sin relleno. Cada frase accionable.';
+
+  let maximo = 'PROTOCOLO OMEGA — ACTIVACIÓN COMPLETA\n\n';
+  maximo += 'Eres un panel de '+(isPro?5:3)+' expertos analizando un caso estratégico.\n\n';
+  maximo += '═══ CONTEXTO ═══\n'+text+'\n\nRecursos: '+ctxStr+'\n';
+  if(result.obstacles && result.obstacles.length>0) maximo += 'Obstáculos: '+result.obstacles.join(', ')+'\n';
+  maximo += '\n═══ PUNTO 0 ═══\n"'+p0Text+'"\n\n═══ CADENA CAUSAL ═══\n';
+  result.chain.forEach(function(step){maximo += '  '+step.text+'\n'});
+  maximo += '\n═══ AGENTES ═══\n\n';
+  result.agents.forEach(function(a,i){
+    maximo += 'AGENTE '+(i+1)+': '+a.role+'\nSesgo: '+a.bias+'\nInstrucción: Analiza el Punto 0 desde tu perspectiva. Declara tu sesgo.\n\n';
+  });
+  maximo += '═══ INSTRUCCIONES ═══\n\n';
+  maximo += '1. Cada agente analiza el Punto 0 (declarando sesgo)\n';
+  maximo += '2. Identifica dónde DISCREPAN — ahí está la verdad\n';
+  maximo += '3. STRESS TEST:\n';
+  maximo += '   - ¿Qué pasa si hacemos lo OPUESTO?\n';
+  maximo += '   - ¿Funciona a 10x escala?\n';
+  maximo += '   - ¿Funciona con la mitad del tiempo?\n';
+  if(isPro){
+    maximo += '   - ¿Funciona con la mitad de los recursos?\n';
+    maximo += '   - ¿Cuál es el plan B si falla?\n';
+  } else {
+    maximo += '   [2 stress tests adicionales en PRO]\n';
+  }
+  maximo += '4. RESOLUCIÓN: Decisión óptima + plan 7 días + acción para HOY\n\n';
+  maximo += 'Formato: Prosa directa. Sin relleno. Cada frase accionable o elimínala.';
+
+  return [direct, deep, maximo];
+}
+
+// ═══ RENDER ═══
+function renderAnalysis(r){
+  document.getElementById('analysisGoalPreview').textContent = '«'+r.goal+'»';
+
+  const es = document.getElementById('execSummary');
+  es.innerHTML = '<div class="exec-item card"><div class="label">Tu mayor palanca</div><div class="value" style="color:var(--accent)">'+esc(r.summary.lever)+'</div></div>'
+    +'<div class="exec-item card"><div class="label">Tu mayor riesgo</div><div class="value" style="color:var(--accent3)">'+esc(r.summary.risk)+'</div></div>'
+    +'<div class="exec-item card"><div class="label">Empieza por aquí</div><div class="value">'+esc(r.summary.firstStep)+'</div></div>';
+
+  document.getElementById('punto0Title').textContent = r.punto0.text.replace('PUNTO 0: ','');
+  document.getElementById('punto0Why').textContent = 'Esta es la decisión que condiciona toda tu cadena de éxito. Resolverla primero desbloquea todo lo demás.';
+
+  let chainHTML = '';
+  r.chain.forEach(function(step){
+    const arrow = step.type==='punto0' ? '★' : step.type==='goal' ? '🎯' : '→';
+    const bold = step.type==='punto0';
+    chainHTML += '<div class="chain-step"><span class="chain-arrow">'+arrow+'</span><span class="chain-text">'+(bold?'<strong>':'')+esc(step.text)+(bold?'</strong>':'')+'</span></div>';
+  });
+  document.getElementById('chainSteps').innerHTML = chainHTML;
+
+  document.getElementById('agentsLabel').textContent = r.agents.length > 1 ? '🧠 Agentes adaptativos ('+r.agents.length+')' : '🧠 Agente adaptativo';
+
+  let agHTML = '';
+  r.agents.forEach(function(a){
+    agHTML += '<div class="agent-card"><div class="agent-role">'+esc(a.role)+'</div><div class="agent-bias">⚠️ Sesgo: '+esc(a.bias)+'</div><div class="agent-rec">'+esc(a.rec)+'</div></div>';
+  });
+  if(!isPro && r.agents.length === 1){
+    agHTML += '<div style="text-align:center;padding:16px 0;border-top:1px solid var(--border);margin-top:12px">';
+    agHTML += '<p style="color:var(--text2);font-size:13px;margin-bottom:8px">4 agentes adicionales disponibles en PRO</p>';
+    agHTML += '<button class="btn-pro-small" onclick="showProModal(\'agents\')">Desbloquear 5 agentes</button>';
+    agHTML += '</div>';
+  }
+  document.getElementById('agentsList').innerHTML = agHTML;
+
+  const tensionBox = document.getElementById('tensionBox');
+  if(r.agents.length > 1){
+    tensionBox.innerHTML = '<strong>⚡ Tensión principal:</strong> '+r.tension;
+    tensionBox.style.display = 'block';
+  } else {
+    tensionBox.style.display = 'none';
+  }
+
+  const pdfBtn = document.getElementById('btnExportPdf');
+  if(pdfBtn){
+    if(!isPro){pdfBtn.classList.add('btn-pro-lock');pdfBtn.onclick=function(){showProModal('pdf')}}
+    else{pdfBtn.classList.remove('btn-pro-lock');pdfBtn.onclick=exportPDF}
+  }
+
+  selectLevel(r.complexity.level);
+}
+
+// ═══ PROMPT TABS ═══
+function selectLevel(level){
+  currentLevel = level;
+  document.querySelectorAll('.prompt-tab').forEach(function(t,i){t.classList.toggle('active',i===level)});
+  document.getElementById('promptBox').textContent = prompts[level];
+  const hints = [
+    'Objetivo reformulado con contexto. Ideal para decisiones rápidas.',
+    'Incluye cadena causal y Punto 0. Para proyectos importantes.',
+    'Protocolo Omega completo: agentes, stress test, plan de ejecución.'
+  ];
+  document.getElementById('levelHint').textContent = hints[level];
+}
+
+// ═══ CLIPBOARD ═══
+function clipCopy(text, msg){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(function(){showToast(msg);trackEvent('prompt_copied',{})}).catch(function(){clipFallback(text,msg)});
+  } else {clipFallback(text,msg)}
+}
+function clipFallback(text, msg){
+  const ta = document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;left:-9999px';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');showToast(msg)}catch(e){showToast('Ctrl+C para copiar')}
+  document.body.removeChild(ta);
+}
+function copyPrompt(){clipCopy(prompts[currentLevel],'Prompt copiado — pégalo en cualquier IA')}
+
+function downloadPrompt(){
+  const blob = new Blob([prompts[currentLevel]],{type:'text/plain'});
+  const a = document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='omega-prompt-nivel-'+(currentLevel+1)+'.txt';a.click();
+  showToast('Descargado');
+}
+
+function shareResult(){
+  const text = 'Mi Punto 0 (por Omega Platform):\n\n'+currentResult.punto0.text.replace('PUNTO 0: ','')+'\n\nEncuentra el tuyo →';
+  if(navigator.share){navigator.share({title:'Mi Punto 0',text:text}).catch(function(){})}
+  else{clipCopy(text,'Copiado para compartir')}
+}
+
+// ═══ PDF EXPORT ═══
+function exportPDF(){
+  if(!isPro){showProModal('pdf');return}
+  const content = '<html><head><title>Omega Analysis - '+currentResult.goal+'</title>';
+  let html = content+'<style>body{font-family:system-ui;max-width:700px;margin:40px auto;color:#222;line-height:1.6}h1{color:#00a080}h2{color:#555;border-bottom:1px solid #ddd;padding-bottom:8px}.p0{background:#f0faf7;border-left:4px solid #00a080;padding:16px;margin:16px 0}.chain{padding:4px 0}.agent{border-left:3px solid #7b61ff;padding:8px 16px;margin:8px 0}.tension{background:#fff5f5;border:1px solid #ffcccc;padding:12px;border-radius:8px;margin:16px 0}</style></head><body>';
+  html += '<h1>Omega Platform — Análisis Estratégico</h1>';
+  html += '<p><em>'+new Date().toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'})+'</em></p>';
+  html += '<h2>Objetivo</h2><p>'+esc(currentResult.goal)+'</p>';
+  html += '<h2>Punto 0 — Tu decisión atómica</h2><div class="p0"><strong>'+esc(currentResult.punto0.text.replace('PUNTO 0: ',''))+'</strong></div>';
+  html += '<h2>Cadena causal</h2>';
+  currentResult.chain.forEach(function(s){html += '<div class="chain">'+(s.type==='punto0'?'★ <strong>':s.type==='goal'?'🎯 ':'→ ')+esc(s.text)+(s.type==='punto0'?'</strong>':'')+'</div>'});
+  html += '<h2>Resumen ejecutivo</h2>';
+  html += '<p><strong>Mayor palanca:</strong> '+esc(currentResult.summary.lever)+'</p>';
+  html += '<p><strong>Mayor riesgo:</strong> '+esc(currentResult.summary.risk)+'</p>';
+  html += '<p><strong>Primera acción:</strong> '+esc(currentResult.summary.firstStep)+'</p>';
+  html += '<h2>Agentes adaptativos</h2>';
+  currentResult.agents.forEach(function(a){html += '<div class="agent"><strong>'+esc(a.role)+'</strong><br><em>Sesgo: '+esc(a.bias)+'</em><br>'+esc(a.rec)+'</div>'});
+  if(currentResult.tension){html += '<div class="tension"><strong>Tensión:</strong> '+esc(currentResult.tension)+'</div>'}
+  html += '<hr><p style="color:#999;font-size:12px">Generado por Omega Platform PRO · omegaplatform.ai</p>';
+  html += '</body></html>';
+
+  const win = window.open('','_blank');
+  if(!win){showToast('Permite ventanas emergentes para exportar PDF');return;}
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function(){win.print()},500);
+  trackEvent('pdf_exported', {});
+}
+
+// ═══ MEMORY ═══
+function getMemory(){try{return JSON.parse(localStorage.getItem('omega_v1_memory')||'{}')}catch(e){return {}}}
+function saveMemory(mem){try{localStorage.setItem('omega_v1_memory',JSON.stringify(mem))}catch(e){}}
+
+function updateMemory(text, ctx, result){
+  let mem = getMemory();
+  if(!mem.analyses) mem.analyses = [];
+  mem.analyses.push({date:new Date().toISOString(),goal:result.goal,punto0:result.punto0.text,sector:ctx.sector});
+  if(mem.analyses.length > 20) mem.analyses = mem.analyses.slice(-20);
+  mem.lastSector = ctx.sector;
+  mem.lastTimeline = ctx.timeline;
+  mem.lastTeam = ctx.team;
+  mem.lastBudget = ctx.budget;
+  mem.totalAnalyses = (mem.totalAnalyses||0) + 1;
+  const sectors = {};
+  mem.analyses.forEach(function(a){if(a.sector && a.sector!=='no especificado'){sectors[a.sector]=(sectors[a.sector]||0)+1}});
+  mem.topSectors = Object.entries(sectors).sort(function(a,b){return b[1]-a[1]}).slice(0,3);
+  saveMemory(mem);
+}
+
+function renderMemoryBanner(){
+  const mem = getMemory();
+  if(!mem.totalAnalyses || mem.totalAnalyses < 1){document.getElementById('memoryBanner').classList.remove('visible');return}
+  let chips = '';
+  if(mem.lastSector && mem.lastSector!=='no especificado') chips += '<span class="memory-chip" onclick="applyMemory(\'sector\')">'+esc(mem.lastSector)+'</span>';
+  if(mem.lastTimeline && mem.lastTimeline!=='no especificado') chips += '<span class="memory-chip" onclick="applyMemory(\'timeline\')">'+esc(mem.lastTimeline)+'</span>';
+  if(mem.lastTeam && mem.lastTeam!=='no especificado') chips += '<span class="memory-chip" onclick="applyMemory(\'team\')">'+esc(mem.lastTeam)+'</span>';
+  if(mem.lastBudget && mem.lastBudget!=='no especificado') chips += '<span class="memory-chip" onclick="applyMemory(\'budget\')">'+esc(mem.lastBudget)+'</span>';
+  chips += '<span class="memory-chip" style="color:var(--accent)">'+esc(mem.totalAnalyses)+' análisis</span>';
+  if(mem.topSectors && mem.topSectors.length>0 && mem.topSectors[0][1]>1){
+    chips += '<span class="memory-chip" style="border-color:var(--accent2);color:var(--accent2)">Patrón: '+esc(mem.topSectors[0][0])+' (×'+esc(mem.topSectors[0][1])+')</span>';
+  }
+  document.getElementById('memoryChips').innerHTML = chips;
+  document.getElementById('memoryBanner').classList.add('visible');
+}
+
+function applyMemory(field){
+  const mem = getMemory();
+  const map = {sector:'ctxSector',timeline:'ctxTimeline',team:'ctxTeam',budget:'ctxBudget'};
+  const el = document.getElementById(map[field]);
+  const val = mem['last'+field.charAt(0).toUpperCase()+field.slice(1)];
+  if(el && val){el.value=val;if(!document.getElementById('contextFields').classList.contains('open'))toggleContext();showToast('Contexto aplicado')}
+}
+
+// ═══ UI UTILS ═══
+function showToast(msg){
+  const t = document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2500);
+}
+
+function updateLoadingProgress(step){
+  const steps = ['step1','step2','step3','step4'];
+  steps.forEach(function(id,i){
+    const el = document.getElementById(id);
+    if(i < step) el.classList.add('done');
+    else if(i === step) el.classList.add('active');
+    else{el.classList.remove('done','active')}
+  });
+}
+
+function showLoading(on){
+  document.getElementById('loading').classList.toggle('active',on);
+  if(!on){if(loadingInterval){clearInterval(loadingInterval);loadingInterval=null}return}
+  const messages = ['Analizando tu objetivo...','Aplicando causalidad inversa...','Generando agentes adaptativos...','Construyendo cadena causal...'];
+  let i=0;
+  const lt=document.getElementById('loadingText');
+  lt.textContent=messages[0];
+  updateLoadingProgress(0);
+  loadingInterval=setInterval(function(){
+    i++;
+    if(i<messages.length){lt.textContent=messages[i];updateLoadingProgress(i)}
+    else{clearInterval(loadingInterval);loadingInterval=null}
+  },CONFIG.LOADING_STEP_MS);
+}
+
+// ═══ ERROR HANDLER ═══
+window.onerror = function(msg){showToast('Error: '+msg);showLoading(false);return true;};
+
+// ═══ SCROLL REVEAL ═══
+var revealObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');revealObserver.unobserve(e.target)}});
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.feature-card, .price-card, .proof-stat, .proof-quote').forEach(function(el){
+  el.classList.add('reveal');
+  revealObserver.observe(el);
+});
+
+// ═══ INIT ═══
+updateUsageUI();
+renderMemoryBanner();
+checkFirstVisit();
+
+// URL params (sanitized)
+const params = new URLSearchParams(window.location.search);
+if(params.get('q')){
+  let q = decodeURIComponent(params.get('q')).substring(0, CONFIG.MAX_INPUT_LENGTH);
+  q = q.replace(/[<>`']/g, '').replace(/[^\w\s.,á-úñÁ-ÚÑ]/g,'');
+  goalInput.value = q;
+  goalInput.dispatchEvent(new Event('input'));
+}
+
+// PRO activation via token
+if(params.get('pro_token')){
+  try{const token=params.get('pro_token');localStorage.setItem('omega_v1_pro_token',token);isPro=true;updateUsageUI()}catch(e){}
+} else {
+  try{if(localStorage.getItem('omega_v1_pro_token')){isPro=true;updateUsageUI()}}catch(e){}
+}
+
+// Expose functions to global scope for onclick handlers
+window.analyze = analyze;
+window.goScreen = goScreen;
+window.toggleContext = toggleContext;
+window.loadTemplate = loadTemplate;
+window.toggleHistory = toggleHistory;
+window.showProModal = showProModal;
+window.closeProModal = closeProModal;
+window.handleUpgrade = handleUpgrade;
+window.dismissOnboarding = dismissOnboarding;
+window.copyPrompt = copyPrompt;
+window.shareResult = shareResult;
+window.downloadPrompt = downloadPrompt;
+window.exportPDF = exportPDF;
+window.selectLevel = selectLevel;
+window.showEmailCapture = showEmailCapture;
+window.captureEmail = captureEmail;
+window.dismissEmail = dismissEmail;
+window.applyMemory = applyMemory;
+window.loadFromHistory = loadFromHistory;
+
+})();
+</script>
+</body>
+</html>
