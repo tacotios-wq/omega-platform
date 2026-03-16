@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omega Auditor — Eval Viewer</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a28;
+    --border: #2a2a3a;
+    --amber: #E99B2A;
+    --orange: #F97316;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --text: #F3EDE8;
+    --text-dim: #8a8a9a;
+    --text-muted: #555568;
+    --font: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+  /* Header */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .header-left { display: flex; align-items: center; gap: 1rem; }
+  .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--amber), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .version { font-size: 0.7rem; color: var(--text-muted); font-family: var(--font); padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; }
+  .header-actions { display: flex; gap: 0.5rem; }
+  .btn { padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 0.85rem; transition: all 0.2s; font-family: var(--font-sans); }
+  .btn:hover { border-color: var(--amber); background: rgba(233,155,42,0.1); }
+  .btn-primary { background: linear-gradient(135deg, var(--amber), var(--orange)); border: none; color: #000; font-weight: 600; }
+  .btn-primary:hover { opacity: 0.9; }
+
+  /* Layout */
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+  /* Stats Row */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative; overflow: hidden; }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--amber), var(--orange)); }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .stat-value { font-size: 2rem; font-weight: 800; font-family: var(--font); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.amber { color: var(--amber); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.blue { color: var(--blue); }
+  .stat-delta { font-size: 0.75rem; color: var(--green); margin-top: 0.25rem; }
+
+  /* Sections */
+  .section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1.5rem; overflow: hidden; }
+  .section-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .section-title { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+  .section-body { padding: 1.5rem; }
+
+  /* Score Ring */
+  .score-ring-container { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; padding: 2rem 0; }
+  .score-ring { text-align: center; }
+  .score-ring svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 8; }
+  .score-ring .bg { stroke: var(--surface2); }
+  .score-ring .fill { stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .score-ring .label { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem; }
+  .score-ring .value { font-size: 1.8rem; font-weight: 800; font-family: var(--font); }
+
+  /* Eval Table */
+  .eval-table { width: 100%; border-collapse: collapse; }
+  .eval-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  .eval-table td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(42,42,58,0.5); font-size: 0.85rem; vertical-align: top; }
+  .eval-table tr:hover td { background: rgba(233,155,42,0.03); }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; gap: 4px; }
+  .badge-pass { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-warn { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .badge-fail { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .badge-info { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+
+  /* Impact bar */
+  .impact-bar { height: 6px; border-radius: 3px; background: var(--surface2); position: relative; width: 100px; }
+  .impact-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+
+  /* Punto 0 */
+  .punto-zero { background: linear-gradient(135deg, rgba(233,155,42,0.1), rgba(249,115,22,0.05)); border: 1px solid rgba(233,155,42,0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .punto-zero-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .punto-zero-icon { font-size: 2rem; }
+  .punto-zero-title { font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, var(--amber), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .punto-zero-desc { color: var(--text-dim); line-height: 1.6; font-size: 0.9rem; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 1.5rem; }
+  .timeline-dot { position: absolute; left: -2rem; top: 2px; width: 18px; height: 18px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; font-size: 8px; }
+  .timeline-dot.pass { border-color: var(--green); background: rgba(34,197,94,0.2); }
+  .timeline-dot.warn { border-color: var(--yellow); background: rgba(234,179,8,0.2); }
+  .timeline-dot.fail { border-color: var(--red); background: rgba(239,68,68,0.2); }
+  .timeline-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+  .timeline-meta { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* Filters */
+  .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); cursor: pointer; font-size: 0.75rem; transition: all 0.2s; }
+  .filter-btn.active { border-color: var(--amber); color: var(--amber); background: rgba(233,155,42,0.1); }
+  .filter-btn:hover { border-color: var(--amber); }
+
+  /* JSON Input */
+  .json-input-area { width: 100%; min-height: 200px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; color: var(--text); font-family: var(--font); font-size: 0.8rem; resize: vertical; }
+  .json-input-area:focus { outline: none; border-color: var(--amber); }
+
+  /* Drag Drop */
+  .drop-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 3rem; text-align: center; transition: all 0.3s; cursor: pointer; }
+  .drop-zone:hover, .drop-zone.active { border-color: var(--amber); background: rgba(233,155,42,0.05); }
+  .drop-zone-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .drop-zone-text { color: var(--text-dim); font-size: 0.9rem; }
+
+  /* Charts area */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .chart-card { background: var(--surface2); border-radius: 8px; padding: 1rem; }
+  .chart-title { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .bar-chart { display: flex; flex-direction: column; gap: 0.5rem; }
+  .bar-row { display: flex; align-items: center; gap: 0.75rem; }
+  .bar-label { width: 120px; font-size: 0.75rem; color: var(--text-dim); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { flex: 1; height: 20px; background: var(--bg); border-radius: 4px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; display: flex; align-items: center; padding-left: 8px; font-size: 0.7rem; font-weight: 600; }
+  .bar-fill.green { background: linear-gradient(90deg, rgba(34,197,94,0.8), rgba(34,197,94,0.4)); }
+  .bar-fill.amber { background: linear-gradient(90deg, rgba(233,155,42,0.8), rgba(233,155,42,0.4)); }
+  .bar-fill.red { background: linear-gradient(90deg, rgba(239,68,68,0.8), rgba(239,68,68,0.4)); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 1rem; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .score-ring-container { gap: 1.5rem; }
+  }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 4rem 2rem; }
+  .empty-state-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+  .empty-state-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .empty-state-desc { color: var(--text-muted); font-size: 0.9rem; max-width: 500px; margin: 0 auto; }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.5s ease forwards; }
+  .delay-1 { animation-delay: 0.1s; opacity: 0; }
+  .delay-2 { animation-delay: 0.2s; opacity: 0; }
+  .delay-3 { animation-delay: 0.3s; opacity: 0; }
+  .delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+  .tab { padding: 0.75rem 1.5rem; cursor: pointer; color: var(--text-muted); font-size: 0.85rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+  .tab:hover { color: var(--text); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Collapsible */
+  .collapsible-header { cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+  .collapsible-header .arrow { transition: transform 0.3s; }
+  .collapsible-header.open .arrow { transform: rotate(90deg); }
+  .collapsible-body { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
+  .collapsible-body.open { max-height: 5000px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">⚡ Omega Auditor</div>
+    <span class="version">Eval Viewer v2.0</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn" id="loadSampleBtn">📋 Cargar Ejemplo</button>
+    <button class="btn" id="importBtn">📂 Importar JSON</button>
+    <button class="btn btn-primary" id="exportBtn">⬇ Exportar Reporte</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Empty State / Drop Zone -->
+  <div id="emptyState">
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-zone-icon">🎯</div>
+      <div class="empty-state-title">Arrastra un archivo de evaluación aquí</div>
+      <div class="drop-zone-text">
+        Acepta archivos JSON generados por <code>omega_audit.py</code><br>
+        o haz clic en <strong>Cargar Ejemplo</strong> para ver un demo
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept=".json" style="display:none">
+  </div>
+
+  <!-- Dashboard (hidden initially) -->
+  <div id="dashboard" style="display:none">
+
+    <!-- Punto 0 -->
+    <div class="punto-zero fade-in" id="puntoZero">
+      <div class="punto-zero-header">
+        <div class="punto-zero-icon">🎯</div>
+        <div>
+          <div class="punto-zero-title" id="p0Title">—</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">PUNTO 0 — Acción de mayor impacto</div>
+        </div>
+      </div>
+      <div class="punto-zero-desc" id="p0Desc">—</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card fade-in delay-1">
+        <div class="stat-label">Score Global</div>
+        <div class="stat-value amber" id="statScore">—</div>
+      </div>
+      <div class="stat-card fade-in delay-2">
+        <div class="stat-label">Hallazgos</div>
+        <div class="stat-value blue" id="statFindings">—</div>
+      </div>
+      <div class="stat-card fade-in delay-3">
+        <div class="stat-label">Críticos</div>
+        <div class="stat-value red" id="statCritical">—</div>
+      </div>
+      <div class="stat-card fade-in delay-4">
+        <div class="stat-label">Aprobados</div>
+        <div class="stat-value green" id="statPassed">—</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="overview">Vista General</div>
+      <div class="tab" data-tab="findings">Hallazgos</div>
+      <div class="tab" data-tab="dimensions">Dimensiones</div>
+      <div class="tab" data-tab="timeline">Timeline</div>
+      <div class="tab" data-tab="raw">JSON Raw</div>
+    </div>
+
+    <!-- Tab: Overview -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="chart-grid">
+        <div class="section">
+          <div class="section-header"><div class="section-title">📊 Score por Dimensión</div></div>
+          <div class="section-body">
+            <div class="score-ring-container" id="scoreRings"></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-header"><div class="section-title">📈 Distribución de Hallazgos</div></div>
+          <div class="section-body">
+            <div class="bar-chart" id="findingsChart"></div>
+          </div>
+        </div>
+      </div>
+      <div class="section" style="margin-top:1.5rem">
+        <div class="section-header"><div class="section-title">🔥 Top 5 Acciones de Mayor Impacto</div></div>
+        <div class="section-body">
+          <table class="eval-table" id="topActions">
+            <thead><tr><th>#</th><th>Acción</th><th>Impacto</th><th>Esfuerzo</th><th>Ratio</th><th>Estado</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Findings -->
+    <div class="tab-content" id="tab-findings">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🔍 Todos los Hallazgos</div>
+          <div class="filters" id="findingFilters">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="critical">🔴 Crítico</button>
+            <button class="filter-btn" data-filter="warning">🟡 Advertencia</button>
+            <button class="filter-btn" data-filter="pass">🟢 Aprobado</button>
+            <button class="filter-btn" data-filter="info">🔵 Info</button>
+          </div>
+        </div>
+        <div class="section-body">
+          <table class="eval-table" id="findingsTable">
+            <thead><tr><th>Dimensión</th><th>Hallazgo</th><th>Severidad</th><th>Impacto</th><th>Detalle</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Dimensions -->
+    <div class="tab-content" id="tab-dimensions">
+      <div id="dimensionsList"></div>
+    </div>
+
+    <!-- Tab: Timeline -->
+    <div class="tab-content" id="tab-timeline">
+      <div class="section">
+        <div class="section-header"><div class="section-title">⏱ Historial de Auditorías</div></div>
+        <div class="section-body">
+          <div class="timeline" id="auditTimeline"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Raw JSON -->
+    <div class="tab-content" id="tab-raw">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">{ } JSON Raw</div>
+          <button class="btn" id="copyJsonBtn">📋 Copiar</button>
+        </div>
+        <div class="section-body">
+          <textarea class="json-input-area" id="rawJson" readonly style="min-height:400px"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ===== STATE =====
+  let evalData = null;
+  let auditHistory = JSON.parse(localStorage.getItem('omega_audit_history') || '[]');
+
+  // ===== SAMPLE DATA =====
+  const SAMPLE = {
+    meta: {
+      project: "omega-platform",
+      type: "html",
+      timestamp: new Date().toISOString(),
+      version: "2.0",
+      auditor: "omega_audit.py"
+    },
+    score: 72,
+    punto_zero: {
+      title: "Implementar lazy loading en componentes pesados",
+      description: "El bundle principal carga 89KB de JS que no se usa en el render inicial. Implementar code splitting y lazy loading reduciría el First Contentful Paint un 40% y mejoraría la retención de usuarios móviles.",
+      impact: 9,
+      effort: 3,
+      ratio: 3.0
+    },
+    dimensions: [
+      {
+        name: "Performance",
+        score: 58,
+        findings: [
+          { title: "Bundle size excesivo", severity: "critical", impact: 9, detail: "89KB de JS no utilizado en render inicial" },
+          { title: "Imágenes sin optimizar", severity: "warning", impact: 6, detail: "12 imágenes sin WebP/AVIF" },
+          { title: "CDN configurado", severity: "pass", impact: 0, detail: "Vercel Edge Network activo" }
+        ]
+      },
+      {
+        name: "Arquitectura",
+        score: 78,
+        findings: [
+          { title: "Separación de concerns correcta", severity: "pass", impact: 0, detail: "Módulos bien definidos" },
+          { title: "Sin manejo de errores global", severity: "warning", impact: 5, detail: "No hay error boundary ni fallback UI" },
+          { title: "State management limpio", severity: "pass", impact: 0, detail: "Vanilla JS con patrones claros" }
+        ]
+      },
+      {
+        name: "UX/Accesibilidad",
+        score: 65,
+        findings: [
+          { title: "Contraste insuficiente en textos secundarios", severity: "warning", impact: 4, detail: "Ratio 3.2:1, mínimo WCAG es 4.5:1" },
+          { title: "Sin aria-labels en botones icon-only", severity: "critical", impact: 7, detail: "8 botones sin texto accesible" },
+          { title: "Responsive design funcional", severity: "pass", impact: 0, detail: "Breakpoints correctos hasta 320px" }
+        ]
+      },
+      {
+        name: "SEO",
+        score: 82,
+        findings: [
+          { title: "Meta tags completos", severity: "pass", impact: 0, detail: "Title, description, OG tags presentes" },
+          { title: "Sitemap presente", severity: "pass", impact: 0, detail: "sitemap.xml válido" },
+          { title: "Structured data faltante", severity: "info", impact: 3, detail: "Añadir JSON-LD para SoftwareApplication" }
+        ]
+      },
+      {
+        name: "Seguridad",
+        score: 75,
+        findings: [
+          { title: "CSP headers ausentes", severity: "warning", impact: 6, detail: "Content Security Policy no configurado" },
+          { title: "HTTPS forzado", severity: "pass", impact: 0, detail: "Redirect 301 activo" },
+          { title: "Sin inyección de datos de usuario", severity: "pass", impact: 0, detail: "Inputs sanitizados correctamente" }
+        ]
+      }
+    ],
+    actions: [
+      { title: "Lazy loading de componentes", impact: 9, effort: 3, ratio: 3.0, status: "pending" },
+      { title: "Añadir aria-labels", impact: 7, effort: 2, ratio: 3.5, status: "pending" },
+      { title: "Optimizar imágenes a WebP", impact: 6, effort: 2, ratio: 3.0, status: "pending" },
+      { title: "Configurar CSP headers", impact: 6, effort: 3, ratio: 2.0, status: "pending" },
+      { title: "Mejorar contraste de textos", impact: 4, effort: 1, ratio: 4.0, status: "pending" },
+      { title: "Añadir error boundaries", impact: 5, effort: 3, ratio: 1.67, status: "pending" },
+      { title: "Implementar JSON-LD", impact: 3, effort: 2, ratio: 1.5, status: "pending" }
+    ]
+  };
+
+  // ===== RENDER FUNCTIONS =====
+  function getColor(score) {
+    if (score >= 80) return 'green';
+    if (score >= 60) return 'amber';
+    return 'red';
+  }
+
+  function getSeverityBadge(severity) {
+    const map = { critical: 'fail', warning: 'warn', pass: 'pass', info: 'info' };
+    const labels = { critical: '🔴 Crítico', warning: '🟡 Advertencia', pass: '🟢 Aprobado', info: '🔵 Info' };
+    return '<span class="badge badge-' + (map[severity] || 'info') + '">' + (labels[severity] || severity) + '</span>';
+  }
+
+  function createScoreRing(name, score) {
+    const color = score >= 80 ? '#22c55e' : score >= 60 ? '#E99B2A' : '#ef4444';
+    const circumference = 2 * Math.PI * 48;
+    const offset = circumference - (score / 100) * circumference;
+    return '<div class="score-ring">' +
+      '<svg viewBox="0 0 120 120">' +
+        '<circle class="bg" cx="60" cy="60" r="48"/>' +
+        '<circle class="fill" cx="60" cy="60" r="48" stroke="' + color + '" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + offset + '"/>' +
+      '</svg>' +
+      '<div class="value" style="color:' + color + ';margin-top:-80px;position:relative;">' + score + '</div>' +
+      '<div class="label" style="position:relative;">' + name + '</div>' +
+    '</div>';
+  }
+
+  function renderDashboard(data) {
+    evalData = data;
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    // Punto 0
+    document.getElementById('p0Title').textContent = data.punto_zero.title;
+    document.getElementById('p0Desc').textContent = data.punto_zero.description;
+
+    // Stats
+    document.getElementById('statScore').textContent = data.score + '/100';
+    document.getElementById('statScore').className = 'stat-value ' + getColor(data.score);
+
+    let totalFindings = 0, criticalCount = 0, passCount = 0;
+    data.dimensions.forEach(function(d) {
+      d.findings.forEach(function(f) {
+        totalFindings++;
+        if (f.severity === 'critical') criticalCount++;
+        if (f.severity === 'pass') passCount++;
+      });
+    });
+    document.getElementById('statFindings').textContent = totalFindings;
+    document.getElementById('statCritical').textContent = criticalCount;
+    document.getElementById('statPassed').textContent = passCount;
+
+    // Score Rings
+    var ringsHTML = '';
+    data.dimensions.forEach(function(d) {
+      ringsHTML += createScoreRing(d.name, d.score);
+    });
+    document.getElementById('scoreRings').innerHTML = ringsHTML;
+
+    // Findings Chart
+    var chartHTML = '';
+    data.dimensions.forEach(function(d) {
+      var c = getColor(d.score);
+      chartHTML += '<div class="bar-row">' +
+        '<div class="bar-label">' + d.name + '</div>' +
+        '<div class="bar-track"><div class="bar-fill ' + c + '" style="width:' + d.score + '%">' + d.score + '%</div></div>' +
+      '</div>';
+    });
+    document.getElementById('findingsChart').innerHTML = chartHTML;
+
+    // Top Actions
+    var actionsHTML = '';
+    var sorted = (data.actions || []).slice().sort(function(a, b) { return b.ratio - a.ratio; }).slice(0, 5);
+    sorted.forEach(function(a, i) {
+      var impactColor = a.impact >= 7 ? 'var(--red)' : a.impact >= 4 ? 'var(--amber)' : 'var(--green)';
+      actionsHTML += '<tr>' +
+        '<td style="color:var(--text-muted)">' + (i + 1) + '</td>' +
+        '<td><strong>' + a.title + '</strong></td>' +
+        '<td><div class="impact-bar"><div class="impact-bar-fill" style="width:' + (a.impact * 10) + '%;background:' + impactColor + '"></div></div> ' + a.impact + '/10</td>
+        '<td>' + a.effort + '/10</td>
+        '<td style="font-weight:700;color:var(--amber)">' + a.ratio.toFixed(1) + 'x</td>
+        '<td>' + (a.status === 'done' ? '<span class="badge badge-pass">✓ Hecho</span>' : '<span class="badge badge-warn">Pendiente</span>') + '</td>
+      </tr>';
+    });
+    document.querySelector('#topActions tbody').innerHTML = actionsHTML;
+
+    // Findings Table
+    renderFindings('all');
+
+    // Dimensions
+    var dimHTML = '';
+    data.dimensions.forEach(function(d) {
+      var findingsRows = '';
+      d.findings.forEach(function(f) {
+        findingsRows += '<tr><td>' + f.title + '</td><td>' + getSeverityBadge(f.severity) + '</td><td>' + (f.impact || '—') + '</td><td style="color:var(--text-dim)">' + (f.detail || '') + '</td></tr>';
+      });
+      dimHTML += '<div class="section" style="margin-bottom:1rem">' +
+        '<div class="section-header collapsible-header" onclick="this.classList.toggle(\'open\');this.parentElement.querySelector(\'.collapsible-body\').classList.toggle(\'open\')">' +
+          '<div class="section-title">' + createScoreRing(d.name, d.score).replace(/<svg.*?<\/svg>/, '').replace(/<div.*?<\/div>/g, '') + d.name + ' — <span style="color:' + (d.score >= 80 ? 'var(--green)' : d.score >= 60 ? 'var(--amber)' : 'var(--red)') + '">' + d.score + '/100</span></div>' +
+          '<span class="arrow">▶</span>' +
+        '</div>' +
+        '<div class="collapsible-body"><div style="padding:1rem">' +
+          '<table class="eval-table"><thead><tr><th>Hallazgo</th><th>Severidad</th><th>Impacto</th><th>Detalle</th></tr></thead><tbody>' + findingsRows + '</tbody></table>' +
+        '</div></div>' +
+      '</div>';
+    });
+    document.getElementById('dimensionsList').innerHTML = dimHTML;
+
+    // Timeline
+    renderTimeline(data);
+
+    // Raw JSON
+    document.getElementById('rawJson').value = JSON.stringify(data, null, 2);
+  }
+
+  function renderFindings(filter) {
+    var rows = '';
+    evalData.dimensions.forEach(function(d) {
+      d.findings.forEach(function(f) {
+        if (filter !== 'all' && f.severity !== filter) return;
+        rows += '<tr>' +
+          '<td style="color:var(--text-dim)">' + d.name + '</td>' +
+          '<td><strong>' + f.title + '</strong></td>' +
+          '<td>' + getSeverityBadge(f.severity) + '</td>' +
+          '<td>' + (f.impact || '—') + '</td>' +
+          '<td style="color:var(--text-dim);max-width:300px">' + (f.detail || '') + '</td>' +
+        '</tr>';
+      });
+    });
+    document.querySelector('#findingsTable tbody').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Sin hallazgos en esta categoría</td></tr>';
+  }
+
+  function renderTimeline(data) {
+    var items = [{ data: data, ts: data.meta.timestamp }];
+    auditHistory.forEach(function(h) {
+      if (h.meta.timestamp !== data.meta.timestamp) items.push({ data: h, ts: h.meta.timestamp });
+    });
+    items.sort(function(a, b) { return new Date(b.ts) - new Date(a.ts); });
+
+    var html = '';
+    items.slice(0, 10).forEach(function(item) {
+      var d = item.data;
+      var dotClass = d.score >= 80 ? 'pass' : d.score >= 60 ? 'warn' : 'fail';
+      html += '<div class="timeline-item">' +
+        '<div class="timeline-dot ' + dotClass + '"></div>' +
+        '<div class="timeline-title">' + (d.meta.project || 'Proyecto') + ' — Score: ' + d.score + '/100</div>' +
+        '<div class="timeline-meta">' + new Date(d.meta.timestamp).toLocaleString('es-ES') + ' · ' + (d.dimensions || []).length + ' dimensiones · Punto 0: ' + (d.punto_zero ? d.punto_zero.title : '—') + '</div>' +
+      '</div>';
+    });
+    document.getElementById('auditTimeline').innerHTML = html || '<div style="color:var(--text-muted);text-align:center">Sin historial previo</div>';
+  }
+
+  // ===== EVENTS =====
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Finding Filters
+  document.getElementById('findingFilters').addEventListener('click', function(e) {
+    if (!e.target.classList.contains('filter-btn')) return;
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    e.target.classList.add('active');
+    renderFindings(e.target.dataset.filter);
+  });
+
+  // Load Sample
+  document.getElementById('loadSampleBtn').addEventListener('click', function() {
+    renderDashboard(SAMPLE);
+  });
+
+  // Import JSON
+  document.getElementById('importBtn').addEventListener('click', function() {
+    document.getElementById('fileInput').click();
+  });
+  document.getElementById('fileInput').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        var data = JSON.parse(ev.target.result);
+        // Save to history
+        auditHistory.unshift(data);
+        if (auditHistory.length > 20) auditHistory = auditHistory.slice(0, 20);
+        try { localStorage.setItem('omega_audit_history', JSON.stringify(auditHistory)); } catch(e) {}
+        renderDashboard(data);
+      } catch (err) {
+        alert('Error al parsear JSON: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  // Drop Zone
+  var dropZone = document.getElementById('dropZone');
+  if (dropZone) {
+    dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('active'); });
+    dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('active'); });
+    dropZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      dropZone.classList.remove('active');
+      var file = e.dataTransfer.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          try {
+            var data = JSON.parse(ev.target.result);
+            auditHistory.unshift(data);
+            try { localStorage.setItem('omega_audit_history', JSON.stringify(auditHistory)); } catch(e) {}
+            renderDashboard(data);
+          } catch (err) {
+            alert('Error al parsear JSON: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      }
+    });
+    dropZone.addEventListener('click', function() {
+      document.getElementById('fileInput').click();
+    });
+  }
+
+  // Copy JSON
+  document.getElementById('copyJsonBtn').addEventListener('click', function() {
+    var ta = document.getElementById('rawJson');
+    ta.select();
+    document.execCommand('copy');
+    var btn = document.getElementById('copyJsonBtn');
+    btn.textContent = '✓ Copiado';
+    setTimeout(function() { btn.textContent = '📋 Copiar'; }, 2000);
+  });
+
+  // Export
+  document.getElementById('exportBtn').addEventListener('click', function() {
+    if (!evalData) { alert('Carga una evaluación primero'); return; }
+    var blob = new Blob([JSON.stringify(evalData, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'omega-audit-' + (evalData.meta.project || 'report') + '-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+  });
+
+  // Check URL params for auto-load
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('demo') === '1') {
+    renderDashboard(SAMPLE);
+  }
+})();
+</script>
+</body>
+</html>
