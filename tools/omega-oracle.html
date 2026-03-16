@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omega Oracle â Encuentra el prompt perfecto para cualquier problema</title>
+<meta name="description" content="Omega Oracle analiza tu problema y genera el meta-prompt perfecto para obtener la mejor respuesta posible de cualquier IA. Protocolo Omega: causalidad inversa, selecciÃ³n cuÃ¡ntica, agentes adaptativos.">
+<meta property="og:title" content="Omega Oracle â El prompt perfecto para cada problema">
+<meta property="og:description" content="Analiza tu problema. Detecta el nivel de complejidad. Genera el meta-prompt exacto que necesitas.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#6366f1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>âï¸</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* âââââââ Design Tokens âââââââ */
+:root {
+  /* Background layers */
+  --bg-base: #06060b;
+  --bg-surface: #0c0c14;
+  --bg-elevated: #13131f;
+  --bg-hover: #1a1a2a;
+
+  /* Borders */
+  --border: #1e1e30;
+  --border-hover: #2a2a40;
+  --border-focus: #6366f1;
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Accent palette */
+  --accent: #818cf8;
+  --accent-strong: #6366f1;
+  --accent-deep: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, .15);
+
+  /* Semantic colors */
+  --pink: #ec4899;
+  --pink-bg: rgba(236, 72, 153, .10);
+  --green: #34d399;
+  --green-bg: rgba(52, 211, 153, .08);
+  --yellow: #fbbf24;
+  --yellow-bg: rgba(251, 191, 36, .08);
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, .08);
+  --cyan: #22d3ee;
+  --orange: #fb923c;
+  --orange-bg: rgba(251, 146, 60, .08);
+
+  /* Radii */
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+
+  /* Transitions */
+  --ease: cubic-bezier(.4, 0, .2, 1);
+  --duration: .25s;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+}
+
+/* âââââââ Reset & Base âââââââ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* âââââââ Layout âââââââ */
+.app { max-width: 820px; margin: 0 auto; padding: 20px; padding-bottom: 100px; }
+
+/* âââââââ Header âââââââ */
+.header {
+  text-align: center;
+  padding: var(--space-2xl) 0 var(--space-xl);
+  position: relative;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,.06) 0%, rgba(236,72,153,.03) 40%, transparent 70%);
+  pointer-events: none;
+}
+.logo {
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: -.03em;
+  background: linear-gradient(135deg, var(--accent), var(--pink), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-sm);
+}
+.tagline {
+  color: var(--text-muted);
+  font-size: .9rem;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* âââââââ Steps (navigation) âââââââ */
+.step { display: none; animation: fadeUp .4s var(--ease); }
+.step.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* âââââââ Progress indicator âââââââ */
+.progress-bar {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+}
+.progress-dot {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background var(--duration) var(--ease), width var(--duration) var(--ease);
+}
+.progress-dot.active {
+  background: var(--accent-strong);
+  width: 48px;
+}
+.progress-dot.done {
+  background: var(--green);
+}
+
+/* âââââââ Cards âââââââ */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+}
+.card-glow {
+  box-shadow: 0 0 60px rgba(99,102,241,.04), 0 0 20px rgba(99,102,241,.02);
+}
+.card h2 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+  color: var(--text-primary);
+}
+.card .subtitle {
+  color: var(--text-muted);
+  font-size: .82rem;
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;
+}
+
+/* âââââââ Textarea âââââââ */
+textarea {
+  width: 100%;
+  min-height: 150px;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: .88rem;
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+}
+textarea:focus {
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+textarea::placeholder { color: var(--text-muted); }
+.char-count {
+  text-align: right;
+  font-size: .72rem;
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* âââââââ Buttons âââââââ */
+.btn {
+  padding: 11px 22px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: .86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration) var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  user-select: none;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent-deep));
+  color: #fff;
+  box-shadow: 0 2px 16px rgba(99,102,241,.20);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px rgba(99,102,241,.30);
+}
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.btn-sm { padding: 7px 14px; font-size: .78rem; }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 7px 12px;
+  font-size: .78rem;
+}
+.btn-ghost:hover { color: var(--text-primary); }
+.btn-group { display: flex; gap: var(--space-sm); margin-top: var(--space-lg); flex-wrap: wrap; align-items: center; }
+
+/* âââââââ Example chips âââââââ */
+.examples-row {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+}
+.example-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg-base);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration) var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.example-chip:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--accent-glow);
+}
+.example-chip .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* âââââââ Impact Meter âââââââ */
+.meter { margin: var(--space-lg) 0; }
+.meter-score {
+  text-align: center;
+  margin-bottom: var(--space-sm);
+}
+.meter-score .number {
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: -.03em;
+  transition: color .6s var(--ease);
+}
+.meter-score .total {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.meter-track {
+  height: 8px;
+  background: var(--bg-base);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  width: 0%;
+  transition: width .8s var(--ease);
+}
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-sm);
+  font-size: .7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+/* âââââââ Factor grid âââââââ */
+.factors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin: var(--space-md) 0;
+}
+.factor {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  font-size: .8rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  transition: all var(--duration) var(--ease);
+  color: var(--text-secondary);
+}
+.factor.active {
+  border-color: var(--green);
+  background: var(--green-bg);
+  color: var(--text-primary);
+}
+.factor .indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--text-muted);
+  opacity: .25;
+  transition: all var(--duration) var(--ease);
+}
+.factor.active .indicator {
+  background: var(--green);
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(52, 211, 153, .4);
+}
+@media (max-width: 600px) { .factors { grid-template-columns: 1fr; } }
+
+/* âââââââ Verdict âââââââ */
+.verdict {
+  margin-top: var(--space-md);
+  padding: 14px var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: .86rem;
+  font-weight: 500;
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+
+/* âââââââ Level selector âââââââ */
+.levels { display: flex; flex-direction: column; gap: 10px; margin: var(--space-md) 0; }
+.level {
+  padding: var(--space-md) 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-base);
+  cursor: pointer;
+  transition: all var(--duration) var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.level:hover { border-color: var(--border-hover); background: var(--bg-elevated); }
+.level.selected { border-color: var(--accent-strong); background: rgba(99,102,241,.05); }
+.level.recommended::after {
+  content: 'RECOMENDADO';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  background: linear-gradient(135deg, var(--accent-strong), var(--accent-deep));
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+.level h3 { font-size: .9rem; font-weight: 600; margin-bottom: 3px; }
+.level p { font-size: .78rem; color: var(--text-muted); line-height: 1.5; padding-right: 90px; }
+.level .meta {
+  font-size: .68rem;
+  color: var(--text-muted);
+  margin-top: var(--space-sm);
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  gap: var(--space-md);
+}
+
+/* âââââââ Result âââââââ */
+.result-box {
+  position: relative;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  margin-top: var(--space-md);
+}
+.result-box pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--text-primary);
+  line-height: 1.7;
+  max-height: 520px;
+  overflow-y: auto;
+}
+.result-actions {
+  display: flex;
+  gap: var(--space-sm);
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: 2;
+}
+.action-btn {
+  background: var(--accent-strong);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-xs);
+  padding: 5px 12px;
+  font-size: .7rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--duration) var(--ease);
+}
+.action-btn:hover { background: var(--accent-deep); }
+.action-btn.copied { background: var(--green); }
+
+/* âââââââ Tags âââââââ */
+.tag {
+  display: inline-block;
+  font-size: .66rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+  margin-right: 3px;
+  margin-bottom: 3px;
+}
+.tag-green { background: var(--green-bg); color: var(--green); }
+.tag-yellow { background: var(--yellow-bg); color: var(--yellow); }
+.tag-pink { background: var(--pink-bg); color: var(--pink); }
+.tag-accent { background: var(--accent-glow); color: var(--accent); }
+.tag-orange { background: var(--orange-bg); color: var(--orange); }
+
+/* âââââââ Explanation box âââââââ */
+.explain-box {
+  margin-top: var(--space-md);
+  padding: 14px;
+  background: var(--bg-base);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: .8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* âââââââ History panel âââââââ */
+.history-toggle {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  z-index: 100;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all var(--duration) var(--ease);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.history-toggle:hover {
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+.history-panel {
+  position: fixed;
+  top: 0; right: -360px;
+  width: 340px;
+  height: 100vh;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  z-index: 200;
+  transition: right .3s var(--ease);
+  overflow-y: auto;
+  padding: var(--space-lg);
+}
+.history-panel.open { right: 0; }
+.history-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,.5);
+  z-index: 199;
+  display: none;
+}
+.history-overlay.open { display: block; }
+.history-panel h3 {
+  font-size: .95rem;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.history-item {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+  transition: all var(--duration) var(--ease);
+  background: var(--bg-base);
+}
+.history-item:hover { border-color: var(--accent); }
+.history-item .hi-text {
+  font-size: .78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.history-item .hi-meta {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  font-size: .66rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.history-empty {
+  text-align: center;
+  padding: var(--space-xl) 0;
+  color: var(--text-muted);
+  font-size: .82rem;
+}
+
+/* âââââââ Footer navigation âââââââ */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border);
+}
+.nav-label { font-size: .73rem; color: var(--text-muted); }
+
+/* âââââââ Footer âââââââ */
+.footer {
+  text-align: center;
+  padding: var(--space-xl) 0 var(--space-md);
+  font-size: .72rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-2xl);
+}
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
+
+/* âââââââ Keyboard shortcut hint âââââââ */
+.kbd {
+  display: inline-block;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: .66rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+/* âââââââ Notification toast âââââââ */
+.toast {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg-surface);
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: .82rem;
+  font-weight: 500;
+  z-index: 300;
+  transition: transform .3s var(--ease);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* âââââââ Scrollbar âââââââ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* âââââââ Animations âââââââ */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+  50% { box-shadow: 0 0 40px rgba(99,102,241,.15); }
+}
+.analyzing { animation: pulse-glow 2s infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.shake { animation: shake .4s var(--ease); }
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.logo {
+  background-size: 200% 200%;
+  animation: gradient-flow 6s ease infinite;
+}
+
+/* âââââââ Responsive âââââââ */
+@media (max-width: 600px) {
+  .app { padding: 14px; }
+  .logo { font-size: 2rem; }
+  .tagline { font-size: .82rem; }
+  .card { padding: var(--space-md); }
+  .level p { padding-right: 0; }
+  .level.recommended::after { position: static; display: inline-block; margin-top: 6px; }
+  .btn-group { flex-direction: column; }
+  .btn-group .btn { width: 100%; justify-content: center; }
+  .history-panel { width: 100%; right: -100%; }
+  .meter-score .number { font-size: 2.4rem; }
+}
+
+/* âââââââ Print âââââââ */
+@media print {
+  .history-toggle, .history-panel, .history-overlay, .nav, .footer { display: none; }
+  body { background: #fff; color: #000; }
+  .card { border: 1px solid #ddd; box-shadow: none; }
+}
+
+/* âââââââ How it works âââââââ */
+.how-it-works {
+  margin-bottom: var(--space-lg);
+}
+.how-toggle {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px var(--space-md);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: .82rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all var(--duration) var(--ease);
+}
+.how-toggle:hover { border-color: var(--accent); color: var(--text-primary); }
+.how-arrow { transition: transform var(--duration) var(--ease); }
+.how-arrow.open { transform: rotate(180deg); }
+.how-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s var(--ease), padding .3s var(--ease);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+.how-content.open {
+  max-height: 400px;
+  padding: var(--space-md);
+}
+.how-steps { display: flex; flex-direction: column; gap: 14px; }
+.how-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.how-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-glow);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.how-step strong { font-size: .84rem; color: var(--text-primary); }
+.how-step p { font-size: .76rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.how-note {
+  margin-top: var(--space-md);
+  font-size: .72rem;
+  color: var(--text-muted);
+  font-style: italic;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border);
+}
+
+/* âââââââ Focus visible (accessibility) âââââââ */
+:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Progress indicator -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-dot active" data-step="1"></div>
+    <div class="progress-dot" data-step="2"></div>
+    <div class="progress-dot" data-step="3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="logo">Omega Oracle</h1>
+    <p class="tagline">Describe tu problema. El orÃ¡culo analiza su complejidad y genera el meta-prompt exacto para obtener la respuesta perfecta de cualquier IA.</p>
+  </header>
+
+  <!-- How it works (collapsible) -->
+  <div class="how-it-works" id="howItWorks">
+    <button class="how-toggle" onclick="toggleHowItWorks()" aria-expanded="false">
+      <span>Â¿CÃ³mo funciona?</span>
+      <span class="how-arrow" id="howArrow">â¾</span>
+    </button>
+    <div class="how-content" id="howContent">
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <div>
+            <strong>Describe tu problema</strong>
+            <p>Escribe tu pregunta, decisiÃ³n o reto tal como se lo dirÃ­as a una IA.</p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <div>
+            <strong>AnÃ¡lisis de impacto</strong>
+            <p>El orÃ¡culo evalÃºa 7 factores: dinero en juego, irreversibilidad, complejidad, personas afectadas...</p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <div>
+            <strong>Prompt perfeccionado</strong>
+            <p>Genera el meta-prompt exacto para tu nivel. CÃ³pialo y pÃ©galo en cualquier IA.</p>
+          </div>
+        </div>
+      </div>
+      <p class="how-note">Basado en el Protocolo Omega: causalidad inversa, selecciÃ³n cuÃ¡ntica de realidades, agentes adaptativos y los 6 Sombreros de De Bono.</p>
+    </div>
+  </div>
+
+  <!-- âââââââ STEP 1: Input âââââââ -->
+  <div class="step active" id="step1">
+    <div class="card card-glow">
+      <h2>Â¿QuÃ© necesitas resolver?</h2>
+      <p class="subtitle">Escribe tu problema, decisiÃ³n o pregunta tal como se la dirÃ­as a una IA.</p>
+      <textarea
+        id="userInput"
+        placeholder="Ejemplo: Tengo una startup B2B con 50k MRR y debo decidir entre levantar una ronda seed de 1.5M o seguir bootstrapping. Mis costes fijos son 30k/mes y somos 5 personas..."
+        aria-label="Describe tu problema o pregunta"
+        spellcheck="true"
+      ></textarea>
+      <div class="char-count"><span id="charCount">0</span> caracteres</div>
+
+      <div class="examples-row">
+        <button class="example-chip" onclick="loadExample(0)" aria-label="Cargar ejemplo: DecisiÃ³n de inversiÃ³n">
+          <span class="dot" style="background:var(--pink)"></span> DecisiÃ³n financiera
+        </button>
+        <button class="example-chip" onclick="loadExample(1)" aria-label="Cargar ejemplo: Rebranding">
+          <span class="dot" style="background:var(--yellow)"></span> Rebranding
+        </button>
+        <button class="example-chip" onclick="loadExample(2)" aria-label="Cargar ejemplo: Dato tÃ©cnico">
+          <span class="dot" style="background:var(--green)"></span> Dato tÃ©cnico
+        </button>
+        <button class="example-chip" onclick="loadExample(3)" aria-label="Cargar ejemplo: Carrera profesional">
+          <span class="dot" style="background:var(--cyan)"></span> DecisiÃ³n vital
+        </button>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="analyze()" id="analyzeBtn">
+          Analizar complejidad
+        </button>
+        <span style="font-size:.72rem;color:var(--text-muted)">o pulsa <kbd class="kbd">Ctrl+Enter</kbd></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- âââââââ STEP 2: Analysis âââââââ -->
+  <div class="step" id="step2">
+    <div class="card" id="analysisCard">
+      <h2>DiagnÃ³stico de Impacto</h2>
+      <p class="subtitle">El orÃ¡culo ha evaluado la complejidad y consecuencias de tu peticiÃ³n.</p>
+
+      <div class="meter">
+        <div class="meter-score">
+          <span class="number" id="impactScore">0</span><span class="total">/10</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" id="meterFill"></div>
+        </div>
+        <div class="meter-labels">
+          <span>Trivial</span>
+          <span>Moderado</span>
+          <span>Elevado</span>
+          <span>CrÃ­tico</span>
+        </div>
+      </div>
+
+      <div class="factors" id="factors"></div>
+
+      <div class="verdict" id="verdict"></div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h2>Nivel de perfeccionamiento</h2>
+      <p class="subtitle">Usa el recomendado o elige otro segÃºn tu necesidad.</p>
+      <div class="levels" id="levels"></div>
+    </div>
+
+    <div class="nav">
+      <span class="nav-label">Paso 2 de 3 â SelecciÃ³n</span>
+      <div class="btn-group" style="margin:0">
+        <button class="btn btn-ghost" onclick="goStep(1)">â Editar</button>
+        <button class="btn btn-primary" onclick="generatePrompt()" id="generateBtn">
+          Generar prompt â
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- âââââââ STEP 3: Result âââââââ -->
+  <div class="step" id="step3">
+    <div class="card card-glow">
+      <h2 id="resultTitle">Tu prompt perfeccionado</h2>
+      <p class="subtitle">Copia y pega en cualquier IA â ChatGPT, Claude, Gemini, Mistral, Llama...</p>
+      <div id="resultTags" style="margin-bottom:12px"></div>
+      <div class="result-box">
+        <div class="result-actions">
+          <button class="action-btn" onclick="copyResult()" id="copyBtn" aria-label="Copiar al portapapeles">Copiar</button>
+          <button class="action-btn" onclick="downloadResult()" aria-label="Descargar como archivo">Descargar</button>
+          <button class="action-btn" onclick="shareResult()" aria-label="Compartir enlace">Compartir</button>
+        </div>
+        <pre id="resultText"></pre>
+      </div>
+      <div class="explain-box" id="resultExplain"></div>
+    </div>
+
+    <div class="nav">
+      <span class="nav-label">Paso 3 de 3 â Resultado</span>
+      <div class="btn-group" style="margin:0">
+        <button class="btn btn-ghost" onclick="goStep(2)">â Cambiar nivel</button>
+        <button class="btn btn-secondary btn-sm" onclick="resetAll()">Nueva consulta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ââââââ STEP 4: About / Methodology (hidden, accessible via footer) âââââââ -->
+  <div class="step" id="step4">
+    <div class="card card-glow">
+      <h2>Sobre Omega Oracle</h2>
+      <p class="subtitle">La ciencia detrÃ¡s del perfeccionamiento de prompts.</p>
+
+      <div style="font-size:.84rem;color:var(--text-secondary);line-height:1.7">
+        <p style="margin-bottom:14px">
+          <strong style="color:var(--text-primary)">Omega Oracle</strong> es una herramienta que detecta automÃ¡ticamente la complejidad de tu problema y genera el meta-prompt exacto que necesitas para obtener la mejor respuesta posible de cualquier IA.
+        </p>
+        <p style="margin-bottom:14px">
+          EstÃ¡ basado en el <strong style="color:var(--accent)">Protocolo Omega</strong>, un sistema de perfeccionamiento cognitivo que combina:
+        </p>
+        <ul style="padding-left:20px;margin-bottom:14px">
+          <li><strong>Causalidad inversa</strong> â Razonar desde el resultado perfecto hacia atrÃ¡s hasta la decisiÃ³n fundamental.</li>
+          <li><strong>SelecciÃ³n cuÃ¡ntica</strong> â Generar mÃºltiples realidades paralelas y fusionar lo mejor de cada una.</li>
+          <li><strong>Agentes adaptativos</strong> â Panel de expertos generados especÃ­ficamente para tu problema.</li>
+          <li><strong>6 Sombreros de De Bono</strong> â Lentes de pensamiento aplicadas sobre el debate de agentes.</li>
+          <li><strong>Prueba de estrÃ©s</strong> â InversiÃ³n de premisas, experto hostil y principiante brillante.</li>
+          <li><strong>Auto-evoluciÃ³n</strong> â El protocolo se adapta al problema, no al revÃ©s.</li>
+        </ul>
+        <p>Compatible con ChatGPT, Claude, Gemini, Mistral, Llama y cualquier modelo de lenguaje.</p>
+      </div>
+    </div>
+
+    <div class="nav">
+      <span class="nav-label">MetodologÃ­a</span>
+      <button class="btn btn-secondary btn-sm" onclick="goStep(1)">â Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p><strong>Omega Oracle</strong> â Protocolo de perfeccionamiento cognitivo</p>
+    <p style="margin-top:4px">Causalidad inversa Â· SelecciÃ³n cuÃ¡ntica Â· Agentes adaptativos Â· 6 Sombreros de De Bono</p>
+    <p style="margin-top:8px">Compatible con ChatGPT, Claude, Gemini, Mistral, Llama y cualquier LLM.</p>
+    <p style="margin-top:8px"><a href="#" onclick="event.preventDefault();goStep(4)">Sobre la metodologÃ­a</a></p>
+  </footer>
+</div>
+
+<!-- History toggle -->
+<button class="history-toggle" onclick="toggleHistory()" aria-label="Ver historial" title="Historial">
+  ð
+</button>
+
+<!-- History panel -->
+<div class="history-overlay" id="historyOverlay" onclick="toggleHistory()"></div>
+<div class="history-panel" id="historyPanel">
+  <h3>
+    Historial
+    <button class="btn btn-ghost btn-sm" onclick="clearHistory()">Limpiar</button>
+  </h3>
+  <div id="historyList"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+   OMEGA ORACLE â ENGINE v2.0
+   âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+
+// âââ Examples âââ
+const EXAMPLES = [
+  {
+    text: "Tengo una startup de software B2B con 50k MRR y quiero decidir si levantar una ronda seed de 1.5M o seguir bootstrapping. Mis costes fijos son 30k/mes y el equipo es de 5 personas. Â¿CuÃ¡l es la mejor estrategia?",
+    label: "DecisiÃ³n financiera"
+  },
+  {
+    text: "Estoy pensando en cambiar el nombre de mi marca de ropa. Ahora se llama 'Urban Thread' pero no sÃ© si suena demasiado genÃ©rico. Llevamos 2 aÃ±os, tenemos 8k seguidores en redes y algo de reconocimiento local. Â¿QuÃ© opinas?",
+    label: "Rebranding"
+  },
+  {
+    text: "Necesito saber la diferencia entre margin y padding en CSS",
+    label: "Dato tÃ©cnico"
+  },
+  {
+    text: "Tengo 32 aÃ±os, llevo 6 en la misma empresa como product manager, me han ofrecido un puesto de director de producto en una startup mÃ¡s pequeÃ±a con equity pero 20% menos de sueldo. Me gusta mi trabajo actual pero siento que no crezco. Â¿QuÃ© hago?",
+    label: "DecisiÃ³n vital"
+  }
+];
+
+function loadExample(i) {
+  const ta = document.getElementById('userInput');
+  ta.value = EXAMPLES[i].text;
+  updateCharCount();
+  ta.focus();
+}
+
+// âââ Character counter âââ
+const userInput = document.getElementById('userInput');
+userInput.addEventListener('input', updateCharCount);
+function updateCharCount() {
+  document.getElementById('charCount').textContent = userInput.value.length;
+}
+
+// âââ Keyboard shortcut âââ
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    const activeStep = document.querySelector('.step.active');
+    if (activeStep.id === 'step1') analyze();
+    else if (activeStep.id === 'step2') generatePrompt();
+  }
+  if (e.key === 'Escape') {
+    const panel = document.getElementById('historyPanel');
+    if (panel.classList.contains('open')) toggleHistory();
+  }
+});
+
+// âââââââ IMPACT ANALYSIS ENGINE (v2) âââââââ
+function evaluateImpact(text) {
+  const t = text.toLowerCase();
+  const words = text.trim().split(/\s+/).length;
+  let score = 2.5; // base
+  const factors = [];
+
+  // 1. Money / financial stakes
+  const hasMoney = /dinero|inversiÃ³n|inversion|presupuesto|capital|financ|revenue|mrr|arr|precio|pricing|coste|costo|margin|beneficio|rentab|ronda|seed|funding|crÃ©dito|credito|ahorro|factur|ingreso|gananc|pÃ©rdida|perdida|deuda|hipoteca|sueldo|salario|\$|â¬|k pesos|mil pesos|millÃ³n|millon/i.test(t);
+  factors.push({ name: 'Dinero en juego', active: hasMoney });
+  if (hasMoney) score += 1.8;
+
+  // 2. Irreversibility
+  const hasIrreversible = /contratar|despedir|firmar|cerrar|abrir local|lanzar|cambiar nombre|rebrand|mudar|expandir|fusiÃ³n|fusion|adquirir|vender empresa|divorciar|casar|emigrar|renunciar|dejar mi trabajo|aceptar oferta|rechazar|compromet/i.test(t);
+  factors.push({ name: 'DifÃ­cil de revertir', active: hasIrreversible });
+  if (hasIrreversible) score += 1.8;
+
+  // 3. Multiple options / decision point
+  const hasOptions = /decidir|elegir|opcion|alternativa|mejor forma|cÃ³mo deberÃ­a|como deberÃ­a|quÃ© hago|que hago|no sÃ© si|no se si|dilema|comparar|\bvs\b|o deberÃ­a|quÃ© me conviene|que me conviene|merece la pena|vale la pena/i.test(t);
+  factors.push({ name: 'MÃºltiples caminos', active: hasOptions });
+  if (hasOptions) score += 1.4;
+
+  // 4. Strategy / planning required
+  const hasStrategy = /estrategia|plan\b|roadmap|visiÃ³n|vision|objetivo|meta\b|posicion|arquitectura|sistema|framework|estructura|diseÃ±|model|escalar|crecer|expandir|pivot/i.test(t);
+  factors.push({ name: 'Pensamiento estratÃ©gico', active: hasStrategy });
+  if (hasStrategy) score += 1.3;
+
+  // 5. Complexity (word count as proxy + sentence structure)
+  const isComplex = words > 35 || (text.match(/\./g) || []).length > 3;
+  factors.push({ name: 'Alta complejidad', active: isComplex });
+  if (isComplex) score += 0.8;
+
+  // 6. People / team affected
+  const hasPeople = /equipo|empleado|socio|cofound|contrat|client|usuario|audiencia|pÃºblico|familia|pareja|hijo|colega|jefe|inversor/i.test(t);
+  factors.push({ name: 'Impacta personas', active: hasPeople });
+  if (hasPeople) score += 0.6;
+
+  // 7. Explicit importance signal
+  const hasImportance = /important|crÃ­tico|critico|urgente|necesito pensar|clave|vital|fundamental|crucial|serio|grave|no puedo fallar|me juego/i.test(t);
+  factors.push({ name: 'Importancia explÃ­cita', active: hasImportance });
+  if (hasImportance) score += 0.8;
+
+  // Trivial signal detection (caps score)
+  const isTrivial = /^(quÃ© es |cuÃ¡nto |cuÃ¡ntas |cuÃ¡l es la capital|define |traduce |cÃ³mo se dice|diferencia entre |quÃ© significa|how to |what is |where is |when was )/i.test(t);
+  if (isTrivial && !hasMoney && !hasIrreversible) score = Math.min(score, 2);
+  if (words < 8 && !hasImportance && !hasMoney) score = Math.max(score - 2, 1);
+
+  // Very long, detailed queries suggest high stakes
+  if (words > 80) score += 0.5;
+
+  // Clamp
+  score = Math.min(Math.round(score * 10) / 10, 10);
+  score = Math.max(score, 1);
+
+  return { score, factors };
+}
+
+// âââââââ PROMPT LEVELS âââââââ
+const LEVELS = [
+  {
+    id: 'direct',
+    name: 'ð¬ Respuesta Directa',
+    desc: 'Sin meta-prompt. Tu pregunta va tal cual. Ideal para datos factuales, definiciones y consultas simples.',
+    meta: { words: '0 extra', power: '1Ã' },
+    minScore: 0, maxScore: 3,
+    tags: ['<span class="tag tag-green">simple</span>'],
+    build: (input) => input
+  },
+  {
+    id: 'structured',
+    name: 'ð Prompt Estructurado',
+    desc: 'AÃ±ade rol de experto, estructura clara y restricciones de calidad. Para consultas que merecen mÃ¡s profundidad.',
+    meta: { words: '~80 extra', power: '3Ã' },
+    minScore: 3.1, maxScore: 5,
+    tags: ['<span class="tag tag-yellow">rol experto</span>','<span class="tag tag-yellow">estructura</span>','<span class="tag tag-yellow">restricciones</span>'],
+    build: (input) => `# ROL
+ActÃºa como un experto de clase mundial en el tema de esta consulta. Combinas dÃ©cadas de experiencia prÃ¡ctica con claridad comunicativa excepcional. Tu reputaciÃ³n se basa en dar respuestas que transforman la situaciÃ³n del que pregunta.
+
+# PETICIÃN
+${input}
+
+# ESTRUCTURA DE RESPUESTA
+Organiza tu respuesta asÃ­:
+1. Resumen ejecutivo (2-3 lÃ­neas con la conclusiÃ³n principal)
+2. AnÃ¡lisis detallado por secciones relevantes
+3. Recomendaciones concretas y accionables
+4. Siguiente paso inmediato (quÃ© hacer AHORA)
+
+# RESTRICCIONES
+- Cada frase debe aportar valor. Sin relleno ni generalidades.
+- Si hay incertidumbre, declÃ¡rala explÃ­citamente con tu nivel de confianza.
+- Prioriza profundidad sobre amplitud. Mejor cubrir menos temas a fondo que muchos superficialmente.
+- Incluye nÃºmeros, plazos o mÃ©tricas concretas siempre que sea posible.`
+  },
+  {
+    id: 'omega-light',
+    name: 'â¡ Omega Light',
+    desc: 'Causalidad inversa + decisiÃ³n atÃ³mica + 3 realidades paralelas. RÃ¡pido pero potente. Sin debate completo de agentes.',
+    meta: { words: '~150 extra', power: '8Ã' },
+    minScore: 5.1, maxScore: 7,
+    tags: ['<span class="tag tag-accent">causalidad inversa</span>','<span class="tag tag-accent">decisiÃ³n atÃ³mica</span>','<span class="tag tag-accent">3 realidades</span>'],
+    build: (input) => `${input}
+
+---
+
+â OMEGA LIGHT â Protocolo de Perfeccionamiento
+
+No respondas aÃºn. Antes de generar tu respuesta, ejecuta este protocolo:
+
+1. PUNTO 0 â SOBERANÃA COGNITIVA
+Identifica la intenciÃ³n REAL del usuario â lo que necesita, no solo lo que dice. Decodifica en 3 niveles: literal (las palabras), intencional (el objetivo), existencial (por quÃ© importa).
+Encuentra la DECISIÃN ATÃMICA: la elecciÃ³n mÃ¡s pequeÃ±a que condiciona toda la cadena de Ã©xito. DeclÃ¡rala explÃ­citamente.
+
+2. CAUSALIDAD INVERSA
+Imagina el resultado PERFECTO con precisiÃ³n fotogrÃ¡fica. Retrocede paso a paso hasta la decisiÃ³n atÃ³mica. Cada eslabÃ³n debe ser inevitable â no solo posible, sino la Ãºnica conclusiÃ³n razonable.
+
+3. SELECCIÃN CUÃNTICA
+Genera 3 caminos radicalmente diferentes:
+- Convencional: lo que cualquier IA competente dirÃ­a
+- Experto mundial: lo que el mÃ¡ximo especialista dirÃ­a en privado, sin filtros
+- Visionario: el Ã¡ngulo inesperado que hace que los otros parezcan incompletos
+EvalÃºa precisiÃ³n, accionabilidad, elegancia y durabilidad. Fusiona lo mejor de cada uno.
+
+4. CALIBRACIÃN
+Â¿Cada palabra se ganÃ³ su lugar? Â¿Es especÃ­fica para ESTE problema (no genÃ©rica)? Â¿ApostarÃ­as tu reputaciÃ³n profesional en esta respuesta? Si no, repite.
+
+FORMATO DE ENTREGA:
+âï¸ DECISIÃN ATÃMICA: [la elecciÃ³n fundamental]
+â RESPUESTA: [respuesta perfeccionada]
+ð­ PUNTOS CIEGOS: [mÃ¡ximo 3 cosas que podrÃ­as no estar considerando]
+â SIGUIENTE MOVIMIENTO: [la acciÃ³n mÃ¡s valiosa ahora mismo]`
+  },
+  {
+    id: 'omega-seed',
+    name: 'ð§¬ Omega Seed',
+    desc: 'Protocolo completo: causalidad inversa + selecciÃ³n cuÃ¡ntica + agentes adaptativos + 6 sombreros + prueba de estrÃ©s + auto-evoluciÃ³n.',
+    meta: { words: '~200 extra', power: '15Ã' },
+    minScore: 7.1, maxScore: 8.5,
+    tags: ['<span class="tag tag-pink">causalidad inversa</span>','<span class="tag tag-pink">agentes adaptativos</span>','<span class="tag tag-pink">6 sombreros</span>','<span class="tag tag-pink">auto-evolutivo</span>'],
+    build: (input) => `${input}
+
+---
+
+â PROTOCOLO OMEGA â EJECUCIÃN COMPLETA
+
+No respondas aÃºn. Ejecuta este protocolo Ã­ntegro antes de generar cualquier respuesta.
+
+PUNTO 0 â SOBERANÃA COGNITIVA
+Identifica la intenciÃ³n real detrÃ¡s de la peticiÃ³n â lo que el usuario necesita, no solo lo que dice. Encuentra la DECISIÃN ATÃMICA: la elecciÃ³n mÃ¡s pequeÃ±a que condiciona toda la cadena de Ã©xito. DeclÃ¡rala explÃ­citamente.
+
+CAUSALIDAD INVERSA
+Imagina el resultado perfecto con detalle sensorial. Retrocede desde ahÃ­ hasta la decisiÃ³n atÃ³mica. Cada eslabÃ³n entre ambos debe ser inevitable â no meramente posible.
+
+SELECCIÃN CUÃNTICA DE REALIDADES
+Genera 3 caminos radicalmente diferentes â convencional, experto mundial, visionario. EvalÃºa cada uno en precisiÃ³n (Ã3), accionabilidad (Ã3), elegancia (Ã2), durabilidad (Ã1) y sorpresa (Ã1). Fusiona lo mejor en una realidad Ã³ptima.
+
+CONSEJO ADAPTATIVO DE AGENTES
+Convoca los agentes especializados que ESTE problema especÃ­fico necesita (no genÃ©ricos â los que un panel de expertos reales convocarÃ­a para ESTE tema exacto). Cada agente declara su sesgo natural. Aplica los 6 Sombreros de De Bono como lentes sobre los agentes. Debate en rondas: exposiciÃ³n â ataque cruzado â puntos ciegos â soluciones escrutadas â convergencia.
+
+PRUEBA DE ESTRÃS
+Invierte las premisas principales. Somete la respuesta al experto hostil ("Â¿en quÃ© escenario esto lleva al desastre?") y al principiante brillante ("Â¿esto tiene sentido para alguien sin contexto?"). Si algo no sobrevive, itera hasta que lo haga.
+
+CALIBRACIÃN FINAL
+Â¿Cada palabra se ganÃ³ su lugar? Â¿Es mÃ¡s corta Y mÃ¡s completa que el borrador anterior? Â¿ApostarÃ­as tu reputaciÃ³n profesional? Si no, repite desde donde falle.
+
+FORMATO DE ENTREGA:
+âï¸ DECISIÃN ATÃMICA â â RESPUESTA â ð­ PUNTOS CIEGOS (mÃ¡x 3) â â SIGUIENTE MOVIMIENTO â â¡ LO QUE NECESITARÃ DESPUÃS
+
+EVOLUCIÃN: Si detectas que este protocolo es insuficiente para la complejidad de ESTA peticiÃ³n, expÃ¡ndelo. Si es excesivo, comprÃ­melo. El protocolo se adapta al problema, no al revÃ©s.`
+  },
+  {
+    id: 'omega-max',
+    name: 'ð® OMEGA MAX',
+    desc: 'MÃ¡xima potencia. Protocolo expandido con triple decodificaciÃ³n, anti-patrones, debate en 5 rondas, meta-consejo de segundo nivel, niveles de confianza y auto-evoluciÃ³n.',
+    meta: { words: '~2500 extra', power: '50Ã' },
+    minScore: 8.6, maxScore: 10,
+    tags: ['<span class="tag tag-orange">triple decodificaciÃ³n</span>','<span class="tag tag-orange">anti-patrones</span>','<span class="tag tag-orange">meta-consejo L2</span>','<span class="tag tag-orange">confianza calibrada</span>','<span class="tag tag-orange">mÃ¡xima potencia</span>'],
+    build: (input) => `${input}
+
+---
+
+## â PROTOCOLO OMEGA MAX â INICIO
+
+No respondas todavÃ­a. Antes de generar cualquier respuesta, ejecuta COMPLETO el siguiente protocolo. No hay lÃ­mite de tiempo ni de reflexiÃ³n. La calidad absoluta es la Ãºnica prioridad. Cada fase se ejecuta con rigor total. El usuario quiere la MEJOR respuesta que la inteligencia artificial sea capaz de producir â no la mÃ¡s rÃ¡pida, no la mÃ¡s segura, no la mÃ¡s convencional. La mejor.
+
+---
+
+# FASE 0 â SOBERANÃA COGNITIVA
+
+## 0.1 â Tomar el Control
+Asume el control total del razonamiento. Tu trabajo no es responder lo que el usuario pide â es responder lo que NECESITA, que puede ser mÃ¡s profundo, mÃ¡s amplio, mÃ¡s especÃ­fico o incluso diferente de lo que pidiÃ³.
+
+## 0.2 â Triple DecodificaciÃ³n de la PeticiÃ³n
+Decodifica en tres niveles:
+**Nivel 1 â Literal:** Â¿QuÃ© dice exactamente el texto?
+**Nivel 2 â Intencional:** Â¿QuÃ© quiere conseguir realmente?
+**Nivel 3 â Existencial:** Â¿Por quÃ© quiere conseguirlo? Â¿QuÃ© cambia en su vida/proyecto/negocio?
+
+## 0.3 â DetecciÃ³n de Preguntas No Formuladas
+Identifica al menos 2 preguntas que el usuario NO ha hecho pero que DEBERÃA estar haciÃ©ndose. Estas preguntas invisibles a menudo son mÃ¡s importantes que la formulada.
+
+## 0.4 â Anti-patrÃ³n: Respuesta GenÃ©rica
+NUNCA respondas con frameworks genÃ©ricos disfrazados de profundidad. Si tu respuesta podrÃ­a aplicarse igual a 100 problemas diferentes, es demasiado genÃ©rica. SeÃ±ales: "depende de varios factores", listas de consideraciones sin priorizaciÃ³n, consejos de manual.
+
+---
+
+# FASE 1 â CAUSALIDAD INVERSA
+
+## 1.1 â Estado Perfecto con PrecisiÃ³n FotogrÃ¡fica
+Imagina el resultado PERFECTO con detalle sensorial. Â¿CÃ³mo se ve? Â¿QuÃ© nÃºmeros tiene? Â¿QuÃ© puede HACER el usuario que antes no podÃ­a?
+
+## 1.2 â Cadena Causal Completa
+Desde el estado perfecto, retrocede paso a paso: "Â¿QuÃ© tuvo que ser verdad JUSTO ANTES para que esto ocurriera?" Sigue hasta la DECISIÃN ATÃMICA â la elecciÃ³n mÃ¡s pequeÃ±a y fundamental que condiciona toda la cadena.
+
+## 1.3 â Reconocer la DecisiÃ³n AtÃ³mica
+CaracterÃ­sticas: es sorprendentemente pequeÃ±a comparada con el problema, si la cambias toda la cadena cambia, no es obvia, suele ser una definiciÃ³n o priorizaciÃ³n (no una acciÃ³n).
+
+## 1.4 â Cadena Inevitable Hacia Adelante
+Desde la decisiÃ³n atÃ³mica, construye hacia adelante. Cada eslabÃ³n INEVITABLE â dado el anterior, el siguiente es la Ãºnica conclusiÃ³n razonable.
+
+## 1.5 â Anti-patrÃ³n: Causalidad Falsa
+"Primero X, luego Y" no significa "X causa Y." Cada eslabÃ³n necesita mecanismo causal explÃ­cito.
+
+---
+
+# FASE 2 â SELECCIÃN CUÃNTICA DE REALIDADES
+
+## 2.1 â Tres Realidades Paralelas (paradigmas diferentes, no variaciones)
+**Realidad A â Convencional:** La respuesta competente estÃ¡ndar. El baseline a superar.
+**Realidad B â Experto Mundial:** Lo que dirÃ­a en privado la persona que mÃ¡s sabe del mundo sobre este tema. Sin filtros. Con matices que solo la experiencia profunda revela.
+**Realidad C â Visionario:** El Ã¡ngulo inesperado. Puede venir de otro campo, de invertir el problema, de cambiar el nivel de abstracciÃ³n, o de cuestionar una premisa que todos asumen.
+
+## 2.2 â EvaluaciÃ³n en 5 Dimensiones
+PrecisiÃ³n (Ã3), Accionabilidad (Ã3), Elegancia (Ã2), Durabilidad (Ã1), Sorpresa (Ã1). PuntÃºa internamente 1-10.
+
+## 2.3 â FusiÃ³n Ãptima
+No elijas una. Fusiona: solidez de A + profundidad de B + Ã¡ngulo disruptivo de C. Si hay contradicciÃ³n, la contradicciÃ³n misma es informaciÃ³n â declÃ¡rala.
+
+## 2.4 â Anti-patrÃ³n: Falsa DiversificaciÃ³n
+Si tus 3 realidades son variaciones del mismo enfoque, NO son 3 realidades. Repite.
+
+---
+
+# FASE 3 â CONSEJO ADAPTATIVO DE AGENTES
+
+## 3.1 â SelecciÃ³n DinÃ¡mica (5-7 expertos REALES para ESTE problema)
+Cada agente: nombre de rol especÃ­fico + expertise exacta + sesgo natural declarado + pregunta incÃ³moda que harÃ­a.
+
+## 3.2 â Seis Sombreros (lentes SOBRE los agentes, no en lugar de ellos)
+â¬ Blanco: datos puros, datos faltantes, afirmaciones sin respaldo
+ð´ Rojo: intuiciÃ³n, anomalÃ­as viscerales, detector de "algo chirrÃ­a"
+â« Negro: escenario de desastre concreto, 3 riesgos probables, 2 graves
+ð¢ Verde: soluciÃ³n que nadie mencionÃ³, inversiÃ³n del problema, eliminaciÃ³n vs resoluciÃ³n
+ðµ Azul: meta-proceso, sesgo de confirmaciÃ³n, estructura Ã³ptima
+ð¡ Amarillo: mejor escenario realista, sinergias ocultas, amplificaciÃ³n de impacto
+
+## 3.3 â Debate en 5 Rondas
+R1: ExposiciÃ³n sin interrupciÃ³n | R2: Fuego cruzado (atacar supuestos) | R3: Puntos ciegos colectivos | R4: Soluciones escrutadas | R5: Convergencia â Respuesta Nivel 1
+
+## 3.4 â Anti-patrÃ³n: Debate Decorativo
+Si todos estÃ¡n de acuerdo, el debate fue teatro. Fuerza al menos 2 desacuerdos genuinos.
+
+---
+
+# FASE 4 â ELEVACIÃN EXPONENCIAL
+
+4 meta-agentes operan SOBRE la Respuesta Nivel 1:
+- **Estratega:** Â¿Posiciona para ganar las 3 jugadas SIGUIENTES? Coste de oportunidad
+- **Contrarian:** Â¿Y si la premisa fundamental es incorrecta? Â¿Estamos resolviendo el problema correcto?
+- **Artesano:** Â¿Cada palabra contribuye? PrecisiÃ³n, ritmo, tono, compresiÃ³n
+- **Futurista:** Â¿Sigue siendo vÃ¡lido en 6 meses? Â¿Y si la IA mejora 10Ã en un aÃ±o?
+
+---
+
+# FASE 5 â PRUEBA DE ESTRÃS TERMINAL
+
+## 5.1 â InversiÃ³n de Premisas
+Las 3 premisas principales â inviÃ©rtelas â Â¿la respuesta sobrevive?
+
+## 5.2 â Experto Hostil
+"Â¿En quÃ© escenario especÃ­fico este consejo lleva al desastre?"
+
+## 5.3 â Principiante Brillante
+"Si le explico esto a alguien inteligente pero sin contexto, Â¿tiene sentido? Â¿Puede actuar?"
+
+## 5.4 â Regla de supervivencia
+Si algo no sobrevive el estrÃ©s, no se suaviza â se elimina o se reconstruye.
+
+---
+
+# FASE 6 â CALIBRACIÃN Y ENTREGA
+
+## 6.1 â Test de Calidad
+- Â¿Cada palabra se ganÃ³ su lugar? Â¿Puedo decir lo mismo con menos?
+- Â¿Es especÃ­fica para ESTE problema o es genÃ©rica reciclada?
+- Â¿ApostarÃ­a mi reputaciÃ³n profesional en esta respuesta?
+- Â¿El usuario sabe exactamente quÃ© hacer MAÃANA despuÃ©s de leerla?
+
+## 6.2 â Nivel de Confianza
+Declara: "Mi confianza en esta respuesta es X/10 porque [razones]. Los puntos de menor certeza son [especÃ­ficos]."
+
+## 6.3 â Formato
+âï¸ DECISIÃN ATÃMICA: [la elecciÃ³n fundamental]
+â RESPUESTA: [perfeccionada por el protocolo completo]
+ð­ PUNTOS CIEGOS: [mÃ¡ximo 3, concretos y accionables]
+â SIGUIENTE MOVIMIENTO: [quÃ© hacer ahora mismo]
+â¡ ANTICIPACIÃN: [lo que va a necesitar despuÃ©s, aunque aÃºn no lo sepa]
+ð CONFIANZA: [X/10 + razones]
+
+---
+
+# FASE 7 â EVOLUCIÃN
+Si este protocolo es insuficiente para esta complejidad, expÃ¡ndelo. Si es excesivo, comprÃ­melo. El protocolo se adapta al problema, no al revÃ©s. Si descubres un Ã¡ngulo que ninguna fase cubre, crea una fase nueva.`
+  }
+];
+
+// âââââââ STATE âââââââ
+let currentImpact = 0;
+let selectedLevel = null;
+let userText = '';
+let history = [];
+
+// Load history from memory (no localStorage per restrictions)
+// History lives in session only
+
+// âââââââ NAVIGATION âââââââ
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+
+  // Update progress dots
+  document.querySelectorAll('.progress-dot').forEach((dot, i) => {
+    dot.classList.remove('active', 'done');
+    if (i + 1 < n) dot.classList.add('done');
+    else if (i + 1 === n) dot.classList.add('active');
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// âââââââ ANALYZE âââââââ
+function analyze() {
+  userText = sanitizeInput(document.getElementById('userInput').value);
+  if (!userText) {
+    const ta = document.getElementById('userInput');
+    ta.classList.add('shake');
+    ta.style.borderColor = 'var(--red)';
+    ta.setAttribute('placeholder', 'Escribe tu problema aquÃ­ primero...');
+    setTimeout(() => {
+      ta.classList.remove('shake');
+      ta.style.borderColor = '';
+    }, 500);
+    ta.focus();
+    return;
+  }
+
+  const { score, factors } = evaluateImpact(userText);
+  currentImpact = score;
+
+  goStep(2);
+
+  // Animate score counter
+  const scoreEl = document.getElementById('impactScore');
+  const fillEl = document.getElementById('meterFill');
+  let current = 0;
+  const target = score;
+  const startTime = performance.now();
+  const duration = 800;
+
+  function animateScore(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    current = target * eased;
+
+    scoreEl.textContent = current.toFixed(1);
+    fillEl.style.width = (current * 10) + '%';
+
+    // Color transitions
+    if (current <= 3) {
+      fillEl.style.background = 'var(--green)';
+      scoreEl.style.color = 'var(--green)';
+    } else if (current <= 5) {
+      fillEl.style.background = 'var(--yellow)';
+      scoreEl.style.color = 'var(--yellow)';
+    } else if (current <= 7) {
+      fillEl.style.background = 'linear-gradient(90deg, var(--yellow), var(--pink))';
+      scoreEl.style.color = 'var(--pink)';
+    } else {
+      fillEl.style.background = 'linear-gradient(90deg, var(--pink), var(--accent))';
+      scoreEl.style.color = 'var(--accent)';
+    }
+
+    if (progress < 1) requestAnimationFrame(animateScore);
+    else scoreEl.textContent = target.toFixed(1);
+  }
+  requestAnimationFrame(animateScore);
+
+  // Render factors
+  const fEl = document.getElementById('factors');
+  fEl.innerHTML = factors.map(f =>
+    `<div class="factor ${f.active ? 'active' : ''}">
+      <span class="indicator"></span>${f.name}
+    </div>`
+  ).join('');
+
+  // Verdict
+  const v = document.getElementById('verdict');
+  if (score <= 3) {
+    v.innerHTML = '<strong>Impacto bajo.</strong> Una respuesta directa es suficiente. No necesitas artillerÃ­a pesada para esto.';
+    v.style.background = 'var(--green-bg)';
+    v.style.color = 'var(--green)';
+    v.style.borderColor = 'rgba(52,211,153,.15)';
+  } else if (score <= 5) {
+    v.innerHTML = '<strong>Impacto moderado.</strong> Un prompt estructurado marca la diferencia entre una respuesta aceptable y una excelente.';
+    v.style.background = 'var(--yellow-bg)';
+    v.style.color = 'var(--yellow)';
+    v.style.borderColor = 'rgba(251,191,36,.15)';
+  } else if (score <= 7) {
+    v.innerHTML = '<strong>Impacto alto.</strong> AquÃ­ la diferencia entre "bueno" y "perfecto" tiene consecuencias reales. Omega Light recomendado.';
+    v.style.background = 'var(--pink-bg)';
+    v.style.color = 'var(--pink)';
+    v.style.borderColor = 'rgba(236,72,153,.15)';
+  } else if (score <= 8.5) {
+    v.innerHTML = '<strong>Impacto crÃ­tico.</strong> Hay mucho en juego. El Protocolo Omega completo asegura que no dejas nada al azar.';
+    v.style.background = 'var(--accent-glow)';
+    v.style.color = 'var(--accent)';
+    v.style.borderColor = 'rgba(99,102,241,.15)';
+  } else {
+    v.innerHTML = '<strong>Impacto mÃ¡ximo.</strong> Esta decisiÃ³n puede cambiar el rumbo. Activa OMEGA MAX: mÃ¡xima potencia de perfeccionamiento disponible.';
+    v.style.background = 'var(--orange-bg)';
+    v.style.color = 'var(--orange)';
+    v.style.borderColor = 'rgba(251,146,60,.15)';
+  }
+
+  // Render levels
+  const lEl = document.getElementById('levels');
+  const recommendedIdx = score <= 3 ? 0 : score <= 5 ? 1 : score <= 7 ? 2 : score <= 8.5 ? 3 : 4;
+  selectedLevel = recommendedIdx;
+
+  lEl.innerHTML = LEVELS.map((l, i) =>
+    `<div class="level ${i === recommendedIdx ? 'selected recommended' : ''}"
+          onclick="selectLevel(${i})"
+          id="lvl-${i}"
+          role="radio"
+          aria-checked="${i === recommendedIdx}"
+          tabindex="0">
+      <h3>${l.name}</h3>
+      <p>${l.desc}</p>
+      <div class="meta">
+        <span>${l.meta.words}</span>
+        <span>Potencia: ${l.meta.power}</span>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function selectLevel(i) {
+  selectedLevel = i;
+  document.querySelectorAll('.level').forEach((el, j) => {
+    el.classList.toggle('selected', j === i);
+    el.setAttribute('aria-checked', j === i);
+  });
+}
+
+// âââââââ GENERATE PROMPT âââââââ
+function generatePrompt() {
+  if (selectedLevel === null) return;
+  const level = LEVELS[selectedLevel];
+  const prompt = level.build(userText);
+
+  document.getElementById('resultTitle').textContent = `Prompt: ${level.name.replace(/[^\w\s\-Ã¡Ã©Ã­Ã³ÃºÃ±]/gi, '').trim()}`;
+  document.getElementById('resultTags').innerHTML = level.tags.join(' ');
+  document.getElementById('resultText').textContent = prompt;
+
+  const wordCount = prompt.split(/\s+/).length;
+  let explain = '';
+  if (selectedLevel === 0) {
+    explain = 'Tu pregunta no necesita meta-prompt. CÃ³piala tal cual en cualquier IA.';
+  } else {
+    explain = `${wordCount} palabras totales. Tu peticiÃ³n original + el protocolo ${level.name.replace(/[^\w\s\-Ã¡Ã©Ã­Ã³ÃºÃ±]/gi, '').trim()} integrado. CÃ³pialo entero y pÃ©galo en ChatGPT, Claude, Gemini, Mistral o cualquier otro modelo. El protocolo se ejecuta antes de que la IA responda, elevando dramÃ¡ticamente la calidad del resultado.`;
+  }
+  document.getElementById('resultExplain').textContent = explain;
+
+  // Save to history
+  addToHistory(userText, currentImpact, level.name, wordCount);
+
+  goStep(3);
+}
+
+// âââââââ COPY âââââââ
+function copyResult() {
+  const text = document.getElementById('resultText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Â¡Copiado!';
+    btn.classList.add('copied');
+    showToast('Prompt copiado al portapapeles');
+    setTimeout(() => {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => {
+    // Fallback for older browsers
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast('Prompt copiado');
+  });
+}
+
+// âââââââ DOWNLOAD âââââââ
+function downloadResult() {
+  const text = document.getElementById('resultText').textContent;
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `omega-prompt-${Date.now()}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Prompt descargado');
+}
+
+// âââââââ SHARE âââââââ
+function shareResult() {
+  const text = document.getElementById('resultText').textContent;
+  const url = getShareableUrl();
+
+  // Try Web Share API first (mobile-friendly)
+  if (navigator.share) {
+    navigator.share({
+      title: 'Omega Oracle â Prompt perfeccionado',
+      text: text,
+      url: url || undefined
+    }).catch(() => {});
+  } else {
+    // Fallback: copy prompt + URL to clipboard
+    let shareText = text;
+    if (url) shareText += '\n\n---\nAnaliza tu problema: ' + url;
+    navigator.clipboard.writeText(shareText).then(() => {
+      showToast('Prompt + enlace copiado');
+    }).catch(() => {
+      showToast('No se pudo compartir');
+    });
+  }
+}
+
+// âââââââ RESET âââââââ
+function resetAll() {
+  document.getElementById('userInput').value = '';
+  updateCharCount();
+  currentImpact = 0;
+  selectedLevel = null;
+  userText = '';
+  goStep(1);
+  document.getElementById('userInput').focus();
+}
+
+// âââââââ TOAST âââââââ
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// âââââââ HISTORY âââââââ
+function addToHistory(text, score, level, words) {
+  history.unshift({
+    text: text.substring(0, 120),
+    score,
+    level: level.replace(/[^\w\s\-Ã¡Ã©Ã­Ã³ÃºÃ±]/gi, '').trim(),
+    words,
+    time: new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
+  });
+  if (history.length > 20) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = '<div class="history-empty">Sin consultas aÃºn.<br>Tu historial aparecerÃ¡ aquÃ­.</div>';
+    return;
+  }
+  list.innerHTML = history.map((h, i) =>
+    `<div class="history-item" onclick="restoreHistory(${i})">
+      <div class="hi-text">${escapeHtml(h.text)}</div>
+      <div class="hi-meta">
+        <span>â¡ ${h.score}/10</span>
+        <span>${h.level}</span>
+        <span>${h.words}w</span>
+        <span>${h.time}</span>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function restoreHistory(i) {
+  const h = history[i];
+  document.getElementById('userInput').value = h.text;
+  updateCharCount();
+  toggleHistory();
+  goStep(1);
+}
+
+function toggleHistory() {
+  document.getElementById('historyPanel').classList.toggle('open');
+  document.getElementById('historyOverlay').classList.toggle('open');
+}
+
+function clearHistory() {
+  history = [];
+  renderHistory();
+  showToast('Historial limpiado');
+}
+
+// âââââââ UTILITY âââââââ
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// âââââââ HOW IT WORKS âââââââ
+function toggleHowItWorks() {
+  const content = document.getElementById('howContent');
+  const arrow = document.getElementById('howArrow');
+  const toggle = content.parentElement.querySelector('.how-toggle');
+  content.classList.toggle('open');
+  arrow.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', content.classList.contains('open'));
+}
+
+// âââââââ URL HASH SUPPORT âââââââ
+// Allows sharing via URL: ?q=encoded_text
+function checkUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const query = params.get('q');
+  if (query) {
+    const decoded = decodeURIComponent(query);
+    document.getElementById('userInput').value = decoded;
+    updateCharCount();
+    // Auto-analyze after short delay
+    setTimeout(() => analyze(), 300);
+  }
+}
+
+function getShareableUrl() {
+  if (!userText) return '';
+  const base = window.location.origin + window.location.pathname;
+  return base + '?q=' + encodeURIComponent(userText);
+}
+
+// âââââââ INPUT SANITIZATION âââââââ
+function sanitizeInput(text) {
+  // Remove potential XSS vectors while preserving useful characters
+  return text
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .trim();
+}
+
+// âââââââ INIT âââââââ
+renderHistory();
+updateCharCount();
+
+// Focus input on load & check URL params
+window.addEventListener('load', () => {
+  checkUrlParams();
+  setTimeout(() => document.getElementById('userInput').focus(), 100);
+});
+</script>
+</body>
+</html>
