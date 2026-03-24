@@ -5,44 +5,33 @@ Three modular skills that chain together to form a self-driving strategic engine
 ## The Chain
 
 ```
-omega-protocol  â  "Tu Punto 0 es X, aquÃ­ estÃ¡n las misiones"
-       â
-omega-planner   â  "Para ejecutar MisiÃ³n 1, sigue estas 4 fases"
-       â
-    [Execute]   â  Solo el Punto 0. Nada mÃ¡s.
-       â
-omega-auditor   â  "Ahora el nuevo Punto 0 es Y (ratio 2.5x)"
-       â
+omega-protocol  →  "Tu Punto 0 es X, aquí están las misiones"
+       ↓
+omega-planner   →  "Para ejecutar Misión 1, sigue estas 4 fases"
+       ↓
+    [Execute]   →  Solo el Punto 0. Nada más.
+       ↓
+omega-auditor   →  "Ahora el nuevo Punto 0 es Y (ratio 2.5x)"
+       ↓
     [Repeat until ratio < 2x]
 ```
 
 ## Skills
 
-### 1. `omega-protocol` â El cerebro
-Deep strategic analysis using inverse causality, adaptive agents with declared biases, and stress testing. Takes a goal â outputs Punto 0 + missions + executable prompts.
+### 1. omega-protocol — El cerebro
+Deep strategic analysis using inverse causality, adaptive agents with declared biases, and stress testing. Takes a goal → outputs Punto 0 + missions + executable prompts.
 
-### 2. `omega-planner` â Las manos
-Transforms any action into a phased execution plan. Each phase: â¤2 hours, specific deliverable, validation step, dependency chain.
+### 2. omega-planner — Las manos
+Transforms any action into a phased execution plan. Each phase: ≤2 hours, specific deliverable, validation step, dependency chain.
 
-### 3. `omega-auditor` â Los ojos
-Diagnostic engine that analyzes any project (code, docs, business) to find the single highest-impact action by impact/effort ratio. Includes a Python script for automated code analysis.
+### 3. omega-auditor — Los ojos
+Diagnostic engine that analyzes any project (code, docs, business) to find the single highest-impact action by impact/effort ratio. Self-driving: outputs its own re-audit prompt.
 
-## Installation
+### 4. omega-max — El núcleo
+Maximum-depth protocol for high-complexity, high-impact decisions. Includes 6 phases, anti-patterns, Six Thinking Hats, Meta-Council, 7 Final Filters and delivery format. The NUCLEAR option — maximum rigor, maximum depth.
 
-Copy each skill folder into your `.skills/skills/` directory:
-```
-.skills/skills/omega-auditor/SKILL.md
-.skills/skills/omega-auditor/scripts/omega_audit.py
-.skills/skills/omega-planner/SKILL.md
-.skills/skills/omega-protocol/SKILL.md
-```
+## Usage
 
-## Eval Results
+Each skill is a standalone SKILL.md — drop it into any Claude environment that supports custom instructions.
 
-| Skill | With Skill | Without Skill | Delta |
-|-------|-----------|--------------|-------|
-| omega-auditor | 100% (5/5) | 40% (2/5) | +60% |
-| omega-planner | 100% (5/5) | 0% (0/5) | +100% |
-| omega-protocol | 100% (5/5) | 0% (0/5) | +100% |
-
-The skills' main value: forcing single-priority focus, numerical scoring, structured formats, and the Omega methodology (inverse causality, agent tensions, stress testing) that generic AI advice lacks.
+**Start here:** Tell Claude "aplica protocolo omega" + your goal.
