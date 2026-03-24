@@ -1,6 +1,6 @@
 # Omega Skills Ecosystem
 
-Three modular skills that chain together to form a self-driving strategic engine.
+Five modular skills that chain together to form a self-driving strategic engine for @tacotios.
 
 ## The Chain
 
@@ -14,24 +14,33 @@ omega-planner   →  "Para ejecutar Misión 1, sigue estas 4 fases"
 omega-auditor   →  "Ahora el nuevo Punto 0 es Y (ratio 2.5x)"
        ↓
     [Repeat until ratio < 2x]
+
+omega-max       →  Protocolo nuclear para decisiones de máxima complejidad
+omega-travel    →  Operación Omega para viajes gastronómicos
 ```
 
 ## Skills
 
 ### 1. omega-protocol — El cerebro
-Deep strategic analysis using inverse causality, adaptive agents with declared biases, and stress testing. Takes a goal → outputs Punto 0 + missions + executable prompts.
+Deep strategic analysis using inverse causality, adaptive agents with declared biases, and stress testing. Takes a goal → outputs Punto 0 + missions + executable prompts. LITE version (5 phases). Auto-escalates to omega-max when complexity demands it.
 
 ### 2. omega-planner — Las manos
-Transforms any action into a phased execution plan. Each phase: ≤2 hours, specific deliverable, validation step, dependency chain.
+Transforms any action into a phased execution plan. Each phase: ≤2 hours, specific deliverable, validation step, dependency chain. Takes a Punto 0 → outputs structured roadmap with phases, milestones, and validation criteria.
 
-### 3. omega-auditor — Los ojos
-Diagnostic engine that analyzes any project (code, docs, business) to find the single highest-impact action by impact/effort ratio. Self-driving: outputs its own re-audit prompt.
+### 3. omega-auditor — El bucle
+Self-driving diagnostic engine. Analyzes any project using inverse causality to find the single highest-impact, lowest-effort action (Punto 0). Runs the continuous improvement loop: audit → execute → re-audit until diminishing returns (ratio < 2x).
 
-### 4. omega-max — El núcleo
-Maximum-depth protocol for high-complexity, high-impact decisions. Includes 6 phases, anti-patterns, Six Thinking Hats, Meta-Council, 7 Final Filters and delivery format. The NUCLEAR option — maximum rigor, maximum depth.
+### 4. omega-max — El protocolo nuclear
+Full 6-phase protocol for high-stakes, irreversible decisions. Includes Six Thinking Hats, Meta-Council of 7 advisors, Anti-Patterns detection, 7 Final Filters, and structured delivery format. The MAXIMUM depth option — use when "the best possible answer" is explicitly needed.
+
+### 5. omega-travel — Operación Omega
+Supreme travel planning agent for gastronomic journeys. Given a destination + dates, executes complete research (YouTube, TikTok, Instagram, Google Maps, guides, forums), evaluates each spot with the Viral Omega Equation, builds optimized routes, and generates actionable Research Decks with storytelling and content ideas. 7 phases from research to final deck.
 
 ## Usage
 
-Each skill is a standalone SKILL.md — drop it into any Claude environment that supports custom instructions.
+Each skill is a standalone Cowork skill in `/skills/<name>/SKILL.md`. They can be invoked individually or chained:
 
-**Start here:** Tell Claude "aplica protocolo omega" + your goal.
+- **Quick analysis**: omega-protocol alone
+- **Full execution**: omega-protocol → omega-planner → execute → omega-auditor
+- **Nuclear decisions**: omega-max (standalone or escalated from omega-protocol)
+- **Travel planning**: omega-travel (standalone, Operación Omega)
