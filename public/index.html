@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.lemonsqueezy.com">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://*.vercel-scripts.com; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.lemonsqueezy.com https://*.vercel.app https://*.vercel-insights.com">
 <title>Omega Platform — Encuentra tu Punto 0</title>
 <meta property="og:title" content="Omega Platform — Encuentra tu Punto 0">
 <meta property="og:description" content="La herramienta que encuentra la decisión atómica que desbloquea todo lo demás. Causalidad inversa + agentes IA.">
@@ -13,23 +13,46 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://omega-platform-gold.vercel.app/">
 <meta name="description" content="No necesitas hacer más. Necesitas saber qué hacer primero. Omega encuentra tu Punto 0 — la decisión que desbloquea todo lo demás.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Omega Platform",
+  "description": "Encuentra tu Punto 0 — la decisión atómica que desbloquea toda tu cadena de éxito usando causalidad inversa.",
+  "url": "https://omega-platform-gold.vercel.app",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": [
+    {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free"},
+    {"@type": "Offer", "price": "15", "priceCurrency": "USD", "name": "PRO", "priceValidUntil": "2027-12-31"}
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Aniol Guell",
+    "alternateName": "@tacotios",
+    "url": "https://instagram.com/tacotios"
+  }
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 <style>
 /* ═══ RESET + BASE ═══ */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0a0f;--surface:#12121c;--surface2:#1a1a28;
-  --border:#2a2a3d;--text:#eaeaf4;--text2:#9a9ab8;
-  --accent:#00d4aa;--accent2:#7b61ff;--accent3:#ff6b6b;
-  --gold:#ffd700;
-  --grad:linear-gradient(135deg,#00d4aa,#7b61ff);
-  --grad-gold:linear-gradient(135deg,#ffd700,#ff9500);
+  --bg:#030307;--surface:#0d0d14;--surface2:#16161f;
+  --border:#2a2a3d;--text:#F3EDE8;--text2:#9a9ab8;
+  --accent:#E99B2A;--accent2:#F97316;--accent3:#ff6b6b;
+  --gold:#E99B2A;
+  --grad:linear-gradient(135deg,#E99B2A,#F97316);
+  --grad-gold:linear-gradient(135deg,#E99B2A,#F97316);
   --radius:14px;--radius-sm:10px;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 a{color:var(--accent);text-decoration:none}
 /* ═══ GLOBAL AMBIENT BG ═══ */
-body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,rgba(0,212,170,.04) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(123,97,255,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,rgba(233,155,42,.04) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(249,115,22,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
 .screen{position:relative;z-index:1}
 
 /* ═══ LAYOUT ═══ */
@@ -50,7 +73,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 /* ═══ HOME SCREEN ═══ */
 .hero{text-align:center;padding:80px 0 48px;position:relative}
-.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.06) 0%,rgba(123,97,255,.03) 40%,transparent 70%);pointer-events:none;z-index:0}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(233,155,42,.06) 0%,rgba(249,115,22,.03) 40%,transparent 70%);pointer-events:none;z-index:0}
 .hero>*{position:relative;z-index:1}
 .hero h1{font-size:clamp(30px,5.5vw,46px);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-.02em}
 .hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -58,18 +81,18 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:24px;background:var(--surface2);border:1px solid var(--border);font-size:13px;color:var(--text2);margin-bottom:28px;backdrop-filter:blur(8px)}
 .badge strong{color:var(--accent)}
 .badge .pulse{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
-@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,170,.4)}50%{opacity:.8;box-shadow:0 0 0 6px rgba(0,212,170,0)}}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(233,155,42,.4)}50%{opacity:.8;box-shadow:0 0 0 6px rgba(233,155,42,0)}}
 
 /* ═══ INPUT AREA ═══ */
 .input-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:all .3s ease}
-.input-area:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,170,.08)}
+.input-area:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(233,155,42,.08)}
 .input-area textarea{width:100%;background:none;border:none;color:var(--text);font-size:16px;line-height:1.6;resize:vertical;min-height:120px;max-height:300px;outline:none;font-family:inherit}
 .input-area textarea::placeholder{color:var(--text2)}
 .input-meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 .char-count{font-size:13px;color:var(--text2)}
 .btn-analyze{padding:14px 36px;border:none;border-radius:var(--radius-sm);background:var(--grad);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all .3s ease;position:relative;overflow:hidden;letter-spacing:.02em}
 .btn-analyze::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.15);border-radius:50%;transform:translate(-50%,-50%);transition:width .4s,height .4s}
-.btn-analyze:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,212,170,.25)}
+.btn-analyze:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 24px rgba(233,155,42,.25)}
 .btn-analyze:hover:not(:disabled)::after{width:300px;height:300px}
 .btn-analyze:disabled{opacity:.35;cursor:not-allowed;transform:none}
 
@@ -90,7 +113,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .templates-section h3{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:16px;font-weight:600}
 .templates-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .template-chip{padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text2);cursor:pointer;transition:all .25s ease;text-align:left;position:relative;role:button;tabindex:0}
-.template-chip:hover{border-color:var(--accent);color:var(--text);transform:translateY(-3px);box-shadow:0 6px 24px rgba(0,212,170,.1)}
+.template-chip:hover{border-color:var(--accent);color:var(--text);transform:translateY(-3px);box-shadow:0 6px 24px rgba(233,155,42,.1)}
 .template-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .template-chip strong{display:block;color:var(--text);margin-bottom:4px;font-size:14px}
 .template-chip.pro-only{opacity:.6}
@@ -103,7 +126,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
 .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:all .3s ease;position:relative;overflow:hidden}
 .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:0;transition:opacity .3s}
-.feature-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,212,170,.1);border-color:rgba(0,212,170,.2)}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(233,155,42,.1);border-color:rgba(233,155,42,.2)}
 .feature-card:hover::before{opacity:1}
 .feature-card .icon{font-size:28px;margin-bottom:12px;display:block}
 .feature-card h3{font-size:15px;margin-bottom:8px;font-weight:700}
@@ -111,13 +134,13 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 /* ═══ PRICING SECTION ═══ */
 .pricing{padding:80px 0;border-top:1px solid var(--border);position:relative}
-.pricing::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(255,215,0,.03) 0%,transparent 70%);pointer-events:none}
+.pricing::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(233,155,42,.03) 0%,transparent 70%);pointer-events:none}
 .pricing h2{text-align:center;font-size:28px;margin-bottom:8px;letter-spacing:-.01em}
 .pricing .subtitle{text-align:center;color:var(--text2);margin-bottom:48px}
 .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:620px;margin:0 auto;position:relative}
 .price-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;position:relative;transition:all .3s}
 .price-card:hover{transform:translateY(-4px)}
-.price-card.featured{border-color:var(--gold);box-shadow:0 0 40px rgba(255,215,0,.08),0 0 80px rgba(255,215,0,.04);transform:scale(1.02)}
+.price-card.featured{border-color:var(--gold);box-shadow:0 0 40px rgba(233,155,42,.08),0 0 80px rgba(233,155,42,.04);transform:scale(1.02)}
 .price-card.featured:hover{transform:scale(1.04) translateY(-4px)}
 .price-card.featured::before{content:'POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--grad-gold);color:#000;font-size:10px;font-weight:800;padding:4px 14px;border-radius:12px;letter-spacing:1px}
 .price-name{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--text2);margin-bottom:8px}
@@ -151,9 +174,9 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .analysis-header h2{font-size:28px;font-weight:800}
 .analysis-header p{color:var(--text2);margin-top:8px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:all .3s ease}
-.card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,212,170,.08)}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(233,155,42,.08)}
 .card-label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:12px}
-.punto0-card{border-color:var(--accent);background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(123,97,255,.05))}
+.punto0-card{border-color:var(--accent);background:linear-gradient(135deg,rgba(233,155,42,.05),rgba(249,115,22,.05))}
 .punto0-card h3{font-size:22px;font-weight:800;margin-bottom:8px}
 .punto0-card .why{color:var(--text2);font-size:15px}
 .chain-step{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -166,7 +189,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .exec-item .label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
 .exec-item .value{font-size:15px;font-weight:600}
 .agent-card{border-left:3px solid var(--accent2);padding-left:16px;margin-bottom:16px;transition:all .2s}
-.agent-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,212,170,.08)}
+.agent-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(233,155,42,.08)}
 .agent-card:last-child{margin-bottom:0}
 .agent-role{font-size:16px;font-weight:700;margin-bottom:4px}
 .agent-bias{font-size:13px;color:var(--accent3);margin-bottom:6px}
@@ -174,6 +197,18 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .tension-box{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);border-radius:var(--radius-sm);padding:16px;margin-top:16px;transition:all .2s}
 .tension-box:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(255,107,107,.1)}
 .tension-box strong{color:var(--accent3)}
+
+/* ═══ STRESS TESTS ═══ */
+.stress-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.stress-item:last-child{border:none}
+.stress-q{font-size:14px;font-weight:700;color:var(--accent3);margin-bottom:4px}
+.stress-a{font-size:14px;color:var(--text2);line-height:1.6}
+.stress-locked{opacity:.4;font-style:italic}
+
+/* ═══ API SOURCE BADGE ═══ */
+.source-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;letter-spacing:.5px;margin-left:8px}
+.source-badge.api{background:rgba(233,155,42,.15);color:var(--accent);border:1px solid rgba(233,155,42,.3)}
+.source-badge.local{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
 
 /* ═══ PROMPTS SCREEN ═══ */
 .prompt-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
@@ -251,7 +286,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,15,.9);z-index:999;justify-content:center;align-items:center;animation:fadeIn .3s}
 .modal-overlay.open{display:flex}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:36px;max-width:420px;width:90%;max-height:85vh;overflow-y:auto;text-align:center;position:relative;box-shadow:0 0 60px rgba(255,215,0,.1)}
+.modal{background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:36px;max-width:420px;width:90%;max-height:85vh;overflow-y:auto;text-align:center;position:relative;box-shadow:0 0 60px rgba(233,155,42,.1)}
 .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer}
 .modal-preview{background:var(--surface2);border:1px dashed var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;max-height:120px;overflow:hidden;position:relative;filter:blur(4px);color:var(--text2);font-size:13px;line-height:1.5}
 .modal-preview::after{content:'';position:absolute;inset:0;background:rgba(10,10,15,.3)}
@@ -263,7 +298,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .modal-features li::before{content:'⚡ ';color:var(--gold)}
 .modal-features li:last-child{border:none}
 .btn-upgrade{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);background:var(--grad-gold);color:#000;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.5px;transition:all .2s}
-.btn-upgrade:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,215,0,.3)}
+.btn-upgrade:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(233,155,42,.3)}
 .modal-skip{display:block;margin-top:12px;background:none;border:none;color:var(--text2);font-size:13px;cursor:pointer;width:100%}
 
 /* ═══ TOAST ═══ */
@@ -330,7 +365,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 <div class="loading-overlay" id="loading">
   <div class="progress-indicators">
     <div class="step">
-      <div class="progress-indicators step-circle active" id="step1">1</div>
+      <div class="step-circle active" id="step1">1</div>
       <div class="step-label">Analizando</div>
     </div>
     <div class="step">
@@ -387,6 +422,13 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <li>Templates por industria</li>
     </ul>
     <button class="btn-upgrade" onclick="handleUpgrade()">Desbloquear PRO — $15/mes</button>
+    <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+      <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Ya tienes licencia PRO?</p>
+      <div class="email-row">
+        <input type="text" id="licenseKeyInput" placeholder="Tu license key">
+        <button onclick="activateLicense()">Activar</button>
+      </div>
+    </div>
     <button class="modal-skip" onclick="closeProModal()">Seguir con plan gratuito</button>
   </div>
 </div>
@@ -587,7 +629,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
     <!-- Footer -->
     <div class="footer">
-      <p>Omega Platform v6.0 · Creado con obsesión por las buenas decisiones</p>
+      <p>Omega Platform v4.0 · Creado con obsesión por las buenas decisiones</p>
     </div>
   </div>
 </div>
@@ -637,6 +679,11 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <div class="card-label" id="agentsLabel">🧠 Agente adaptativo</div>
       <div id="agentsList"></div>
       <div class="tension-box" id="tensionBox"></div>
+    </div>
+
+    <div class="card" id="stressTestCard" style="display:none">
+      <div class="card-label">🔬 Stress tests</div>
+      <div id="stressTestList"></div>
     </div>
 
     <div id="emailCaptureContainer"></div>
@@ -788,9 +835,53 @@ function showProModal(trigger){
   trackEvent('pro_modal_shown', {trigger: trigger});
 }
 function closeProModal(){document.getElementById('proModal').classList.remove('open')}
-function handleUpgrade(){
-  showToast('Próximamente — pagos en proceso de integración');
-  closeProModal();
+async function handleUpgrade(){
+  const email = localStorage.getItem('omega_v1_email') || '';
+  try{
+    const resp = await fetch('/api/validate-pro', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'checkout', email: email})
+    });
+    const data = await resp.json();
+    if(data.checkoutUrl){
+      window.open(data.checkoutUrl, '_blank');
+      closeProModal();
+    } else {
+      showToast(data.message || 'Contacta @tacotios para acceso PRO');
+      closeProModal();
+    }
+  } catch(e){
+    showToast('Contacta @tacotios para acceso PRO');
+    closeProModal();
+  }
+}
+
+// ═══ LICENSE ACTIVATION ═══
+async function activateLicense(){
+  const key = document.getElementById('licenseKeyInput').value.trim();
+  if(!key){showToast('Ingresa tu license key');return}
+  try{
+    const resp = await fetch('/api/validate-pro', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'validate', licenseKey: key})
+    });
+    const data = await resp.json();
+    if(data.valid){
+      isPro = true;
+      localStorage.setItem('omega_v1_pro_validated', 'true');
+      localStorage.setItem('omega_v1_license_key', key);
+      updateUsageUI();
+      closeProModal();
+      showToast('PRO activado correctamente');
+      trackEvent('pro_activated', {});
+    } else {
+      showToast('License key inválida: '+(data.reason||'verifica e intenta de nuevo'));
+    }
+  } catch(e){
+    showToast('Error validando license key');
+  }
 }
 
 // ═══ ONBOARDING ═══
@@ -898,7 +989,7 @@ function addToHistory(text, ctx, result){
     ctx: ctx,
     result: result
   });
-  if(h.length > 50) h.slice(0,50);
+  if(h.length > 50) h.length = 50;
   saveHistory(h);
 }
 
@@ -1055,20 +1146,33 @@ function analyze(){
 
   btnAnalyze.disabled = true;
   trackEvent('analysis_started', {});
-
   showLoading(true);
 
-  setTimeout(function(){
-    try{
-      const autoCtx = autoExtractContext(text);
-      const ctx = {
-        sector: document.getElementById('ctxSector').value || autoCtx.sector || 'no especificado',
-        timeline: document.getElementById('ctxTimeline').value || autoCtx.timeline || 'no especificado',
-        team: document.getElementById('ctxTeam').value || autoCtx.team || 'no especificado',
-        budget: document.getElementById('ctxBudget').value || autoCtx.budget || 'no especificado'
-      };
+  const autoCtx = autoExtractContext(text);
+  const ctx = {
+    sector: document.getElementById('ctxSector').value || autoCtx.sector || 'no especificado',
+    timeline: document.getElementById('ctxTimeline').value || autoCtx.timeline || 'no especificado',
+    team: document.getElementById('ctxTeam').value || autoCtx.team || 'no especificado',
+    budget: document.getElementById('ctxBudget').value || autoCtx.budget || 'no especificado'
+  };
 
+  // Try API first, fallback to local engine
+  analyzeWithAPI(text, ctx).then(function(result){
+    currentResult = result;
+    prompts = generatePrompts(text, ctx, currentResult);
+    renderAnalysis(currentResult);
+    updateMemory(text, ctx, currentResult);
+    addToHistory(text, ctx, currentResult);
+    incrementUsage();
+    showLoading(false);
+    showEmailCapture();
+    goScreen('analysis');
+    trackEvent('analysis_completed', {goal: currentResult.goal, agents: currentResult.agents.length, source: currentResult._source || 'api'});
+  }).catch(function(err){
+    console.warn('API failed, using local engine:', err.message);
+    try{
       currentResult = runOmegaProtocol(text, ctx);
+      currentResult._source = 'local';
       prompts = generatePrompts(text, ctx, currentResult);
       renderAnalysis(currentResult);
       updateMemory(text, ctx, currentResult);
@@ -1077,14 +1181,32 @@ function analyze(){
       showLoading(false);
       showEmailCapture();
       goScreen('analysis');
-      trackEvent('analysis_completed', {goal: currentResult.goal, agents: currentResult.agents.length});
-    } catch(e){
+      trackEvent('analysis_completed', {goal: currentResult.goal, agents: currentResult.agents.length, source: 'local_fallback'});
+    } catch(e2){
       showLoading(false);
       btnAnalyze.disabled = false;
-      showToast('Error: '+e.message);
-      trackEvent('analysis_error', {error: e.message});
+      showToast('Error: '+e2.message);
     }
-  }, CONFIG.ANALYSIS_DELAY_MS);
+  });
+}
+
+async function analyzeWithAPI(text, ctx){
+  const tier = isPro ? 'pro' : 'free';
+  const response = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text: text, context: ctx, tier: tier})
+  });
+
+  if(!response.ok){
+    const err = await response.json().catch(function(){return {error:'Network error'}});
+    throw new Error(err.error || 'API error '+response.status);
+  }
+
+  const data = await response.json();
+  if(!data.result) throw new Error('Empty result');
+  data.result._source = 'api';
+  return data.result;
 }
 
 function autoExtractContext(text){
@@ -1342,8 +1464,6 @@ function generatePrompts(text, ctx, result){
 
 // ═══ RENDER ═══
 function renderAnalysis(r){
-  document.getElementById('analysisGoalPreview').textContent = '«'+r.goal+'»';
-
   const es = document.getElementById('execSummary');
   es.innerHTML = '<div class="exec-item card"><div class="label">Tu mayor palanca</div><div class="value" style="color:var(--accent)">'+esc(r.summary.lever)+'</div></div>'
     +'<div class="exec-item card"><div class="label">Tu mayor riesgo</div><div class="value" style="color:var(--accent3)">'+esc(r.summary.risk)+'</div></div>'
@@ -1381,6 +1501,29 @@ function renderAnalysis(r){
   } else {
     tensionBox.style.display = 'none';
   }
+
+  // Stress tests
+  const stCard = document.getElementById('stressTestCard');
+  if(r.stressTests && r.stressTests.length > 0){
+    let stHTML = '';
+    const stCount = isPro ? r.stressTests.length : Math.min(r.stressTests.length, 3);
+    for(let i=0;i<stCount;i++){
+      const st = r.stressTests[i];
+      stHTML += '<div class="stress-item"><div class="stress-q">'+esc(st.test)+'</div><div class="stress-a">'+esc(st.result)+'</div></div>';
+    }
+    if(!isPro && r.stressTests.length > 3){
+      stHTML += '<div class="stress-item stress-locked">+'+(r.stressTests.length-3)+' stress tests en PRO <button class="btn-pro-small" style="margin-left:8px" onclick="showProModal(\'agents\')">Desbloquear</button></div>';
+    }
+    document.getElementById('stressTestList').innerHTML = stHTML;
+    stCard.style.display = 'block';
+  } else {
+    stCard.style.display = 'none';
+  }
+
+  // Source badge
+  const sourceType = r._source === 'api' ? 'api' : 'local';
+  const sourceLabel = sourceType === 'api' ? 'IA' : 'Local';
+  document.getElementById('analysisGoalPreview').innerHTML = esc('«'+r.goal+'»') + ' <span class="source-badge '+sourceType+'">'+sourceLabel+'</span>';
 
   const pdfBtn = document.getElementById('btnExportPdf');
   if(pdfBtn){
@@ -1426,9 +1569,24 @@ function downloadPrompt(){
 }
 
 function shareResult(){
-  const text = 'Mi Punto 0 (por Omega Platform):\n\n'+currentResult.punto0.text.replace('PUNTO 0: ','')+'\n\nEncuentra el tuyo →';
-  if(navigator.share){navigator.share({title:'Mi Punto 0',text:text}).catch(function(){})}
-  else{clipCopy(text,'Copiado para compartir')}
+  const shareData = {
+    g: currentResult.goal,
+    p: currentResult.punto0.text,
+    w: currentResult.punto0.why || '',
+    l: currentResult.summary.lever,
+    r: currentResult.summary.risk,
+    f: currentResult.summary.firstStep
+  };
+  try{
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
+    const shareUrl = window.location.origin + '?s=' + encoded;
+    const text = 'Mi Punto 0 (por Omega Platform):\n\n'+currentResult.punto0.text.replace('PUNTO 0: ','')+'\n\nEncuentra el tuyo → '+shareUrl;
+    if(navigator.share){navigator.share({title:'Mi Punto 0 — Omega Platform',text:text,url:shareUrl}).catch(function(){})}
+    else{clipCopy(shareUrl,'URL copiada — comparte tu análisis')}
+  }catch(e){
+    const text = 'Mi Punto 0 (por Omega Platform):\n\n'+currentResult.punto0.text.replace('PUNTO 0: ','')+'\n\nEncuentra el tuyo →';
+    clipCopy(text,'Copiado para compartir');
+  }
 }
 
 // ═══ PDF EXPORT ═══
@@ -1552,21 +1710,43 @@ updateUsageUI();
 renderMemoryBanner();
 checkFirstVisit();
 
-// URL params (sanitized)
+// Prefetch API endpoint for faster first analysis
+try{fetch('/api/analyze',{method:'OPTIONS'}).catch(function(){})}catch(e){}
+
+// URL params
 const params = new URLSearchParams(window.location.search);
+
+// Shared analysis
+if(params.get('s')){
+  try{
+    const decoded = JSON.parse(decodeURIComponent(escape(atob(params.get('s')))));
+    if(decoded.g && decoded.p){
+      currentResult = {
+        goal: decoded.g,
+        punto0: {text: decoded.p, why: decoded.w || ''},
+        chain: [{text: decoded.p, type:'punto0'},{text:'Meta: '+decoded.g, type:'goal'}],
+        agents: [],
+        tension: '',
+        summary: {lever: decoded.l||'', risk: decoded.r||'', firstStep: decoded.f||''},
+        _source: 'shared'
+      };
+      prompts = ['','',''];
+      renderAnalysis(currentResult);
+      goScreen('analysis');
+    }
+  }catch(e){console.warn('Invalid share data')}
+}
+
+// Pre-fill from URL
 if(params.get('q')){
   let q = decodeURIComponent(params.get('q')).substring(0, CONFIG.MAX_INPUT_LENGTH);
-  q = q.replace(/[<>`']/g, '').replace(/[^\w\s.,á-úñÁ-ÚÑ]/g,'');
+  q = q.replace(/[<>`]/g, '');
   goalInput.value = q;
   goalInput.dispatchEvent(new Event('input'));
 }
 
-// PRO activation via token
-if(params.get('pro_token')){
-  try{const token=params.get('pro_token');localStorage.setItem('omega_v1_pro_token',token);isPro=true;updateUsageUI()}catch(e){}
-} else {
-  try{if(localStorage.getItem('omega_v1_pro_token')){isPro=true;updateUsageUI()}}catch(e){}
-}
+// PRO activation — requires server-validated token stored locally
+try{if(localStorage.getItem('omega_v1_pro_validated')==='true'){isPro=true;updateUsageUI()}}catch(e){}
 
 // Expose functions to global scope for onclick handlers
 window.analyze = analyze;
@@ -1588,6 +1768,7 @@ window.captureEmail = captureEmail;
 window.dismissEmail = dismissEmail;
 window.applyMemory = applyMemory;
 window.loadFromHistory = loadFromHistory;
+window.activateLicense = activateLicense;
 
 })();
 </script>
