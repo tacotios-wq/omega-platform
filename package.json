@@ -9,5 +9,8 @@
   "keywords": ["omega", "punto-0", "causalidad-inversa", "estrategia", "ia"],
   "author": "Aniol Guell (@tacotios)",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  }
 }
