@@ -205,6 +205,12 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .stress-a{font-size:14px;color:var(--text2);line-height:1.6}
 .stress-locked{opacity:.4;font-style:italic}
 
+/* ═══ BLIND SPOTS ═══ */
+.blind-spot{padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2);display:flex;gap:8px;align-items:flex-start}
+.blind-spot:last-child{border:none}
+.blind-spot::before{content:'👁️';flex-shrink:0}
+.next-after{font-style:italic;color:var(--accent)}
+
 /* ═══ API SOURCE BADGE ═══ */
 .source-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;letter-spacing:.5px;margin-left:8px}
 .source-badge.api{background:rgba(233,155,42,.15);color:var(--accent);border:1px solid rgba(233,155,42,.3)}
@@ -684,6 +690,12 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <div class="card" id="stressTestCard" style="display:none">
       <div class="card-label">🔬 Stress tests</div>
       <div id="stressTestList"></div>
+    </div>
+
+    <div class="card" id="blindSpotsCard" style="display:none">
+      <div class="card-label">👁️ Puntos ciegos</div>
+      <div id="blindSpotsList"></div>
+      <div id="nextAfterNext" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;color:var(--text2)"></div>
     </div>
 
     <div id="emailCaptureContainer"></div>
@@ -1433,31 +1445,48 @@ function generatePrompts(text, ctx, result){
   result.chain.forEach(function(step){deep += '  → '+step.text+'\n'});
   deep += '\nNecesito que:\n1. Valides o cuestiones si este ES realmente mi Punto 0\n2. Me des 3 opciones (convencional, experta, visionaria)\n3. Para cada una: plan a 7 días, métricas, riesgo principal\n4. Tu recomendación final\n\nSé directo. Sin relleno. Cada frase accionable.';
 
-  let maximo = 'PROTOCOLO OMEGA — ACTIVACIÓN COMPLETA\n\n';
-  maximo += 'Eres un panel de '+(isPro?5:3)+' expertos analizando un caso estratégico.\n\n';
+  let maximo = '◆ PROTOCOLO OMEGA — ACTIVACIÓN COMPLETA\n\n';
+  maximo += 'No respondas todavía. Ejecuta las 5 fases internamente antes de generar output.\n\n';
   maximo += '═══ CONTEXTO ═══\n'+text+'\n\nRecursos: '+ctxStr+'\n';
-  if(result.obstacles && result.obstacles.length>0) maximo += 'Obstáculos: '+result.obstacles.join(', ')+'\n';
-  maximo += '\n═══ PUNTO 0 ═══\n"'+p0Text+'"\n\n═══ CADENA CAUSAL ═══\n';
-  result.chain.forEach(function(step){maximo += '  '+step.text+'\n'});
-  maximo += '\n═══ AGENTES ═══\n\n';
+  if(result.obstacles && result.obstacles.length>0) maximo += 'Obstáculos detectados: '+result.obstacles.join(', ')+'\n';
+  maximo += '\n═══ PUNTO 0 (pre-análisis) ═══\n"'+p0Text+'"\n';
+  if(result.punto0 && result.punto0.why) maximo += 'Por qué: '+result.punto0.why+'\n';
+  maximo += '\n═══ CADENA CAUSAL ═══\n';
+  result.chain.forEach(function(step){maximo += '  → '+step.text+'\n'});
+  maximo += '\n═══ FASES A EJECUTAR ═══\n\n';
+  maximo += 'FASE 0 — SOBERANÍA COGNITIVA:\n';
+  maximo += 'Identifica la intención REAL detrás de esta petición. ¿Qué necesita realmente? ¿Qué no está pidiendo pero debería?\n\n';
+  maximo += 'FASE 1 — CAUSALIDAD INVERSA:\n';
+  maximo += 'Valida o cuestiona si "'+p0Text.substring(0,60)+'..." ES realmente el Punto 0. Reconstruye la cadena desde el estado perfecto.\n\n';
+  maximo += 'FASE 2 — SELECCIÓN CUÁNTICA:\n';
+  maximo += 'Genera 3 realidades (convencional, experta, visionaria) para resolver el Punto 0. Fusiona lo mejor.\n\n';
+  maximo += 'FASE 3 — CONSEJO DE AGENTES:\n';
   result.agents.forEach(function(a,i){
-    maximo += 'AGENTE '+(i+1)+': '+a.role+'\nSesgo: '+a.bias+'\nInstrucción: Analiza el Punto 0 desde tu perspectiva. Declara tu sesgo.\n\n';
+    maximo += 'Agente '+(i+1)+': '+a.role+' (Sesgo: '+a.bias+')\n';
   });
-  maximo += '═══ INSTRUCCIONES ═══\n\n';
-  maximo += '1. Cada agente analiza el Punto 0 (declarando sesgo)\n';
-  maximo += '2. Identifica dónde DISCREPAN — ahí está la verdad\n';
-  maximo += '3. STRESS TEST:\n';
-  maximo += '   - ¿Qué pasa si hacemos lo OPUESTO?\n';
-  maximo += '   - ¿Funciona a 10x escala?\n';
-  maximo += '   - ¿Funciona con la mitad del tiempo?\n';
+  maximo += 'Debate en 3 rondas: exposición → fuego cruzado → puntos ciegos. Donde DISCREPAN está la verdad.\n\n';
+  maximo += 'FASE 4 — STRESS TEST:\n';
+  maximo += '1. INVERSIÓN: ¿Qué pasa si hacemos lo opuesto del Punto 0?\n';
+  maximo += '2. ESCALA: ¿Funciona a 10x?\n';
+  maximo += '3. COMPRESIÓN: ¿Funciona con la mitad del tiempo?\n';
   if(isPro){
-    maximo += '   - ¿Funciona con la mitad de los recursos?\n';
-    maximo += '   - ¿Cuál es el plan B si falla?\n';
+    maximo += '4. RESTRICCIÓN: ¿Funciona con la mitad de los recursos?\n';
+    maximo += '5. PLAN B: Si falla completamente, ¿cuál es la ruta de escape?\n';
   } else {
-    maximo += '   [2 stress tests adicionales en PRO]\n';
+    maximo += '[2 stress tests adicionales en PRO]\n';
   }
-  maximo += '4. RESOLUCIÓN: Decisión óptima + plan 7 días + acción para HOY\n\n';
-  maximo += 'Formato: Prosa directa. Sin relleno. Cada frase accionable o elimínala.';
+  maximo += '\nFASE 5 — CALIBRACIÓN FINAL:\n';
+  maximo += '7 filtros: línea recta, accionabilidad, honestidad radical, anticipación, elegancia, irreversibilidad, apuesta de reputación.\n\n';
+  maximo += '═══ ENTREGA ═══\n';
+  maximo += '⚛️ Decisión Atómica (validada o corregida)\n';
+  maximo += '◆ Análisis completo con cadena causal reconstruida\n';
+  maximo += '🧠 Cada agente con su dictamen (declarando sesgo)\n';
+  maximo += '⚡ Tensión principal y resolución\n';
+  maximo += '🔬 Resultados de cada stress test\n';
+  maximo += '👁️ Puntos ciegos (max 3)\n';
+  maximo += '→ Plan de 7 días con acción para HOY\n';
+  maximo += '→ Lo que necesitará DESPUÉS y aún no sabe\n\n';
+  maximo += 'Formato: Prosa directa. Cada frase accionable o elimínala. Sin relleno. Sin generalidades.';
 
   return [direct, deep, maximo];
 }
@@ -1518,6 +1547,20 @@ function renderAnalysis(r){
     stCard.style.display = 'block';
   } else {
     stCard.style.display = 'none';
+  }
+
+  // Blind spots + next after next
+  const bsCard = document.getElementById('blindSpotsCard');
+  if(r.blindSpots && r.blindSpots.length > 0){
+    let bsHTML = '';
+    r.blindSpots.forEach(function(bs){bsHTML += '<div class="blind-spot">'+esc(bs)+'</div>'});
+    document.getElementById('blindSpotsList').innerHTML = bsHTML;
+    const nanEl = document.getElementById('nextAfterNext');
+    if(r.nextAfterNext){nanEl.innerHTML = '<span class="next-after">Después del Punto 0 → </span>'+esc(r.nextAfterNext);nanEl.style.display='block'}
+    else{nanEl.style.display='none'}
+    bsCard.style.display = 'block';
+  } else {
+    bsCard.style.display = 'none';
   }
 
   // Source badge
