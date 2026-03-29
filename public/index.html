@@ -840,7 +840,7 @@ function updateUsageUI(){
 // ═══ PRO MODAL ═══
 function showProModal(trigger){
   const msgs = {
-    'limit':'Has usado tus 3 análisis gratis este mes. Desbloquea PRO para análisis ilimitados.',
+    'limit':'Has usado tus 5 análisis gratis este mes. Desbloquea PRO para análisis ilimitados.',
     'agents':'Con PRO obtienes 5 agentes adaptativos en vez de 1. Más perspectivas = mejores decisiones.',
     'pdf':'El export PDF es una feature PRO. Descarga tus análisis como documentos profesionales.',
     'template':'Los templates de industria son exclusivos de PRO.',
@@ -1214,6 +1214,7 @@ function retryAnalysis(){
 
 async function analyzeWithAPI(text, ctx){
   const tier = isPro ? 'pro' : 'free';
+  const licenseKey = localStorage.getItem('omega_v1_license_key') || '';
   const controller = new AbortController();
   const timeoutId = setTimeout(function(){controller.abort()}, 45000);
 
@@ -1221,7 +1222,7 @@ async function analyzeWithAPI(text, ctx){
     const response = await fetch('/api/analyze', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({text: text, context: ctx, tier: tier}),
+      body: JSON.stringify({text: text, context: ctx, tier: tier, licenseKey: licenseKey}),
       signal: controller.signal
     });
     clearTimeout(timeoutId);
@@ -1812,8 +1813,22 @@ if(params.get('q')){
   goalInput.dispatchEvent(new Event('input'));
 }
 
-// PRO activation — requires server-validated token stored locally
-try{if(localStorage.getItem('omega_v1_pro_validated')==='true'){isPro=true;updateUsageUI()}}catch(e){}
+// PRO activation — re-validate license key on load if one exists
+try{
+  const storedKey = localStorage.getItem('omega_v1_license_key');
+  if(storedKey){
+    fetch('/api/validate-pro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'validate',licenseKey:storedKey})})
+      .then(function(r){return r.json()})
+      .then(function(d){
+        if(d.valid){isPro=true;localStorage.setItem('omega_v1_pro_validated','true')}
+        else{isPro=false;localStorage.removeItem('omega_v1_pro_validated');localStorage.removeItem('omega_v1_license_key')}
+        updateUsageUI();
+      }).catch(function(){
+        // Offline: trust cached status temporarily
+        if(localStorage.getItem('omega_v1_pro_validated')==='true'){isPro=true;updateUsageUI()}
+      });
+  }
+}catch(e){}
 
 // Expose functions to global scope for onclick handlers
 window.analyze = analyze;

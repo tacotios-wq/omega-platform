@@ -150,6 +150,33 @@ Responde SOLO con este JSON (sin markdown, sin backticks, sin texto adicional):
 - Responde en el idioma del usuario. Si el objetivo está en español, responde en español. Si está en inglés, en inglés.
 - SOLO JSON válido. Nada más. Sin markdown. Sin backticks. Sin explicaciones.`;
 
+// License validation cache (in-memory, resets on cold start — acceptable for serverless)
+const licenseCache = new Map();
+const LICENSE_CACHE_TTL = 10 * 60 * 1000; // 10 min
+
+async function validateLicense(licenseKey) {
+  if (!licenseKey) return false;
+
+  // Check cache first
+  const cached = licenseCache.get(licenseKey);
+  if (cached && Date.now() - cached.ts < LICENSE_CACHE_TTL) return cached.valid;
+
+  try {
+    const resp = await fetch('https://api.lemonsqueezy.com/v1/licenses/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ license_key: licenseKey })
+    });
+    const data = await resp.json();
+    const valid = !!data.valid;
+    licenseCache.set(licenseKey, { valid, ts: Date.now() });
+    return valid;
+  } catch {
+    // On network error, trust cache if exists, otherwise deny
+    return cached ? cached.valid : false;
+  }
+}
+
 export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -166,7 +193,7 @@ export default async function handler(req, res) {
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'API key not configured' });
 
   try {
-    const { text, context, tier } = req.body;
+    const { text, context, tier, licenseKey } = req.body;
 
     if (!text || typeof text !== 'string' || text.trim().length < 30) {
       return res.status(400).json({ error: 'El objetivo debe tener al menos 30 caracteres.' });
@@ -175,8 +202,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'El objetivo no puede superar 2000 caracteres.' });
     }
 
-    const agentCount = tier === 'pro' ? 5 : 1;
-    const stressCount = tier === 'pro' ? 5 : 3;
+    // Validate PRO server-side — don't trust client tier claim
+    const isPro = tier === 'pro' && licenseKey ? await validateLicense(licenseKey) : false;
+    const agentCount = isPro ? 5 : 1;
+    const stressCount = isPro ? 5 : 3;
 
     const userMessage = `OBJETIVO DEL USUARIO:
 ${text.trim()}
@@ -240,7 +269,7 @@ Responde SOLO con el JSON. Sin texto adicional.`;
       }
     }
 
-    return res.status(200).json({ result, model: 'claude-sonnet-4-20250514' });
+    return res.status(200).json({ result, model: 'claude-sonnet-4-20250514', proValidated: isPro });
   } catch (err) {
     console.error('Handler error:', err);
     return res.status(500).json({ error: 'Error interno. Intenta de nuevo.' });
