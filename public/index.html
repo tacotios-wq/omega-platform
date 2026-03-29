@@ -45,6 +45,7 @@
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
 <link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#E99B2A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -684,7 +685,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <div class="social-proof">
       <div class="proof-stats">
         <div class="proof-stat"><div class="num">2M+</div><div class="label">Seguidores</div></div>
-        <div class="proof-stat"><div class="num">10</div><div class="label">Proyectos activos</div></div>
+        <div class="proof-stat"><div class="num" id="globalAnalysisCount">0</div><div class="label">Análisis hechos</div></div>
         <div class="proof-stat"><div class="num">60s</div><div class="label">Por análisis</div></div>
       </div>
       <p>Creado por <a href="https://instagram.com/tacotios" target="_blank">@tacotios</a> — porque yo necesitaba esto antes que nadie.</p>
@@ -696,7 +697,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
     <!-- Footer -->
     <div class="footer">
-      <p>Omega Platform v4.2 · Creado con obsesión por las buenas decisiones</p>
+      <p>Omega Platform v4.3 · Creado con obsesión por las buenas decisiones</p>
     </div>
   </div>
 </div>
@@ -879,6 +880,11 @@ function incrementUsage(){
   data.count++;
   saveUsage(data);
   updateUsageUI();
+  // Increment global counter
+  try{fetch('/api/stats',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
+    var el=document.getElementById('globalAnalysisCount');
+    if(el&&d.count)el.textContent=d.count.toLocaleString('es');
+  }).catch(function(){})}catch(e){}
 }
 function getRemainingUses(){
   if(isPro) return 999;
@@ -990,16 +996,36 @@ function captureEmail(){
   }
   try{localStorage.setItem('omega_v1_email',email)}catch(e){}
   document.getElementById('emailCapture').style.display='none';
-  showToast('¡Guardado! Te enviaremos tu análisis cuando activemos esta función.');
-  trackEvent('email_captured', {});
+  showToast('Email guardado — recibirás tu análisis completo');
+  trackEvent('email_captured', {source:'analysis_gate'});
 }
 function dismissEmail(){
   document.getElementById('emailCapture').style.display='none';
+  try{localStorage.setItem('omega_v1_email_skipped','true')}catch(e){}
 }
 function showEmailCapture(){
   const container = document.getElementById('emailCaptureContainer');
   if(!container) return;
-  container.innerHTML = '<div class="email-capture" id="emailCapture"><p>¿Quieres recibir tu análisis por email?</p><div class="email-row"><input type="email" id="emailInput" placeholder="tu@email.com"><button onclick="captureEmail()">Enviar</button></div><button class="email-skip" onclick="dismissEmail()">No, gracias</button></div>';
+  // Don't show if already captured or skipped twice
+  const hasEmail = localStorage.getItem('omega_v1_email');
+  const skipCount = parseInt(localStorage.getItem('omega_v1_email_skip_count')||'0');
+  if(hasEmail) return;
+
+  const mem = getMemory();
+  const isFirstAnalysis = mem.totalAnalyses <= 1;
+  const headline = isFirstAnalysis
+    ? 'Recibe tu análisis completo por email'
+    : 'Guarda tus análisis — recíbelos por email';
+  const subtitle = isFirstAnalysis
+    ? 'Incluye tu Punto 0, cadena causal y plan de acción. Gratis.'
+    : 'Historial, Punto 0 y recomendaciones personalizadas. Gratis.';
+
+  container.innerHTML = '<div class="email-capture" id="emailCapture">'
+    +'<p style="font-size:16px;font-weight:700;margin-bottom:4px">'+headline+'</p>'
+    +'<p style="font-size:13px;color:var(--text2);margin-bottom:16px">'+subtitle+'</p>'
+    +'<div class="email-row"><input type="email" id="emailInput" placeholder="tu@email.com" autocomplete="email"><button onclick="captureEmail()">Guardar</button></div>'
+    +(skipCount < 2 ? '<button class="email-skip" onclick="dismissEmail();localStorage.setItem(\'omega_v1_email_skip_count\',\''+(skipCount+1)+'\')">Ahora no</button>' : '')
+    +'</div>';
 }
 
 // ═══ TEMPLATES ═══
@@ -1980,6 +2006,14 @@ document.querySelectorAll('.feature-card, .price-card, .proof-stat, .proof-quote
 updateUsageUI();
 renderMemoryBanner();
 checkFirstVisit();
+
+// Load global analysis counter
+try{
+  fetch('/api/stats').then(function(r){return r.json()}).then(function(d){
+    var el = document.getElementById('globalAnalysisCount');
+    if(el && d.count) el.textContent = d.count.toLocaleString('es');
+  }).catch(function(){});
+}catch(e){}
 
 // Prefetch API endpoint for faster first analysis
 try{fetch('/api/analyze',{method:'OPTIONS'}).catch(function(){})}catch(e){}
