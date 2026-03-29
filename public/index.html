@@ -5,11 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://*.vercel-scripts.com; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.lemonsqueezy.com https://*.vercel.app https://*.vercel-insights.com">
 <title>Omega Platform — Encuentra tu Punto 0</title>
-<meta property="og:title" content="Omega Platform — Encuentra tu Punto 0">
-<meta property="og:description" content="La herramienta que encuentra la decisión atómica que desbloquea todo lo demás. Causalidad inversa + agentes IA.">
+<meta property="og:title" content="Encuentra tu Punto 0 — Omega Platform">
+<meta property="og:description" content="No necesitas hacer más. Necesitas saber qué hacer primero. Omega encuentra la única decisión que desbloquea toda tu cadena de éxito.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
+<meta property="og:image" content="https://omega-platform-gold.vercel.app/api/og">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://omega-platform-gold.vercel.app">
+<meta property="og:site_name" content="Omega Platform by @tacotios">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Encuentra tu Punto 0 — Omega Platform">
+<meta name="twitter:description" content="La única decisión que desbloquea toda tu cadena de éxito. Gratis. 60 segundos.">
+<meta name="twitter:image" content="https://omega-platform-gold.vercel.app/api/og">
+<meta name="twitter:creator" content="@tacotios">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://omega-platform-gold.vercel.app/">
 <meta name="description" content="No necesitas hacer más. Necesitas saber qué hacer primero. Omega encuentra tu Punto 0 — la decisión que desbloquea todo lo demás.">
@@ -640,7 +649,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
     <!-- Footer -->
     <div class="footer">
-      <p>Omega Platform v4.0 · Creado con obsesión por las buenas decisiones</p>
+      <p>Omega Platform v4.2 · Creado con obsesión por las buenas decisiones</p>
     </div>
   </div>
 </div>
@@ -1645,9 +1654,11 @@ function shareResult(){
   try{
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
     const shareUrl = window.location.origin + '?s=' + encoded;
-    const text = 'Mi Punto 0 (por Omega Platform):\n\n'+currentResult.punto0.text.replace('PUNTO 0: ','')+'\n\nEncuentra el tuyo → '+shareUrl;
+    const p0Clean = currentResult.punto0.text.replace('PUNTO 0: ','');
+    const text = 'Mi Punto 0 (por Omega Platform):\n\n'+p0Clean+'\n\nEncuentra el tuyo → '+shareUrl;
     if(navigator.share){navigator.share({title:'Mi Punto 0 — Omega Platform',text:text,url:shareUrl}).catch(function(){})}
     else{clipCopy(shareUrl,'URL copiada — comparte tu análisis')}
+    trackEvent('result_shared', {});
   }catch(e){
     const text = 'Mi Punto 0 (por Omega Platform):\n\n'+currentResult.punto0.text.replace('PUNTO 0: ','')+'\n\nEncuentra el tuyo →';
     clipCopy(text,'Copiado para compartir');
@@ -1851,6 +1862,48 @@ window.dismissEmail = dismissEmail;
 window.applyMemory = applyMemory;
 window.loadFromHistory = loadFromHistory;
 window.activateLicense = activateLicense;
+
+// ═══ PWA INSTALL PROMPT ═══
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show install banner after 2nd analysis
+  const mem = getMemory();
+  if(mem.totalAnalyses && mem.totalAnalyses >= 2){
+    showInstallBanner();
+  }
+});
+
+function showInstallBanner(){
+  if(document.getElementById('installBanner')) return;
+  if(localStorage.getItem('omega_v1_install_dismissed')) return;
+  const banner = document.createElement('div');
+  banner.id = 'installBanner';
+  banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 20px;display:flex;align-items:center;gap:12px;z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,.5);max-width:440px;width:calc(100% - 40px);transition:opacity .3s,transform .3s';
+  banner.innerHTML = '<span style="font-size:13px;color:var(--text);flex:1">Instala Omega en tu celular para acceso rápido</span><button onclick="installPWA()" style="padding:8px 16px;border-radius:8px;background:var(--grad);border:none;color:#fff;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">Instalar</button><button onclick="dismissInstall()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:4px">&times;</button>';
+  document.body.appendChild(banner);
+}
+
+function installPWA(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(r){
+      if(r.outcome==='accepted') trackEvent('pwa_installed',{});
+      deferredPrompt = null;
+      var b = document.getElementById('installBanner');
+      if(b) b.remove();
+    });
+  }
+}
+window.installPWA = installPWA;
+
+function dismissInstall(){
+  localStorage.setItem('omega_v1_install_dismissed','true');
+  var b = document.getElementById('installBanner');
+  if(b) b.remove();
+}
+window.dismissInstall = dismissInstall;
 
 })();
 </script>
