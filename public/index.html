@@ -35,6 +35,11 @@
 }
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#E99B2A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Omega">
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 <style>
@@ -763,7 +768,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 // ═══ CONFIG ═══
 const CONFIG = {
-  FREE_LIMIT: 3,
+  FREE_LIMIT: 5,
   MAX_INPUT_LENGTH: 2000,
   MAX_HISTORY: 50,
   FREE_HISTORY_VISIBLE: 5,
@@ -1197,28 +1202,44 @@ function analyze(){
     } catch(e2){
       showLoading(false);
       btnAnalyze.disabled = false;
-      showToast('Error: '+e2.message);
+      showToast('Error: '+e2.message+' — Pulsa Analizar de nuevo');
     }
   });
 }
 
+function retryAnalysis(){
+  btnAnalyze.disabled = false;
+  analyze();
+}
+
 async function analyzeWithAPI(text, ctx){
   const tier = isPro ? 'pro' : 'free';
-  const response = await fetch('/api/analyze', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({text: text, context: ctx, tier: tier})
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(function(){controller.abort()}, 45000);
 
-  if(!response.ok){
-    const err = await response.json().catch(function(){return {error:'Network error'}});
-    throw new Error(err.error || 'API error '+response.status);
+  try {
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text: text, context: ctx, tier: tier}),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if(!response.ok){
+      const err = await response.json().catch(function(){return {error:'Network error'}});
+      throw new Error(err.error || 'API error '+response.status);
+    }
+
+    const data = await response.json();
+    if(!data.result) throw new Error('Empty result');
+    data.result._source = 'api';
+    return data.result;
+  } catch(err) {
+    clearTimeout(timeoutId);
+    if(err.name === 'AbortError') throw new Error('El análisis tardó demasiado. Intenta de nuevo.');
+    throw err;
   }
-
-  const data = await response.json();
-  if(!data.result) throw new Error('Empty result');
-  data.result._source = 'api';
-  return data.result;
 }
 
 function autoExtractContext(text){
@@ -1499,7 +1520,7 @@ function renderAnalysis(r){
     +'<div class="exec-item card"><div class="label">Empieza por aquí</div><div class="value">'+esc(r.summary.firstStep)+'</div></div>';
 
   document.getElementById('punto0Title').textContent = r.punto0.text.replace('PUNTO 0: ','');
-  document.getElementById('punto0Why').textContent = 'Esta es la decisión que condiciona toda tu cadena de éxito. Resolverla primero desbloquea todo lo demás.';
+  document.getElementById('punto0Why').textContent = r.punto0.why || 'Esta es la decisión que condiciona toda tu cadena de éxito. Resolverla primero desbloquea todo lo demás.';
 
   let chainHTML = '';
   r.chain.forEach(function(step){
@@ -1755,6 +1776,9 @@ checkFirstVisit();
 
 // Prefetch API endpoint for faster first analysis
 try{fetch('/api/analyze',{method:'OPTIONS'}).catch(function(){})}catch(e){}
+
+// Register Service Worker for PWA
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}
 
 // URL params
 const params = new URLSearchParams(window.location.search);

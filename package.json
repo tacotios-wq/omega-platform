@@ -1,6 +1,6 @@
 {
   "name": "omega-platform",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "description": "Omega Platform — Encuentra tu Punto 0 usando causalidad inversa",
   "scripts": {
     "dev": "npx serve public -l 8765",
