@@ -193,17 +193,52 @@ export default async function handler(req, res) {
   if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'API key not configured' });
 
   try {
-    const { text, context, tier, licenseKey } = req.body;
+    const { text, context, tier, licenseKey, mode } = req.body;
 
-    if (!text || typeof text !== 'string' || text.trim().length < 30) {
-      return res.status(400).json({ error: 'El objetivo debe tener al menos 30 caracteres.' });
+    if (!text || typeof text !== 'string' || text.trim().length < 10) {
+      return res.status(400).json({ error: 'El texto debe tener al menos 10 caracteres.' });
     }
-    if (text.length > 2000) {
-      return res.status(400).json({ error: 'El objetivo no puede superar 2000 caracteres.' });
+    if (text.length > 3000) {
+      return res.status(400).json({ error: 'El texto no puede superar 3000 caracteres.' });
     }
 
-    // Validate PRO server-side — don't trust client tier claim
+    // Validate PRO server-side
     const isPro = tier === 'pro' && licenseKey ? await validateLicense(licenseKey) : false;
+
+    // ═══ FOLLOW-UP MODE ═══
+    if (mode === 'followup') {
+      const followUpSystem = `Eres Omega, un motor de análisis estratégico. El usuario ya recibió un análisis y ahora quiere profundizar.
+Responde de forma DIRECTA, CONCRETA y ACCIONABLE. Máximo 300 palabras.
+Usa formato claro con números y puntos. No repitas contexto que el usuario ya sabe.
+Si el usuario pide un plan de acción, incluye: qué hacer, cuándo, cómo medir, y plan B.
+Responde en el idioma del usuario.`;
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1500,
+          temperature: 0.5,
+          system: followUpSystem,
+          messages: [{ role: 'user', content: text.trim() }]
+        })
+      });
+
+      if (!response.ok) {
+        return res.status(502).json({ error: 'Error en follow-up. Intenta de nuevo.' });
+      }
+
+      const data = await response.json();
+      const content = data.content?.[0]?.text || '';
+      return res.status(200).json({ followup: content, raw: content });
+    }
+
+    // ═══ FULL ANALYSIS MODE ═══
     const agentCount = isPro ? 5 : 1;
     const stressCount = isPro ? 5 : 3;
 
@@ -251,7 +286,7 @@ Responde SOLO con el JSON. Sin texto adicional.`;
       return res.status(502).json({ error: 'Respuesta vacía del motor de análisis.' });
     }
 
-    // Parse JSON from response (handle potential markdown wrapping)
+    // Parse JSON from response
     let result;
     try {
       const jsonStr = content.replace(/^```json?\n?/i, '').replace(/\n?```$/i, '').trim();

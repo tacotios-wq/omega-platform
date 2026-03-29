@@ -225,6 +225,25 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .blind-spot::before{content:'👁️';flex-shrink:0}
 .next-after{font-style:italic;color:var(--accent)}
 
+/* ═══ ITERATION LOOP ═══ */
+.iteration-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+@media(max-width:600px){.iteration-grid{grid-template-columns:1fr}}
+.iter-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;text-align:left;transition:border-color .2s,transform .15s;font-size:13px;color:var(--text);line-height:1.4}
+.iter-btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.iter-btn:active{transform:scale(.98)}
+.iter-btn .iter-icon{font-size:16px;margin-right:6px}
+.iter-btn .iter-label{font-weight:600;display:block;margin-bottom:2px}
+.iter-btn .iter-desc{color:var(--text2);font-size:12px}
+.iter-btn.pro-only{opacity:.5}
+.iteration-ask{display:flex;gap:8px;align-items:center}
+.iteration-ask input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:14px;transition:border-color .2s}
+.iteration-ask input:focus{border-color:var(--accent);outline:none}
+.follow-up-result{margin-top:16px;padding:16px;background:rgba(233,155,42,.05);border:1px solid rgba(233,155,42,.15);border-radius:var(--radius-sm);font-size:14px;line-height:1.7;color:var(--text);animation:fadeIn .3s ease-out}
+.follow-up-result h4{color:var(--accent);margin:0 0 8px;font-size:15px}
+.follow-up-result ul{margin:8px 0;padding-left:20px}
+.follow-up-result li{margin-bottom:4px}
+.follow-up-loading{text-align:center;padding:20px;color:var(--text2)}
+
 /* ═══ API SOURCE BADGE ═══ */
 .source-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;letter-spacing:.5px;margin-left:8px}
 .source-badge.api{background:rgba(233,155,42,.15);color:var(--accent);border:1px solid rgba(233,155,42,.3)}
@@ -710,6 +729,17 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <div class="card-label">👁️ Puntos ciegos</div>
       <div id="blindSpotsList"></div>
       <div id="nextAfterNext" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;color:var(--text2)"></div>
+    </div>
+
+    <!-- ═══ ITERATION LOOP ═══ -->
+    <div class="card" id="iterationCard">
+      <div class="card-label">🔄 Profundiza tu análisis</div>
+      <div class="iteration-grid" id="iterationGrid"></div>
+      <div class="iteration-ask" id="iterationAsk">
+        <input type="text" id="followUpInput" placeholder="Pregunta algo sobre tu análisis..." maxlength="500">
+        <button class="btn btn-primary" onclick="askFollowUp()" id="btnFollowUp" style="white-space:nowrap">Preguntar</button>
+      </div>
+      <div id="followUpResult" class="follow-up-result" style="display:none"></div>
     </div>
 
     <div id="emailCaptureContainer"></div>
@@ -1605,8 +1635,145 @@ function renderAnalysis(r){
     else{pdfBtn.classList.remove('btn-pro-lock');pdfBtn.onclick=exportPDF}
   }
 
+  // Iteration loop buttons
+  renderIterationLoop(r);
+
   selectLevel(r.complexity.level);
 }
+
+// ═══ ITERATION LOOP ═══
+function renderIterationLoop(r){
+  const grid = document.getElementById('iterationGrid');
+  if(!grid) return;
+  let html = '';
+
+  // Button 1: Profundizar Punto 0
+  html += '<button class="iter-btn" onclick="iteratePunto0()">';
+  html += '<span class="iter-icon">🎯</span>';
+  html += '<span class="iter-label">Plan de acción del Punto 0</span>';
+  html += '<span class="iter-desc">Pasos concretos para ejecutar esta decisión</span>';
+  html += '</button>';
+
+  // Button 2: Profundizar obstáculos
+  if(r.obstacles && r.obstacles.length > 0){
+    html += '<button class="iter-btn" onclick="iterateObstacles()">';
+    html += '<span class="iter-icon">🧱</span>';
+    html += '<span class="iter-label">Resolver obstáculos</span>';
+    html += '<span class="iter-desc">Analiza cada obstáculo con su propio Punto 0</span>';
+    html += '</button>';
+  }
+
+  // Button 3: Segundo agente (free gets 1, this unlocks debate)
+  if(r.agents && r.agents.length >= 1){
+    html += '<button class="iter-btn'+(isPro?'':' pro-only')+'" onclick="'+(isPro?'iterateDebate()':'showProModal(\'agents\')')+'">';
+    html += '<span class="iter-icon">⚔️</span>';
+    html += '<span class="iter-label">Debate entre agentes</span>';
+    html += '<span class="iter-desc">'+(isPro?'Haz que los agentes argumenten entre sí':'PRO: desbloquea debate multi-agente')+'</span>';
+    html += '</button>';
+  }
+
+  // Button 4: Reformular
+  html += '<button class="iter-btn" onclick="iterateReframe()">';
+  html += '<span class="iter-icon">🔄</span>';
+  html += '<span class="iter-label">Reformular objetivo</span>';
+  html += '<span class="iter-desc">Pide a Omega que cuestione tu planteamiento</span>';
+  html += '</button>';
+
+  grid.innerHTML = html;
+
+  // Reset follow-up
+  document.getElementById('followUpResult').style.display = 'none';
+  document.getElementById('followUpInput').value = '';
+}
+
+function iteratePunto0(){
+  if(!currentResult) return;
+  const p0 = currentResult.punto0.text.replace('PUNTO 0: ','');
+  const prompt = 'Mi Punto 0 es: "'+p0+'"\n\nDame un plan de acción concreto para ejecutar esta decisión:\n1. Qué hacer HOY (30 min)\n2. Qué hacer esta SEMANA (3 acciones)\n3. Cómo medir si funcionó (métrica + plazo)\n4. Plan B si no funciona';
+  runFollowUp(prompt, 'Plan de acción: '+p0.substring(0,60)+'...');
+}
+
+function iterateObstacles(){
+  if(!currentResult || !currentResult.obstacles) return;
+  const obs = currentResult.obstacles.map(function(o,i){return (i+1)+'. '+o}).join('\n');
+  const prompt = 'Mi objetivo es: "'+currentResult.goal+'"\nMi Punto 0 es: "'+currentResult.punto0.text+'"\n\nMis obstáculos son:\n'+obs+'\n\nPara CADA obstáculo, dame:\n- Su propio mini-Punto 0 (la decisión que lo desbloquea)\n- Una acción concreta de 30 min para empezar\n- Si es un obstáculo real o una excusa disfrazada';
+  runFollowUp(prompt, 'Análisis de obstáculos');
+}
+
+function iterateDebate(){
+  if(!currentResult || !isPro) return;
+  const agents = currentResult.agents.map(function(a){return a.role+' (sesgo: '+a.bias+'): '+a.rec}).join('\n\n');
+  const prompt = 'Estos agentes analizaron mi situación:\n\n'+agents+'\n\nAhora haz que DEBATAN entre sí. Cada agente debe:\n1. Cuestionar la recomendación del otro\n2. Defender su posición con un argumento nuevo\n3. Llegar a una síntesis que combine lo mejor de ambos\n\nEl resultado debe ser una recomendación final más fuerte.';
+  runFollowUp(prompt, 'Debate entre agentes');
+}
+
+function iterateReframe(){
+  if(!currentResult) return;
+  const prompt = 'Mi objetivo original es: "'+currentResult.goal+'"\nOmega dice que mi Punto 0 es: "'+currentResult.punto0.text+'"\n\nAhora CUESTIONA mi planteamiento:\n1. ¿Estoy resolviendo el problema correcto o un síntoma?\n2. ¿Hay un ángulo que no estoy viendo?\n3. ¿Qué pasaría si hiciera lo OPUESTO de lo que planeo?\n4. Reformula mi objetivo de una forma que podría ser más poderosa.';
+  runFollowUp(prompt, 'Replanteamiento del objetivo');
+}
+
+async function askFollowUp(){
+  const input = document.getElementById('followUpInput');
+  const question = input.value.trim();
+  if(!question || question.length < 10){showToast('Escribe una pregunta más detallada');return}
+  if(!currentResult){showToast('Primero necesitas un análisis');return}
+
+  const ctx = 'Mi objetivo: "'+currentResult.goal+'"\nMi Punto 0: "'+currentResult.punto0.text+'"\nMi mayor palanca: "'+currentResult.summary.lever+'"\nMi mayor riesgo: "'+currentResult.summary.risk+'"';
+  const prompt = ctx+'\n\nMi pregunta: '+question+'\n\nResponde de forma directa, concreta y accionable. Máximo 200 palabras.';
+  runFollowUp(prompt, question);
+  trackEvent('follow_up_asked', {});
+}
+window.askFollowUp = askFollowUp;
+
+async function runFollowUp(prompt, label){
+  const resultDiv = document.getElementById('followUpResult');
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = '<div class="follow-up-loading">Analizando: '+esc(label)+'...</div>';
+  resultDiv.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  try{
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        text: prompt,
+        context: {},
+        tier: isPro ? 'pro' : 'free',
+        mode: 'followup'
+      })
+    });
+
+    if(!resp.ok) throw new Error('API error');
+    const data = await resp.json();
+
+    if(data.followup){
+      resultDiv.innerHTML = '<h4>'+esc(label)+'</h4><div>'+formatFollowUp(data.followup)+'</div>';
+    } else if(data.raw){
+      resultDiv.innerHTML = '<h4>'+esc(label)+'</h4><div>'+formatFollowUp(data.raw)+'</div>';
+    } else {
+      // Fallback: show the prompt for copy-paste
+      resultDiv.innerHTML = '<h4>'+esc(label)+'</h4><p style="color:var(--text2);margin-bottom:12px">La IA no está disponible ahora. Copia este prompt y pégalo en ChatGPT o Claude:</p><div class="prompt-box" style="font-size:13px;max-height:200px;overflow-y:auto">'+esc(prompt)+'</div><button class="btn" onclick="clipCopy(\''+prompt.replace(/'/g,"\\'")+'\',\'Prompt copiado\')" style="margin-top:8px">📋 Copiar prompt</button>';
+    }
+  } catch(e){
+    resultDiv.innerHTML = '<h4>'+esc(label)+'</h4><p style="color:var(--text2);margin-bottom:12px">Copia este prompt y pégalo en ChatGPT o Claude:</p><div class="prompt-box" style="font-size:13px;max-height:200px;overflow-y:auto">'+esc(prompt)+'</div><button class="btn" style="margin-top:8px" onclick="clipCopy(document.querySelector(\'#followUpResult .prompt-box\').textContent,\'Prompt copiado\')">📋 Copiar prompt</button>';
+  }
+  trackEvent('iteration_used', {type: label.substring(0,30)});
+}
+
+function formatFollowUp(text){
+  if(!text) return '';
+  return esc(text)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n(\d+)\./g, '</p><p><strong>$1.</strong>')
+    .replace(/\n- /g, '</p><li>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
+window.iteratePunto0 = iteratePunto0;
+window.iterateObstacles = iterateObstacles;
+window.iterateDebate = iterateDebate;
+window.iterateReframe = iterateReframe;
 
 // ═══ PROMPT TABS ═══
 function selectLevel(level){
