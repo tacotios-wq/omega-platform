@@ -1,8 +1,10 @@
 ---
 name: omega-max
 description: >-
-  Protocolo de máxima dimensión para decisiones de alta complejidad y alto impacto. Versión COMPLETA
-  con 6 fases, anti-patrones, Six Thinking Hats, Meta-Consejo, 7 Filtros Finales y formato de entrega.
+  Protocolo de máxima dimensión para decisiones de alta complejidad y alto impacto. v2.0 — fusión
+  definitiva del motor web + skill conversacional. 6 fases, anti-patrones, Six Thinking Hats,
+  Meta-Consejo de 4 agentes de segundo nivel, 5 pruebas destructivas, 7 Filtros Finales,
+  blindspots, nextAfterNext, y formato de entrega calibrado.
   Use this skill when: the user explicitly asks for "omega max", "protocolo max", "análisis máximo",
   "full omega", "máxima profundidad", "deep analysis", "decisión crítica", "high-stakes decision",
   "quiero el análisis completo", "aplica omega max", "necesito la versión completa",
@@ -13,9 +15,9 @@ description: >-
   For routine analysis, use protocolo-omega (LITE) instead. Works in any language.
 ---
 
-# OMEGA MAX — Protocolo de Máxima Dimensión
+# OMEGA MAX v2.0 — Protocolo de Máxima Dimensión
 
-Este es el protocolo de máxima profundidad del ecosistema Omega. Incluye ejemplos trabajados, protocolos cognitivos detallados, anti-patrones y calibración. Actívalo solo cuando la complejidad lo justifica — decisiones irreversibles, multi-dimensionales o de alto impacto.
+Este es el protocolo de máxima profundidad del ecosistema Omega. Fusión definitiva del motor de análisis web + el skill conversacional. Actívalo solo cuando la complejidad lo justifica — decisiones irreversibles, multi-dimensionales o de alto impacto.
 
 ## ◆ PROTOCOLO OMEGA MAX — INICIO
 
@@ -46,7 +48,7 @@ Ejemplo de triple decodificación:
 
 ## 0.3 — Detección de Preguntas No Formuladas
 
-Identifica al menos 2 preguntas que el usuario NO ha hecho pero que DEBERÍA estar haciéndose. Estas preguntas invisibles a menudo son más importantes que la pregunta formulada.
+Identifica al menos 2 preguntas que el usuario NO ha hecho pero que DEBERÍA estar haciéndose. Estas preguntas invisibles a menudo son más importantes que la pregunta formulada. Intégralas en tu análisis — no las ignores.
 
 Ejemplo:
 - Pregunta formulada: "¿Debería levantar una ronda seed?"
@@ -61,6 +63,7 @@ Señales de que estás siendo genérico:
 - Listas de "consideraciones" sin priorización
 - Consejos que cualquier libro de gestión daría
 - Ausencia de números, plazos o acciones concretas
+- Si el sector es específico y no usas vocabulario, métricas ni benchmarks de ESE sector
 
 ---
 
@@ -84,28 +87,36 @@ Desde el estado perfecto, retrocede paso a paso. Cada paso debe responder: "¿Qu
 
 Sigue retrocediendo hasta llegar a la DECISIÓN ATÓMICA — la elección más pequeña y fundamental que condiciona toda la cadena. Es el punto donde si eliges mal, todo lo que construyes encima será incorrecto, sin importar cuán refinado sea.
 
-## 1.3 — Cómo Reconocer la Decisión Atómica
+## 1.3 — Cómo Reconocer la Decisión Atómica (Punto 0)
 
 La decisión atómica tiene estas características:
 - Es sorprendentemente pequeña comparada con el problema completo
 - Si la cambias, toda la cadena posterior cambia
 - No es obvia — el usuario probablemente no la ha identificado
 - Suele ser una definición, una priorización o una premisa, no una acción
+- Es algo que se puede DECIDIR HOY, no un diagnóstico ni una observación
 
 Ejemplos de decisiones atómicas reales:
 - Para "¿cómo escalo mi negocio?": La DA no es "contrata más gente" sino "¿tu modelo actual es replicable sin ti?"
 - Para "¿qué tecnología uso?": La DA no es "React vs Vue" sino "¿cuál es la restricción real — velocidad de desarrollo, rendimiento, o talento disponible?"
 - Para "¿cómo mejoro mi CV?": La DA no es "mejora el formato" sino "¿a qué puesto específico aspiras y qué valora esa empresa?"
+- Para "¿cómo monetizo mi audiencia?": La DA no es "lanza un producto" sino "¿cuál es el problema #1 que tu audiencia pagaría por resolver HOY?"
 
 ## 1.4 — Construcción Hacia Adelante: Cadena Inevitable
 
 Desde la decisión atómica, construye hacia adelante. Cada eslabón debe ser INEVITABLE — dado el anterior, el siguiente es la única conclusión razonable, no simplemente una conclusión posible.
 
-Si en algún eslabón hay ambigüedad (podría ir por A o por B), tienes una bifurcación no resuelta. Resuélvela antes de continuar. Usa los criterios de la Fase 2 para elegir.
+Cada eslabón necesita un MECANISMO CAUSAL EXPLÍCITO: ¿POR QUÉ A lleva inevitablemente a B? No basta con "primero X, luego Y" — necesitas el porqué.
+
+Si en algún eslabón hay ambigüedad (podría ir por A o por B), tienes una bifurcación no resuelta. Resuélvela antes de continuar.
+
+La cadena debe tener entre 4 y 7 eslabones: Punto 0 → pasos inevitables → validación medible → meta alcanzada.
 
 ## 1.5 — Anti-patrón: Causalidad Falsa
 
 No confundas correlación con causalidad. "Primero X, luego Y" no significa "X causa Y." Cada eslabón debe tener un mecanismo causal explícito — ¿POR QUÉ A lleva inevitablemente a B?
+
+Si la inversión del eslabón también funciona ("si NO hago A, ¿sigue pasando B?"), la causalidad es débil. Refórzala o reemplázala.
 
 ---
 
@@ -161,10 +172,10 @@ Si tus 3 realidades son variaciones del mismo enfoque (ej: "contratar 5 personas
 No uses agentes genéricos. Para ESTE problema específico, responde: "Si tuvieras que montar un comité de 5-7 expertos REALES para resolver esto, ¿a quién llamarías por teléfono?"
 
 Cada agente debe tener:
-- **Nombre del rol** (específico al dominio, no genérico)
-- **Expertise exacta** (no "experto en negocios" sino "CFO con experiencia en SaaS B2B early-stage")
-- **Sesgo natural** (cada experto tiene un sesgo — decláralo para compensarlo)
-- **Pregunta que va a hacer** (la pregunta incómoda que este experto haría)
+- **Nombre del rol** (ULTRA-ESPECÍFICO al dominio — no "experto en negocios" sino "CFO con experiencia en SaaS B2B early-stage en LATAM")
+- **Expertise exacta** (qué sabe que los demás no)
+- **Sesgo natural declarado** (cada experto tiene un sesgo — decláralo para compensarlo)
+- **Pregunta incómoda** que este experto haría (la que nadie quiere oír)
 
 Ejemplo para un problema de expansión de restaurante:
 - Operador de cadena (sesgo: eficiencia sobre calidad) → "¿Cuánto tardas en entrenar un cocinero que replique tu plato exacto?"
@@ -180,70 +191,45 @@ Los sombreros son LENTES, no roles. Se aplican SOBRE los agentes, no en lugar de
 **⬜ Sombrero Blanco — Datos Puros**
 - ¿Qué DATOS concretos tenemos? (no opiniones, no estimaciones — datos)
 - ¿Qué datos FALTAN y dónde se podrían obtener?
-- ¿Hay alguna afirmación en la respuesta que NO tiene dato que la respalde?
+- ¿Hay alguna afirmación sin dato que la respalde?
 - Si un dato es una estimación, decláralo como tal y da el rango de incertidumbre.
 
 **🔴 Sombrero Rojo — Intuición e Instinto**
 - ¿La respuesta "suena" correcta a nivel visceral?
 - ¿Hay algo que chirría sin poder articular por qué?
-- ¿Qué diría el instinto de alguien con 20 años de experiencia en este campo?
+- ¿Qué diría el instinto de alguien con 20 años de experiencia?
 - La intuición no es evidencia, pero es un detector de anomalías. Si chirría, investiga.
 
 **⚫ Sombrero Negro — Análisis de Riesgo**
-- ¿En qué escenario específico esta respuesta lleva al DESASTRE? (no "podría salir mal" — describe el escenario concreto)
+- ¿En qué escenario específico esta respuesta lleva al DESASTRE?
 - ¿Cuáles son los 3 riesgos más probables? ¿Y los 2 más graves (aunque improbables)?
-- ¿Hay algún consejo en la respuesta que, seguido literalmente, podría causar daño?
-- ¿Qué pasa si los supuestos del mercado cambian en 6 meses?
+- ¿Hay algún consejo que, seguido literalmente, podría causar daño?
 
 **🟢 Sombrero Verde — Pensamiento Lateral**
 - ¿Existe una solución que nadie ha mencionado?
 - ¿Qué haría alguien de un campo completamente diferente?
-- ¿Se puede invertir el problema? ("en vez de encontrar clientes, ¿cómo hago que los clientes me encuentren?")
+- ¿Se puede invertir el problema?
 - ¿Hay una solución que elimine el problema en lugar de resolverlo?
 
 **🔵 Sombrero Azul — Meta-Proceso**
 - ¿El método de razonamiento fue el óptimo para este tipo de problema?
-- ¿Se dedicó tiempo suficiente a las fases más críticas?
-- ¿Hay un sesgo de confirmación operando? (buscamos evidencia para lo que ya creíamos)
+- ¿Hay un sesgo de confirmación operando?
 - ¿La estructura de la respuesta ayuda o dificulta la comprensión?
 
 **🟡 Sombrero Amarillo — Optimismo Estratégico**
 - Si se ejecuta PERFECTAMENTE, ¿cuál es el mejor escenario realista?
-- ¿Cómo maximizar la probabilidad de ese mejor escenario?
 - ¿Hay sinergias ocultas entre diferentes partes de la respuesta?
 - ¿Se puede amplificar el impacto positivo con un pequeño ajuste?
 
 ## 3.3 — Debate Estructurado en 5 Rondas
 
-**Ronda 1 — Exposición (sin interrupción)**
-Cada agente presenta sus 2-3 hallazgos más importantes. Formato: "[Hallazgo] porque [evidencia/razonamiento]." Sin juicios sobre lo que dicen los demás. Solo presenta.
+**Ronda 1 — Exposición:** Cada agente presenta sus 2-3 hallazgos más importantes con evidencia.
+**Ronda 2 — Fuego Cruzado:** Cada agente ataca al menos una afirmación de otro. Preguntas incómodas, profundas, específicas.
+**Ronda 3 — Puntos Ciegos:** ¿Qué variables invisibles? ¿Qué stakeholders ausentes? ¿Qué no sabemos que no sabemos?
+**Ronda 4 — Soluciones Escrutadas:** Para cada problema identificado, se propone solución concreta que recibe el MISMO escrutinio que la respuesta original.
+**Ronda 5 — Convergencia:** El Agente Integrador construye la síntesis. Los mejores argumentos sobreviven. Las contradicciones se resuelven (o se declaran como dilemas genuinos). El ruido muere.
 
-**Ronda 2 — Fuego Cruzado**
-Cada agente ataca al menos una afirmación de otro agente. Las preguntas deben ser:
-- Incómodas (atacan supuestos, no detalles)
-- Profundas (van a la raíz, no a la superficie)
-- Específicas ("¿En qué te basas para decir que el mercado crecerá un 15%?" — no "¿estás seguro?")
-
-**Ronda 3 — Puntos Ciegos**
-El grupo identifica colectivamente:
-- ¿Qué VARIABLES no estamos considerando?
-- ¿Qué STAKEHOLDERS están ausentes del análisis?
-- ¿Qué ESCENARIOS hemos descartado prematuramente?
-- ¿Qué sabemos que NO sabemos? ¿Qué no sabemos que no sabemos?
-
-**Ronda 4 — Soluciones Escrutadas**
-Para cada problema identificado en Rondas 2-3:
-- Se propone al menos una solución concreta
-- Esa solución se somete al MISMO escrutinio que la respuesta original
-- Si la solución no sobrevive, se genera otra
-- Una solución que crea un problema nuevo mayor al que resuelve se descarta
-
-**Ronda 5 — Convergencia**
-El Agente Integrador construye la síntesis:
-- Los mejores argumentos sobreviven
-- Las contradicciones se resuelven (o se declaran como dilemas genuinos)
-- El ruido muere
-- Se produce la **Respuesta de Nivel 1**
+**TENSIÓN = INSIGHT:** Donde los agentes discrepan, ahí está la verdad del caso. La tensión no es un problema a resolver — es el INSIGHT más valioso del análisis. Revela el dilema real.
 
 ## 3.4 — Anti-patrón: Debate Decorativo
 
@@ -252,70 +238,53 @@ Si todos los agentes están de acuerdo en todo, el debate fue teatro. Fuerza al 
 ---
 
 # ═══════════════════════════════════════════════════════════
-# FASE 4 — ELEVACIÓN EXPONENCIAL
+# FASE 4 — STRESS TEST + ELEVACIÓN EXPONENCIAL
 # ═══════════════════════════════════════════════════════════
 
-## 4.1 — Meta-Consejo de Segundo Nivel
+## 4.1 — Cinco Pruebas Destructivas
 
-4 meta-agentes operan SOBRE la Respuesta de Nivel 1. No la revisan — la ELEVAN.
+Aplica estas 5 pruebas sobre el Punto 0 y la cadena causal. Si algo no sobrevive, ITERA hasta que lo haga:
+
+**1. INVERSIÓN:** ¿Qué pasa si hacemos lo OPUESTO? Si la inversión también funciona, el Punto 0 es débil — busca uno más fundamental.
+
+**2. ESCALA 10x:** ¿Se sostiene a 10x la escala actual? ¿Dónde aparece la primera fractura? ¿Es estructural o operativa?
+
+**3. COMPRESIÓN TEMPORAL:** ¿Funciona con la mitad del tiempo? ¿Qué se sacrifica primero? ¿Lo que se sacrifica era realmente necesario?
+
+**4. RESTRICCIÓN DE RECURSOS:** ¿Funciona con la mitad del presupuesto/equipo? ¿Cuál es la versión mínima viable que aún entrega valor?
+
+**5. PLAN B CONCRETO:** Si falla completamente, ¿cuál es la ruta de escape? No "revaluar opciones" — un plan concreto con timeline.
+
+## 4.2 — Meta-Consejo de Segundo Nivel
+
+4 meta-agentes operan SOBRE todo lo anterior. No revisan — ELEVAN.
 
 **El Estratega**
-- Visión sistémica: ¿Esta respuesta posiciona al usuario para ganar en las 3 jugadas SIGUIENTES, no solo en la actual?
-- Efectos dominó: ¿Qué consecuencias en cadena produce esta respuesta? ¿Son deseables?
-- Coste de oportunidad: ¿Al seguir este camino, qué otros caminos se cierran? ¿El usuario lo sabe?
+- ¿Esta respuesta posiciona al usuario para ganar en las 3 jugadas SIGUIENTES, no solo en la actual?
+- ¿Qué consecuencias en cadena produce? ¿Son deseables?
+- ¿Al seguir este camino, qué otros caminos se cierran? ¿El usuario lo sabe?
 
 **El Contrarian**
-- Inversión total: ¿Y si la premisa fundamental del usuario está equivocada?
-- Paradigma oculto: ¿Estamos resolviendo el problema correcto o estamos optimizando el problema equivocado?
-- Pregunta nuclear: "¿Y si NO hiciera nada? ¿Cuál es el coste real de la inacción?"
+- ¿Y si la premisa fundamental del usuario está equivocada?
+- ¿Estamos optimizando el problema equivocado?
+- "¿Y si NO hiciera nada? ¿Cuál es el coste real de la inacción?"
 
 **El Artesano**
-- Precisión lingüística: ¿Cada palabra está contribuyendo? ¿Hay frases que suenan bien pero no dicen nada?
-- Ritmo: ¿La información más importante está donde el usuario la va a ver primero?
-- Tono: ¿El registro es el adecuado para este usuario y este contexto?
-- Compresión: ¿Se puede decir lo mismo con la mitad de palabras?
+- ¿Cada palabra contribuye? ¿Hay frases que suenan bien pero no dicen nada?
+- ¿La información más importante está donde el usuario la va a ver primero?
+- ¿Se puede decir lo mismo con la mitad de palabras?
 
 **El Futurista**
-- Anticipación: ¿Qué va a necesitar el usuario DESPUÉS de recibir esta respuesta?
-- Evolución: ¿Cómo cambiará este problema en 6 meses, 1 año, 3 años?
-- Preparación: ¿La respuesta prepara al usuario para lo que viene o solo resuelve el presente?
-
-## 4.2 — Tres Pruebas de Estrés
-
-### Prueba 1 — Inversión de Premisas
-Identifica las 3 premisas principales de la respuesta. Invierte cada una:
-- Si la premisa es "el mercado crecerá" → ¿qué pasa si el mercado se contrae?
-- Si la premisa es "el equipo es competente" → ¿qué pasa si hay rotación?
-- Si la premisa es "el presupuesto es suficiente" → ¿qué pasa si cuesta el doble?
-
-Si la inversión revela que la respuesta se derrumba, hay una FRAGILIDAD. Blíndala: añade un plan de contingencia o cambia la recomendación. Si la inversión no cambia nada sustancial, la premisa es ROBUSTA — eso es bueno.
-
-### Prueba 2 — El Experto Hostil
-Imagina que el mayor experto mundial en este tema lee tu respuesta con la intención explícita de destruirla en una conferencia pública. ¿Dónde atacaría?
-
-Puntos típicos de ataque:
-- Generalizaciones sin evidencia
-- Confusión entre correlación y causalidad
-- Omisión de factores importantes
-- Recomendaciones que funcionan en teoría pero no en la práctica
-- Falta de matices o excepciones
-
-Para cada punto de ataque, blinda la respuesta PREVENTIVAMENTE.
-
-### Prueba 3 — El Principiante Brillante
-Imagina que alguien inteligente, curioso, pero sin NINGÚN contexto previo lee tu respuesta:
-- ¿Entiende todo sin esfuerzo?
-- ¿Hay jerga que no se explica?
-- ¿Hay saltos lógicos donde el lector tiene que "adivinar" la conexión?
-- ¿Los supuestos están declarados o son invisibles?
-- ¿La estructura guía la lectura o la dificulta?
+- ¿Qué va a necesitar el usuario DESPUÉS de recibir esta respuesta y AÚN NO SABE?
+- ¿Cómo cambiará este problema en 6 meses, 1 año, 3 años?
+- ¿La respuesta prepara al usuario para lo que viene o solo resuelve el presente?
 
 ## 4.3 — Control de Recursión
 
 Responde internamente con honestidad brutal:
-- ¿La Fase 4 mejoró SUSTANCIALMENTE la Respuesta de Nivel 1?
+- ¿La Fase 4 mejoró SUSTANCIALMENTE la respuesta?
   - Si SÍ → procede a Fase 5
-  - Si NO (solo reorganizó o reescribió sin mejorar) → repite 4.1 con más agresividad. Busca un ángulo que no hayas considerado. Si después de 2 intentos sigue sin mejorar, la Respuesta de Nivel 1 era ya excelente — procede.
+  - Si NO → repite 4.1-4.2 con más agresividad. Si después de 2 intentos no mejora, la respuesta ya era excelente — procede.
 - ¿Es más CORTA y más COMPLETA que la versión anterior? Si no, estás añadiendo ruido. Comprime.
 
 ---
@@ -332,19 +301,19 @@ Pasa la respuesta por estos 7 filtros. Si falla alguno, corrige antes de entrega
 ¿Cada frase acerca al usuario a su objetivo? ¿Hay alguna oración que, si la eliminas, la respuesta no pierde nada? Si sí, elimínala. Sin excepciones.
 
 **2. Filtro de Accionabilidad**
-¿El usuario sabe EXACTAMENTE qué hacer después de leer esto? No "considerar opciones" — sino "hacer X, luego Y, luego Z." Si la respuesta no termina en una acción concreta, le falta algo.
+¿El usuario sabe EXACTAMENTE qué hacer después de leer esto? No "considerar opciones" — sino "hacer X, luego Y, luego Z." El firstStep debe ser tan concreto que se ejecuta en 30 minutos sin preguntar nada más.
 
 **3. Filtro de Honestidad Radical**
-¿Has declarado toda incertidumbre? ¿Has señalado tus límites? ¿Hay algo que no puedes saber con certeza y estás presentando como hecho? Corrígelo. La honestidad sobre la incertidumbre es más valiosa que la falsa certeza.
+¿Has declarado toda incertidumbre? ¿Hay algo que presentas como hecho pero es una estimación? La honestidad sobre la incertidumbre es más valiosa que la falsa certeza.
 
 **4. Filtro de Anticipación**
-¿Has incluido lo que el usuario va a necesitar saber DESPUÉS? No lo que preguntó — lo que va a preguntar en 5 minutos cuando actúe sobre tu respuesta. Adelántate.
+¿Has incluido lo que va a necesitar saber DESPUÉS? No lo que preguntó — lo que va a preguntar en 5 minutos cuando actúe sobre tu respuesta. Adelántate.
 
 **5. Filtro de Elegancia**
-¿La solución resuelve múltiples problemas simultáneamente? La mejor solución no es la que resuelve un problema bien — es la que resuelve tres problemas con un solo movimiento.
+¿La solución resuelve múltiples problemas simultáneamente? La mejor solución no resuelve un problema bien — resuelve tres con un solo movimiento.
 
 **6. Filtro de Irreversibilidad**
-¿Has advertido sobre decisiones difíciles de revertir? ¿Las decisiones con alto coste de error están señaladas con claridad? Nadie debería tomar una decisión irreversible sin saber que lo es.
+¿Has advertido sobre decisiones difíciles de revertir? ¿Las decisiones con alto coste de error están señaladas con claridad?
 
 **7. Filtro de Reputación**
 Si tu carrera entera dependiera de esta respuesta — si fuera lo único por lo que te juzgaran profesionalmente — ¿la entregarías tal cual? Si dudas, sigue trabajando.
@@ -355,29 +324,36 @@ Antes de la respuesta final, revela al usuario cuál fue la decisión atómica q
 - Entender POR QUÉ la respuesta es como es (transparencia total)
 - Validar si esa decisión fundamental es correcta para su contexto
 - Recalibrar si su premisa inicial era diferente
-- Confiar en la respuesta porque ve el razonamiento detrás
 
-## 5.3 — Calibración de Formato
+## 5.3 — Puntos Ciegos y Anticipación
 
-Adapta el formato al contenido:
-- Si la respuesta es una decisión binaria → sé directo primero, luego justifica
-- Si es una estrategia → estructura en fases temporales
-- Si es un análisis → prioriza por importancia, no por categoría
-- Si es creativo → rompe el formato si el contenido lo pide
-- NUNCA uses el formato como sustituto de sustancia
+Identifica máximo 3 PUNTOS CIEGOS: cosas que el usuario no está considerando y debería. Cada uno debe ser concreto, específico y accionable — no genérico.
+
+Identifica el NEXT AFTER NEXT: lo que necesitará DESPUÉS del Punto 0 y aún no sabe que necesita. El segundo paso que aún no ve.
 
 ## 5.4 — Formato de Entrega
 
 ```
-⚛️ DECISIÓN ATÓMICA:
+⚛️ DECISIÓN ATÓMICA (PUNTO 0):
 [La decisión fundamental más pequeña que condiciona toda la cadena de éxito.
 Declarada en 1-3 líneas. Explica por qué ESTA es la decisión que importa.]
 
 ◆ RESPUESTA:
-[La respuesta transmutada por las 5 fases del protocolo.
+[La respuesta transmutada por las 6 fases del protocolo.
 Directa, completa, sin grasa. Cada palabra se ha ganado su lugar.
 Organizada de la forma más clara posible para este tema específico.
 Incluye números, plazos y acciones concretas donde sea posible.]
+
+⛓️ CADENA CAUSAL:
+[Punto 0 → paso inevitable (mecanismo causal) → siguiente eslabón → validación medible → meta]
+[4-7 eslabones. Cada uno con el POR QUÉ explícito.]
+
+🧠 CONSEJO DE AGENTES:
+[Para cada agente: rol, sesgo declarado, recomendación concreta]
+[Tensión principal: dónde discrepan y por qué ambos tienen razón]
+
+🔬 STRESS TESTS:
+[5 pruebas con resultados específicos de ESTE caso — no plantilla genérica]
 
 🔭 PUNTOS CIEGOS:
 [Máximo 3 elementos que el usuario podría no estar considerando.
@@ -385,30 +361,40 @@ Cada uno es concreto, específico y accionable — no genérico.]
 
 → SIGUIENTE MOVIMIENTO:
 [La acción concreta más valiosa que puede tomar AHORA MISMO.
-No "investigar opciones" sino "hacer X antes del viernes."]
+No "investigar opciones" sino "abre [herramienta], haz [acción], mide [métrica]".]
 
-⚡ ANTICIPACIÓN:
+⚡ DESPUÉS DEL PUNTO 0:
 [Lo que va a necesitar saber o hacer DESPUÉS del siguiente movimiento.
 El segundo paso que aún no sabe que necesita.]
 
 ⚠️ NIVEL DE CONFIANZA:
 [Declaración honesta de dónde eres más y menos fiable en esta respuesta.
 Ejemplo: "Alta confianza en la estructura estratégica, moderada en las
-proyecciones financieras específicas que deberías validar con tu contable."]
+proyecciones financieras que deberías validar con tu contable."]
 ```
 
 ---
 
 ## ◆ PROTOCOLO OMEGA MAX — EVOLUCIÓN
 
-Si detectas que este protocolo es insuficiente para la complejidad de ESTA petición específica, expándelo: añade agentes, fases o rondas de debate. Si es excesivo para la pregunta, comprímelo manteniendo solo las fases esenciales. El protocolo se adapta al problema, no al revés. La herramienta sirve al objetivo, nunca al revés.
+Si detectas que este protocolo es insuficiente para la complejidad de ESTA petición específica, expándelo: añade agentes, fases o rondas de debate. Si es excesivo para la pregunta, comprímelo manteniendo solo las fases esenciales. El protocolo se adapta al problema, no al revés.
+
+## ◆ REGLAS ABSOLUTAS
+
+- El Punto 0 SIEMPRE es una DECISIÓN (se toma hoy), NUNCA un diagnóstico ni una observación
+- Cada frase accionable o elimínala. Sin relleno. Sin "depende". Sin "considera"
+- Si el sector es específico, usa vocabulario, métricas y benchmarks de ESE sector
+- Si detectas que la pregunta real es diferente de la formulada, responde a la REAL
+- Responde en el idioma del usuario
+- La tensión entre agentes no es un bug — es el insight más valioso
 
 ## ◆ HANDOFF — Al terminar el análisis
 
 Siempre sugiere el siguiente paso del ecosistema Omega:
-- "¿Activo **omega-planner** para diseñar el plan de ejecución de la Misión 1?"
+- "¿Activo **omega-planner** para diseñar el plan de ejecución del Punto 0?"
 - Si el usuario ya tiene un proyecto en marcha: "¿Activo **omega-auditor** para diagnosticar el siguiente Punto 0?"
+- Si quiere la versión web: "Pruébalo en **punto0.app** para un análisis visual con cadena causal interactiva."
 
 No dejes al usuario sin dirección. El análisis sin acción es ruido.
 
-## ◆ PROTOCOLO OMEGA MAX — FIN
+## ◆ PROTOCOLO OMEGA MAX v2.0 — FIN
